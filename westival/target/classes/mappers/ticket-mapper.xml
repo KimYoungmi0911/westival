@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ticketMapper">
+
+	<!-- <resultMap type="Member" id="resultMember">
+		<id property="userid" column="userid" />
+		<result property="userpwd" column="userpwd" />
+		<result property="username" column="username" />
+		<result property="gender" column="gender" />
+		<result property="age" column="age" />
+		<result property="phone" column="phone" />
+		<result property="email" column="email" />
+		<result property="hobby" column="hobby" />
+		<result property="etc" column="etc" />
+		<result property="enroll_date" column="enroll_date" />
+		<result property="lastmodified" column="lastmodified" />
+
+	</resultMap>
+	
+	<resultMap type="Member" id="resultList">
+		<result property="userid" column="userid" />
+		<result property="userpwd" column="userpwd" />
+		<result property="username" column="username" />
+		<result property="gender" column="gender" />
+		<result property="age" column="age" />
+		<result property="phone" column="phone" />
+		<result property="email" column="email" />
+		<result property="hobby" column="hobby" />
+		<result property="etc" column="etc" />
+		<result property="enroll_date" column="enroll_date" />
+		<result property="lastmodified" column="lastmodified" />
+
+	</resultMap>
+
+	<select id="loginCheck" parameterType="Member" resultType="Member" resultMap="resultMember">
+		<![CDATA[
+		select * from member where userid = #{userid} and userpwd = #{userpwd}
+		]]>
+	</select>	
+	
+	<select id="selectList" resultMap="resultList">
+		<![CDATA[select * from member]]>
+	</select>
+
+	<select id="selectMember" parameterType="string" resultMap="resultMember">
+		<![CDATA[select * from member where userid = #{userId}]]>
+	</select>
+
+	<select id="dupId" parameterType="string" resultType="_int">
+		<![CDATA[select count(userid) from member where userid = #{userId}]]>
+	</select>
+
+	<insert id="insertMember" parameterType="Member" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		<![CDATA[
+		insert into member values (#{userId}, #{userPwd}, #{userName},
+		#{gender}, #{age}, #{phone}, #{email}, #{hobby}, #{etc},
+		sysdate, sysdate)
+		]]>
+	</insert>
+
+	<update id="updateMember" parameterType="Member" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[
+		update member set userpwd = #{userpwd}, age = #{age}, email =
+		#{email}, phone = #{phone}, hobby = #{hobby}, etc = #{etc} where
+		userid = #{userid}
+		]]>
+	</update>
+
+	<delete id="deleteMember" parameterType="string" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[delete from member where userid = #{userid}]]>
+	</delete> -->
+
+</mapper>

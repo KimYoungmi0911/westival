@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE configuration PUBLIC
+"-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="org.kh.westival.member.model.vo.Member" alias="Member" />
+		<typeAlias type="org.kh.westival.community.model.vo.Community" alias="Community" />
+		<typeAlias type="org.kh.westival.festival.model.vo.Festival" alias="Festival" />
+		<typeAlias type="org.kh.westival.notice.model.vo.Notice" alias="Notice" />
+		<typeAlias type="org.kh.westival.qna.model.vo.Qna" alias="Qna" />
+		<typeAlias type="org.kh.westival.ticket.model.vo.Ticket" alias="Ticket" />
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappers/member-mapper.xml" />
+		<mapper resource="mappers/community-mapper.xml" />
+		<mapper resource="mappers/festival-mapper.xml" />
+		<mapper resource="mappers/notice-mapper.xml" />
+		<mapper resource="mappers/qna-mapper.xml" />
+		<mapper resource="mappers/ticket-mapper.xml" />
+	</mappers>
+</configuration>
+
+<!-- <configuration>
+	<typeAliases>
+		<typeAlias type="org.kh.westival.admin.model.vo.admin" alias="Admin" />
+	</typeAliases>	
+	<mappers>
+		<mapper resource="mappers/admin-mapper.xml" />
+	</mappers>
+</configuration> -->
