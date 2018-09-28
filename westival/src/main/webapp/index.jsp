@@ -20,7 +20,6 @@
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/responsive.css">
 </head>
 
-
 <body>
 
 <div class="super_container">
