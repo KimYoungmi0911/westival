@@ -6,5 +6,5 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @Controller
 @SessionAttributes("festival")
 public class FestivalController {
-	
+
 }
