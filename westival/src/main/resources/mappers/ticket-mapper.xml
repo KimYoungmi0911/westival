@@ -3,22 +3,92 @@
 "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ticketMapper">
-
-	<!-- <resultMap type="Member" id="resultMember">
-		<id property="userid" column="userid" />
-		<result property="userpwd" column="userpwd" />
-		<result property="username" column="username" />
-		<result property="gender" column="gender" />
-		<result property="age" column="age" />
-		<result property="phone" column="phone" />
-		<result property="email" column="email" />
-		<result property="hobby" column="hobby" />
-		<result property="etc" column="etc" />
-		<result property="enroll_date" column="enroll_date" />
-		<result property="lastmodified" column="lastmodified" />
-
+	
+	<!-- resultMap start -->
+	<resultMap type="Ticket" id="resultTicket">
+		<id property="ticket_no" column="ticket_no" />
+		<result property="no" column="no" />
+		<result property="user_id" column="user_id" />
+		<result property="ticket_date" column="ticket_date" />
+		<result property="ticket_count" column="ticket_count" />
+		<result property="pay_type" column="pay_type" />
+		<result property="pay_date" column="pay_date" />
+		<result property="price" column="price" />
+		<result property="state" column="state" />
 	</resultMap>
 	
+	<resultMap type="Festival" id="resultFestival">
+		<id property="no" column="no" />
+		<result property="user_id" column="user_id" />
+		<result property="name" column="name" />
+		<result property="address" column="address" />
+		<result property="original_img_name" column="original_img_name" />
+		<result property="new_img_name" column="new_img_name" />
+		<result property="content" column="content" />
+		<result property="start_date" column="start_date" />
+		<result property="end_date" column="end_date" />
+		<result property="theme" column="theme" />
+		<result property="telephone" column="telephone" />
+		<result property="manager" column="manager" />
+		<result property="ticket" column="ticket" />
+		<result property="file_name" column="file_name" />
+		<result property="tag" column="tag" />
+		<result property="read_count" column="read_count" />
+		<result property="recommend" column="recommend" />
+	</resultMap>
+	
+	<resultMap type="Member" id="resultMember">
+		<id property="user_id" column="user_id" />
+		<result property="user_pwd" column="user_pwd" />
+		<result property="user_name" column="user_name" />
+		<result property="user_birth" column="user_birth" />
+		<result property="user_address" column="user_address" />
+		<result property="user_phone" column="user_phone" />
+		<result property="user_email" column="user_email" />
+		<result property="user_gender" column="user_gender" />
+		<result property="user_confirm_check" column="user_confirm_check" />
+	</resultMap>
+	<!-- resultMap end -->
+	
+	<!-- insert ticket -->
+	<insert id="insertTicket" parameterType="Ticket" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		<![CDATA[
+		insert into tb_ticket values 
+		(to_char(systimestamp, 'yyyymmddhh24missff3'), 
+		#{no}, #{user_id}, #{ticket_date}, #{ticket_count},
+		#{pay_type}, sysdate, #{price}, #{state})
+		]]>
+	</insert>
+	
+	<!-- select ticket -->
+	<select id="selectTicket" parameterType="Ticket" resultMap="resultTicket">
+		<![CDATA[select * from tb_ticket 
+		where no = #{no} 
+		and user_id = #{user_id}
+		and ticket_date = #{ticket_date}
+		and ticket_count = #{ticket_count}
+		and price = #{price}
+		and state = #{state}
+		]]>
+	</select>
+	
+	
+	<!-- select festival -->
+	<select id="selectFestival" resultMap="resultFestival"
+		parameterType="_int">
+		<![CDATA[select * from tb_festival where no = #{no}]]>
+	</select>
+	
+	<!-- select member -->
+	<select id="selectMember" parameterType="string" resultMap="resultMember">
+		<![CDATA[select * from tb_user where user_id = #{user_id}]]>
+	</select>
+	
+	
+		
+
+	<!-- 
 	<resultMap type="Member" id="resultList">
 		<result property="userid" column="userid" />
 		<result property="userpwd" column="userpwd" />
