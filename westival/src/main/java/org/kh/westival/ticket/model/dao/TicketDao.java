@@ -18,22 +18,22 @@ public class TicketDao {
 	//예매번호 생성
 	public int insertTicket(Ticket ticket) {
 		System.out.println("생성왜안?");
-		return sqlSession.insert("insertTicket", ticket);
+		return sqlSession.insert("ticketMapper.insertTicket", ticket);
 	}
 	
 	//결제시 사용할 축제정보
 	public Festival selectFestival(int no) {
-		return (Festival)sqlSession.selectOne("selectFestival", no);
+		return (Festival)sqlSession.selectOne("ticketMapper.selectFestival", no);
 	}
 
 	//결제시 사용할 회원정보
 	public Member selectMember(String user_id) {
-		return (Member)sqlSession.selectOne("selectMember", user_id);
+		return (Member)sqlSession.selectOne("ticketMapper.selectMember", user_id);
 	}
 	
 	//결제시 사용할 예매정보
 	public Ticket selectTicket(Ticket ticket) {
-		return (Ticket)sqlSession.selectOne("selectTicket", ticket);
+		return (Ticket)sqlSession.selectOne("ticketMapper.selectTicket", ticket);
 	}
 	
 	/*//결제완료시

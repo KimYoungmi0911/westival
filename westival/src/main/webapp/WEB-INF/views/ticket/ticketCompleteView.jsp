@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:import url="../../../header.jsp" />
+<c:set var="import_uid"/> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,10 +22,131 @@
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+<script>
+
+	//css
+	$(function(){
+		$("input:text").prop("readonly", true);
+		$("input").css("border", "none");
+		$("input:text").css("width", "100%");
+		$("#ticket_count").prop("min", "1");
+		
+		//예매수량 변경시
+		$("#ticket_count").on("change", function(){
+			var resultPrice = ${ticket.price} * $("#ticket_count").val();
+			$("#price").val(resultPrice);
+		});
+		
+		//결제하기 클릭시
+		$("#payBtn").on("click", function(){
+			var payType = $("#pay_type:checked").val();
+			if(payType == "카드"){
+				payCard();
+			}else{
+				payCash();
+			}
+		});
+		
+		//취소하기 클릭시
+	});
+
+	
+
+	//결제 API
+	var IMP = window.IMP; // 생략가능
+	IMP.init('imp69614733'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+	
+	function payCard(){
+		IMP.request_pay({
+		    pg : 'inicis', // version 1.1.0부터 지원.
+		    pay_method : 'card',
+		    merchant_uid : 'merchant_' + new Date().getTime(),
+		    name : '${festival.name}',
+		    amount : '${ticket.price}',
+		    buyer_email : 'ky0203mm@gmail.com', //${member.user_email}
+		    buyer_name : '${userid}',
+		    buyer_tel : '${member.user_phone}', //
+		    buyer_addr : '${member.user_address}', //
+		    //buyer_postcode : '123-456',
+		    company : 'Westival',
+		    m_redirect_url : 'https://www.yourdomain.com/payments/complete'    
+		}, function(rsp) {
+		    if ( rsp.success ) {
+		        var msg = '결제가 완료되었습니다.';
+		        msg += '고유ID : ' + rsp.imp_uid;
+		        msg += '상점 거래ID : ' + rsp.merchant_uid;
+		        msg += '결제 금액 : ' + rsp.paid_amount;
+		        msg += '카드 승인번호 : ' + rsp.apply_num;
+		    } else {
+		        var msg = '결제에 실패하였습니다.';
+		        msg += '에러내용 : ' + rsp.error_msg;
+		    }
+		    alert(msg);
+		    if(rsp.success){
+		    	$("#import_uid").val(rsp.imp_uid);
+		    	$("#fsubmit").submit();
+		    }
+		});
+		return false;
+	}
+
+	function payCash(){
+		IMP.request_pay({
+		    pg : 'inicis', // version 1.1.0부터 지원.
+		    pay_method : 'vbank',
+		    merchant_uid : 'merchant_' + new Date().getTime(),
+		    name : '${festival.name}',
+		    amount : '${ticket.price}',
+		    buyer_email : 'ky0203mm@gmail.com', //${member.user_email}
+		    buyer_name : '${userid}',
+		    buyer_tel : '010-1234-5678', //${member.user_phone}
+		    buyer_addr : '서울특별시 강남구 삼성동', //${member.user_address}
+		    //buyer_postcode : '123-456',
+		    m_redirect_url : 'https://www.yourdomain.com/payments/complete',
+		    company : 'Westival',
+		    redirect_after : 'ticketComplete.do'
+		}, function(rsp) {
+		    if ( rsp.success ) {
+		        var msg = '결제가 완료되었습니다.';
+		        /* msg += '고유ID : ' + rsp.imp_uid;
+		        msg += '상점 거래ID : ' + rsp.merchant_uid;
+		        msg += '결제 금액 : ' + rsp.paid_amount;
+		        msg += '카드 승인번호 : ' + rsp.apply_num; */
+		        //ticketComplete(1);
+		    } else {
+		        var msg = '결제에 실패하였습니다.';
+		        msg += '에러내용 : ' + rsp.error_msg;
+		    }
+		    alert(msg);
+		    if(rsp.success){
+		    	 $("#fsubmit").submit();
+		    }
+		});
+		return false;
+	}
+	
+	//결제완료시
+	function ticketComplete(result){
+		if(result == 1){
+			
+			location.replace = ("ticketComplete.do");
+			alert("결제완료 페이지로 이동");
+		}else {
+			alert("결제실패 페이지");
+		}
+		
+		return false;
+	} 
+	
+	
+	
+	
+	
+</script>
 
 </head>
 
-<body>
+<body>dd
 
 <div class="super_container">
 	
@@ -138,7 +260,7 @@
 	</div>
 
 	<!-- Intro -->
-	<h1>예매완료</h1>
+
 	<div class="intro">
 		<div class="container">
 			<div class="row">
@@ -147,6 +269,7 @@
 				</div>
 				<div class="col-lg-5">
 				<h3 align="center"></h3>
+				<form id="fsubmit" action="ticketComplete.do" method="post">
 					<table class="table">
 					  <thead>
 					    <tr>
@@ -157,34 +280,51 @@
 					  <tbody>
 					    <tr>
 					      <th scope="row">축제명</th>
-					      <td>${festival.name }</td>
+					      <td><input value="${festival.name }"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">축제번호</th>
-					      <td>${festival.no }</td>
+					      <td><input name="no" value="${festival.no }"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">테마</th>
-					      <td>${festival.theme }</td>
+					      <td><input value="${festival.theme }"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">진행일정</th>
-					      <td>${festival.start_date } ~ ${festival.end_date }</td>
+					      <td><input value="${festival.start_date } ~ ${festival.end_date }"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">예매날짜</th>
-					      <td>${ticket.ticket_date }</td>
+					      <td><input name="ticket_date" type="date" value="${ticket.ticket_date }"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">예매수량</th>
-					      <td>${ticket.ticket_count }</td>
+					      <td><input id="ticket_count" name="ticket_count" type="number" value="${ticket.ticket_count }"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">합계</th>
-					      <td>${ticket.price }</td>
-					    </tr>					  
+					      <td><input id="price" name="price" value="${ticket.price }"></td>
+					    </tr>	
+					    <tr>
+					      <th scope="row">결제방식</th>
+					      <td><input type="radio" id="pay_type" name="pay_type" value="카드" checked>카드
+					      	  <input type="radio" id="pay_type" name="pay_type" value="가상계좌">가상계좌
+					      </td>
+					    </tr>				  
 					  </tbody>
 					</table>
+					<input type="hidden" name="user_id" value="test">
+					<input type="hidden" name="state" value="결제완료">
+					<input type="hidden" id="import_uid" name="import_uid">
+					<!-- <div style="float:right;width:800px;"> -->
+					<div style="float: right;">
+						<button id="payBtn" type="button" class="btn btn-danger">결제하기</button>&nbsp;&nbsp;&nbsp;&nbsp;
+						<button id="cancleBtn" type="button" class="btn btn-outline-danger">취소하기</button>
+					</div>
+					<!-- </div> -->
+				</form>
+				
 					
 					<!-- <div class="intro_content">
 						<div class="intro_title">we have the best tours</div>
@@ -193,9 +333,8 @@
 					</div> -->
 					
 				</div>
-				<div class="button intro_button" style="position: relative; left: 550px;"><div class="button_bcg"></div><a href="#">결제<span></span><span></span><span></span></a></div>
-				<div class="button intro_button" style="position: relative; right: 300px;"><div class="button_bcg"></div><a href="#">취소<span></span><span></span><span></span></a></div>
-				<button type="button" id="payBtn" onclick="pay()">결제테스트</button>
+				<!-- <div class="button intro_button" style="position: relative; left: 550px;"><div class="button_bcg"></div><a href="#">결제<span></span><span></span><span></span></a></div>
+				<div class="button intro_button" style="position: relative; right: 300px;"><div class="button_bcg"></div><a href="#">취소<span></span><span></span><span></span></a></div> -->
 			</div>
 		</div>
 	</div>
@@ -206,7 +345,9 @@
 		<div class="container">
 			<div class="row">
 				<div class="col text-center">
-					<div class="section_title">years statistics</div>
+					<div class="section_title">
+						sss
+					</div>
 				</div>
 			</div>
 			<div class="row">

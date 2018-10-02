@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:import url="../../../header.jsp" />
+<%-- <c:import url="../../../header.jsp" /> --%>
+<c:set var="import_uid"/> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,26 +12,88 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
-<link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/owl.carousel.css">
-<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
-<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/animate.css">
-<link rel="stylesheet" type="text/css" href="styles/about_styles.css">
-<link rel="stylesheet" type="text/css" href="styles/about_responsive.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
+<link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/animate.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_styles.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_responsive.css">
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <script>
+
+	//css
+	$(function(){
+		$("input:text").prop("readonly", true);
+		$("input").css("border", "none");
+		$("input:text").css("width", "100%");
+		$("#ticket_count").prop("min", "1");
+		
+		//예매수량 변경시
+		$("#ticket_count").on("change", function(){
+			var resultPrice = ${ticket.price} * $("#ticket_count").val();
+			$("#price").val(resultPrice);
+		});
+		
+		//결제하기 클릭시
+		$("#payBtn").on("click", function(){
+			var payType = $("#pay_type:checked").val();
+			if(payType == "카드"){
+				payCard();
+			}else{
+				payCash();
+			}
+		});
+		
+		//취소하기 클릭시
+	});
+
 	
-	/* 결제 API */
+
+	//결제 API
 	var IMP = window.IMP; // 생략가능
 	IMP.init('imp69614733'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 	
-	function pay(){
+	function payCard(){
 		IMP.request_pay({
 		    pg : 'inicis', // version 1.1.0부터 지원.
 		    pay_method : 'card',
+		    merchant_uid : 'merchant_' + new Date().getTime(),
+		    name : '${festival.name}',
+		    amount : $("#price").val(),
+		    buyer_email : 'ky0203mm@gmail.com', //${member.user_email}
+		    buyer_name : '${userid}',
+		    buyer_tel : '${member.user_phone}', //
+		    buyer_addr : '${member.user_address}', //
+		    //buyer_postcode : '123-456',
+		    company : 'Westival',
+		    m_redirect_url : 'https://www.yourdomain.com/payments/complete'    
+		}, function(rsp) {
+		    if ( rsp.success ) {
+		        var msg = '결제가 완료되었습니다.';
+		        msg += '고유ID : ' + rsp.imp_uid;
+		        msg += '상점 거래ID : ' + rsp.merchant_uid;
+		        msg += '결제 금액 : ' + rsp.paid_amount;
+		        msg += '카드 승인번호 : ' + rsp.apply_num;
+		    } else {
+		        var msg = '결제에 실패하였습니다.';
+		        msg += '에러내용 : ' + rsp.error_msg;
+		    }
+		    alert(msg);
+		    if(rsp.success){
+		    	$("#import_uid").val(rsp.imp_uid);
+		    	$("#fsubmit").submit();
+		    }
+		});
+		return false;
+	}
+
+	function payCash(){
+		IMP.request_pay({
+		    pg : 'inicis', // version 1.1.0부터 지원.
+		    pay_method : 'vbank',
 		    merchant_uid : 'merchant_' + new Date().getTime(),
 		    name : '${festival.name}',
 		    amount : '${ticket.price}',
@@ -62,6 +125,7 @@
 		return false;
 	}
 	
+	//결제완료시
 	function ticketComplete(result){
 		if(result == 1){
 			
@@ -73,7 +137,13 @@
 		
 		return false;
 	} 
+	
+	
+	
+	
+	
 </script>
+
 </head>
 
 <body>dd
@@ -191,14 +261,23 @@
 
 	<!-- Intro -->
 
-	<div class="intro">
+	<div class="intro" style="background:white;">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-7">
-					<div class="intro_image"><img src="/westival/resources/images/intro.png" alt=""></div>
+					<!-- <div class="intro_image"><img src="/westival/resources/images/2561914_image2_1.jpg" alt=""></div> -->
+					<!-- <div class="card" style="width: 18rem;"> -->
+					<!-- <div class=""> -->
+					<div class="intro_item_content d-flex flex-column align-items-center justify-content-center">
+							
+						
+					  <img class="img-thumbnail" style="width:500px;height:400px;" src="/westival/resources/images/2561914_image2_1.jpg" alt="">
+					</div>  
+					<!-- </div> -->
+					<!-- </div> -->
 				</div>
 				<div class="col-lg-5">
-				<h3 align="center"></h3>
+				<div class="intro_content">
 				<form id="fsubmit" action="ticketComplete.do" method="post">
 					<table class="table">
 					  <thead>
@@ -210,61 +289,74 @@
 					  <tbody>
 					    <tr>
 					      <th scope="row">축제명</th>
-					      <td>${festival.name }</td>
+					      <td><input value="${festival.name }"></td>
 					    </tr>
 					    <tr>
-					      <th id="no" scope="row">축제번호</th>
-					      <td>${festival.no }</td>
+					      <th scope="row">축제번호</th>
+					      <td><input name="no" value="${festival.no }"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">테마</th>
-					      <td>${festival.theme }</td>
+					      <td><input value="${festival.theme }"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">진행일정</th>
-					      <td>${festival.start_date } ~ ${festival.end_date }</td>
+					      <td><input value="${festival.start_date } ~ ${festival.end_date }"></td>
 					    </tr>
 					    <tr>
-					      <th id="ticket_date" scope="row">예매날짜</th>
-					      <td>${ticket.ticket_date }</td>
+					      <th scope="row">예매날짜</th>
+					      <td><input name="ticket_date" type="date" value="${ticket.ticket_date }"></td>
 					    </tr>
 					    <tr>
-					      <th id="ticket_count" scope="row">예매수량</th>
-					      <td>${ticket.ticket_count }</td>
+					      <th scope="row">예매수량</th>
+					      <td><input id="ticket_count" name="ticket_count" type="number" value="${ticket.ticket_count }"></td>
 					    </tr>
 					    <tr>
-					      <th id='price' scope="row">합계</th>
-					      <td>${ticket.price }</td>
-					    </tr>					  
+					      <th scope="row">합계</th>
+					      <td><input id="price" name="price" value="${ticket.price }"></td>
+					    </tr>	
+					    <tr>
+					      <th scope="row">결제방식</th>
+					      <td><input type="radio" id="pay_type" name="pay_type" value="카드" checked>카드
+					      	  <input type="radio" id="pay_type" name="pay_type" value="가상계좌">가상계좌
+					      </td>
+					    </tr>				  
 					  </tbody>
 					</table>
-					<input id="user_id" value="test">
-					<input id="pay_type" value="카드">
-					<input id="state" value="결제완료">
+					<input type="hidden" name="user_id" value="test">
+					<input type="hidden" name="state" value="결제완료">
+					<input type="hidden" id="import_uid" name="import_uid">
+					<!-- <div style="float:right;width:800px;"> -->
+					<div style="float: right;">
+						<button id="payBtn" type="button" class="btn btn-danger">결제하기</button>&nbsp;&nbsp;&nbsp;&nbsp;
+						<button id="cancleBtn" type="button" class="btn btn-outline-danger">취소하기</button>
+					</div>
+					<!-- </div> -->
 				</form>
 				
 					
-					<!-- <div class="intro_content">
-						<div class="intro_title">we have the best tours</div>
+					
+						<!-- <div class="intro_title">we have the best tours</div>
 						<p class="intro_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus quis vulputate eros, iaculis consequat nisl. Nunc et suscipit urna. Integer elementum orci eu vehicula pretium. Donec bibendum tristique condimentum. Aenean in lacus ligula. Phasellus euismod gravida eros. Aenean nec ipsum aliquet, pharetra magna id, interdum sapien. Etiam id lorem eu nisl pellentesque semper. Nullam tincidunt metus placerat, suscipit leo ut, tempus nulla. Fusce at eleifend tellus. Ut eleifend dui nunc, non fermentum quam placerat non. Etiam venenatis nibh augue, sed eleifend justo tristique eu</p>
-						<div class="button intro_button"><div class="button_bcg"></div><a href="#">explore now<span></span><span></span><span></span></a></div>
-					</div> -->
+						<div class="button intro_button"><div class="button_bcg"></div><a href="#">explore now<span></span><span></span><span></span></a></div> -->
+					</div>
 					
 				</div>
-				<div class="button intro_button" style="position: relative; left: 550px;"><div class="button_bcg"></div><a href="#">결제<span></span><span></span><span></span></a></div>
-				<div class="button intro_button" style="position: relative; right: 300px;"><div class="button_bcg"></div><a href="#">취소<span></span><span></span><span></span></a></div>
-				<button type="button" id="payBtn" onclick="pay()">결제테스트</button>
+				<!-- <div class="button intro_button" style="position: relative; left: 550px;"><div class="button_bcg"></div><a href="#">결제<span></span><span></span><span></span></a></div>
+				<div class="button intro_button" style="position: relative; right: 300px;"><div class="button_bcg"></div><a href="#">취소<span></span><span></span><span></span></a></div> -->
 			</div>
 		</div>
 	</div>
 
 	<!-- Stats -->
 
-	<div class="stats">
+	<!-- <div class="stats">
 		<div class="container">
 			<div class="row">
 				<div class="col text-center">
-					<div class="section_title">years statistics</div>
+					<div class="section_title">
+						sss
+					</div>
 				</div>
 			</div>
 			<div class="row">
@@ -284,7 +376,7 @@
 				<div class="col">
 					<div class="stats_contents">
 						
-						<!-- Stats Item -->
+						Stats Item
 						<div class="stats_item d-flex flex-md-row flex-column clearfix">
 							<div class="stats_last order-md-1 order-3">
 								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
@@ -313,7 +405,7 @@
 							</div>
 						</div>
 						
-						<!-- Stats Item -->
+						Stats Item
 						<div class="stats_item d-flex flex-md-row flex-column clearfix">
 							<div class="stats_last order-md-1 order-3">
 								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
@@ -342,7 +434,7 @@
 							</div>
 						</div>
 
-						<!-- Stats Item -->
+						Stats Item
 						<div class="stats_item d-flex flex-md-row flex-column clearfix">
 							<div class="stats_last order-md-1 order-3">
 								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
@@ -371,7 +463,7 @@
 							</div>
 						</div>
 
-						<!-- Stats Item -->
+						Stats Item
 						<div class="stats_item d-flex flex-md-row flex-column clearfix">
 							<div class="stats_last order-md-1 order-3">
 								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
@@ -404,11 +496,11 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<!-- Add -->
 
-	<div class="add">
+	<!-- <div class="add">
 		<div class="container">
 			<div class="row">
 				<div class="col">
@@ -423,7 +515,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<!-- Milestones -->
 
@@ -614,18 +706,18 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 </div>
 
-<script src="js/jquery-3.2.1.min.js"></script>
-<script src="styles/bootstrap4/popper.js"></script>
-<script src="styles/bootstrap4/bootstrap.min.js"></script>
-<script src="plugins/greensock/TweenMax.min.js"></script>
-<script src="plugins/greensock/TimelineMax.min.js"></script>
-<script src="plugins/scrollmagic/ScrollMagic.min.js"></script>
-<script src="plugins/greensock/animation.gsap.min.js"></script>
-<script src="plugins/greensock/ScrollToPlugin.min.js"></script>
-<script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
-<script src="plugins/easing/easing.js"></script>
-<script src="plugins/parallax-js-master/parallax.min.js"></script>
-<script src="js/about_custom.js"></script>
+<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
+<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<script src="/westival/resources/plugins/greensock/TweenMax.min.js"></script>
+<script src="/westival/resources/plugins/greensock/TimelineMax.min.js"></script>
+<script src="/westival/resources/plugins/scrollmagic/ScrollMagic.min.js"></script>
+<script src="/westival/resources/plugins/greensock/animation.gsap.min.js"></script>
+<script src="/westival/resources/plugins/greensock/ScrollToPlugin.min.js"></script>
+<script src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+<script src="/westival/resources/plugins/easing/easing.js"></script>
+<script src="/westival/resources/plugins/parallax-js-master/parallax.min.js"></script>
+<script src="/westival/resources/js/about_custom.js"></script>
 
 </body>
 

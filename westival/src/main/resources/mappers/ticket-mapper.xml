@@ -15,6 +15,7 @@
 		<result property="pay_date" column="pay_date" />
 		<result property="price" column="price" />
 		<result property="state" column="state" />
+		<result property="import_uid" column="import_uid" />
 	</resultMap>
 	
 	<resultMap type="Festival" id="resultFestival">
@@ -57,19 +58,14 @@
 		insert into tb_ticket values 
 		(to_char(systimestamp, 'yyyymmddhh24missff3'), 
 		#{no}, #{user_id}, #{ticket_date}, #{ticket_count},
-		#{pay_type}, sysdate, #{price}, #{state})
+		#{pay_type}, sysdate, #{price}, #{state}, #{import_uid})
 		]]>
 	</insert>
 	
 	<!-- select ticket -->
 	<select id="selectTicket" parameterType="Ticket" resultMap="resultTicket">
 		<![CDATA[select * from tb_ticket 
-		where no = #{no} 
-		and user_id = #{user_id}
-		and ticket_date = #{ticket_date}
-		and ticket_count = #{ticket_count}
-		and price = #{price}
-		and state = #{state}
+		where import_uid = #{import_uid}
 		]]>
 	</select>
 	

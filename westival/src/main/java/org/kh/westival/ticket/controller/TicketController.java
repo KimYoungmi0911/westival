@@ -40,8 +40,8 @@ public class TicketController {
 		mv.addObject("member", tService.selectMember(user_id));
 		mv.addObject("festival", tService.selectFestival(no));
 		mv.addObject("ticket", ticket);
-
 		mv.setViewName("ticket/ticketView");
+		
 		return mv;
 	}
 
@@ -54,7 +54,8 @@ public class TicketController {
 			@RequestParam(value="price") int price,
 			@RequestParam(value="user_id") String user_id,
 			@RequestParam(value="pay_type") String pay_type,
-			@RequestParam(value="state") String state) {
+			@RequestParam(value="state") String state, 
+			@RequestParam(value="import_uid") String import_uid) {
 		
 		ticket.setNo(no);
 		ticket.setUser_id(user_id);
@@ -63,6 +64,7 @@ public class TicketController {
 		ticket.setPay_type(pay_type);
 		ticket.setPrice(price);
 		ticket.setState(state);
+		ticket.setImport_uid(import_uid);
 		
 		int result = tService.insertTicket(ticket);
 		if(result > 0)
@@ -71,8 +73,8 @@ public class TicketController {
 		mv.addObject("member", tService.selectMember(user_id));
 		mv.addObject("festival", tService.selectFestival(no));
 		mv.addObject("ticket", ticket);
-		
 		mv.setViewName("ticket/ticketCompleteView");
+		
 		return mv;
 	}
 }
