@@ -23,7 +23,7 @@
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <script>
 	
-	
+	/* 결제 API */
 	var IMP = window.IMP; // 생략가능
 	IMP.init('imp69614733'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 	
@@ -56,7 +56,7 @@
 		    }
 		    alert(msg);
 		    if(rsp.success){
-		    	 ticketComplete(1);
+		    	 $("#fsubmit").submit();
 		    }
 		});
 		return false;
@@ -199,6 +199,7 @@
 				</div>
 				<div class="col-lg-5">
 				<h3 align="center"></h3>
+				<form id="fsubmit" action="ticketComplete.do" method="post">
 					<table class="table">
 					  <thead>
 					    <tr>
@@ -212,7 +213,7 @@
 					      <td>${festival.name }</td>
 					    </tr>
 					    <tr>
-					      <th scope="row">축제번호</th>
+					      <th id="no" scope="row">축제번호</th>
 					      <td>${festival.no }</td>
 					    </tr>
 					    <tr>
@@ -224,19 +225,24 @@
 					      <td>${festival.start_date } ~ ${festival.end_date }</td>
 					    </tr>
 					    <tr>
-					      <th scope="row">예매날짜</th>
+					      <th id="ticket_date" scope="row">예매날짜</th>
 					      <td>${ticket.ticket_date }</td>
 					    </tr>
 					    <tr>
-					      <th scope="row">예매수량</th>
+					      <th id="ticket_count" scope="row">예매수량</th>
 					      <td>${ticket.ticket_count }</td>
 					    </tr>
 					    <tr>
-					      <th scope="row">합계</th>
+					      <th id='price' scope="row">합계</th>
 					      <td>${ticket.price }</td>
 					    </tr>					  
 					  </tbody>
 					</table>
+					<input id="user_id" value="test">
+					<input id="pay_type" value="카드">
+					<input id="state" value="결제완료">
+				</form>
+				
 					
 					<!-- <div class="intro_content">
 						<div class="intro_title">we have the best tours</div>
