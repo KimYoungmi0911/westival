@@ -6,10 +6,16 @@
 	<typeAliases>
 		<typeAlias type="org.kh.westival.member.model.vo.Member" alias="Member" />
 		<typeAlias type="org.kh.westival.community.model.vo.Community" alias="Community" />
+		<typeAlias type="org.kh.westival.community.model.vo.CommunityReply" alias="CommunityReply" />	
 		<typeAlias type="org.kh.westival.festival.model.vo.Festival" alias="Festival" />
+		<typeAlias type="org.kh.westival.festival.model.vo.Recommend" alias="Recommend" />
+		<typeAlias type="org.kh.westival.festival.model.vo.Scrap" alias="Scrap" />
+		<typeAlias type="org.kh.westival.festival.model.vo.TicketOption" alias="TicketOption" />	
 		<typeAlias type="org.kh.westival.notice.model.vo.Notice" alias="Notice" />
 		<typeAlias type="org.kh.westival.qna.model.vo.Qna" alias="Qna" />
+		<typeAlias type="org.kh.westival.qna.model.vo.QnaReply" alias="QnaReply" />	
 		<typeAlias type="org.kh.westival.ticket.model.vo.Ticket" alias="Ticket" />
+		<typeAlias type="org.kh.westival.ticket.model.vo.Refund" alias="Refund" />
 	</typeAliases>
 	
 	<mappers>

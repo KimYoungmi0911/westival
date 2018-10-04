@@ -3,6 +3,7 @@ package org.kh.westival.ticket.model.service;
 import java.util.Map;
 
 import org.kh.westival.festival.model.vo.Festival;
+import org.kh.westival.festival.model.vo.TicketOption;
 import org.kh.westival.member.model.vo.Member;
 import org.kh.westival.ticket.model.dao.TicketDao;
 import org.kh.westival.ticket.model.vo.Ticket;
@@ -28,6 +29,12 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public Member selectMember(String user_id) {
 		return tDao.selectMember(user_id);
+	}
+
+	// 결제시 사용할 티켓정보
+	@Override
+	public TicketOption selectTicketOption(int no) {
+		return tDao.selectTicketOption(no);
 	}
 
 	// 결제완료시 예매정보 등록

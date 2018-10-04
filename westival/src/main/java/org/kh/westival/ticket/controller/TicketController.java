@@ -24,22 +24,19 @@ public class TicketController {
 		return "/ticket/ticketView";
 	}
 
-	// 예매하기 메소드 호출시
-	// no, user_id, ticket_date, ticket_count, price 받아옴
+	// 예매하기 호출시
 	@RequestMapping(value = "ticketing.do")
-	public ModelAndView ticketing(ModelAndView mv, Ticket ticket, @RequestParam(value = "user_id") String user_id,
-			@RequestParam(value = "no") int no, @RequestParam(value = "ticket_date") Date ticket_date,
-			@RequestParam(value = "ticket_count") int ticket_count, @RequestParam(value = "price") int price) {
+	public ModelAndView ticketing(ModelAndView mv, Ticket ticket, 
+			@RequestParam(value = "user_id") String user_id,
+			@RequestParam(value = "no") int no) {
 
 		ticket.setUser_id(user_id);
 		ticket.setNo(no);
-		ticket.setTicket_date(ticket_date);
-		ticket.setTicket_count(ticket_count);
-		ticket.setPrice(price);
-
+		
 		mv.addObject("member", tService.selectMember(user_id));
 		mv.addObject("festival", tService.selectFestival(no));
-		mv.addObject("ticket", ticket);
+		mv.addObject("ticketOption", tService.selectTicketOption(no));
+
 		mv.setViewName("ticket/ticketView");
 		
 		return mv;
@@ -70,7 +67,7 @@ public class TicketController {
 		if(result > 0)
 			ticket = tService.selectTicket(ticket);
 		
-		mv.addObject("member", tService.selectMember(user_id));
+		//mv.addObject("member", tService.selectMember(user_id));
 		mv.addObject("festival", tService.selectFestival(no));
 		mv.addObject("ticket", ticket);
 		mv.setViewName("ticket/ticketCompleteView");

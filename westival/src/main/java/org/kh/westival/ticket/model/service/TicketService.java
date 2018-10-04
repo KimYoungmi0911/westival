@@ -1,6 +1,7 @@
 package org.kh.westival.ticket.model.service;
 
 import org.kh.westival.festival.model.vo.Festival;
+import org.kh.westival.festival.model.vo.TicketOption;
 import org.kh.westival.member.model.vo.Member;
 import org.kh.westival.ticket.model.vo.Ticket;
 
@@ -14,6 +15,8 @@ public interface TicketService {
 	Member selectMember(String user_id);
 	
 	Ticket selectTicket(Ticket ticket);
+
+	TicketOption selectTicketOption(int no);
 	
 
 }

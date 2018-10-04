@@ -30,7 +30,7 @@
 		<result property="end_date" column="end_date" />
 		<result property="theme" column="theme" />
 		<result property="telephone" column="telephone" />
-		<result property="manager" column="manager" />
+		<result property="manage" column="manage" />
 		<result property="ticket" column="ticket" />
 		<result property="file_name" column="file_name" />
 		<result property="tag" column="tag" />
@@ -48,6 +48,23 @@
 		<result property="user_email" column="user_email" />
 		<result property="user_gender" column="user_gender" />
 		<result property="user_confirm_check" column="user_confirm_check" />
+	</resultMap>
+	
+	<resultMap type="TicketOption" id="resultTicketOption">
+		<id property="ticket_no" column="ticket_no" />
+		<result property="user_id" column="user_id" />
+		<result property="no" column="no" />
+		<result property="ticket_name" column="ticket_name" />
+		<result property="ticket_price" column="ticket_price" />
+		<result property="ticket_quantity" column="ticket_quantity" />
+		<result property="company_name" column="company_name" />
+		<result property="ceo_name" column="ceo_name" />
+		<result property="company_no" column="company_no" />
+		<result property="phone" column="phone" />
+		<result property="bank_name" column="bank_name" />
+		<result property="account_holder_name" column="account_holder_name" />
+		<result property="account_no" column="account_no" />
+		<result property="registration_date" column="registration_date" />
 	</resultMap>
 	<!-- resultMap end -->
 	
@@ -80,6 +97,13 @@
 	<select id="selectMember" parameterType="string" resultMap="resultMember">
 		<![CDATA[select * from tb_user where user_id = #{user_id}]]>
 	</select>
+	
+	<!-- select ticket option -->
+	<select id="selectTicketOption" parameterType="_int" resultMap="resultTicketOption">
+		<![CDATA[select * from tb_ticket_option where no = #{no}]]>
+	</select>
+	
+	
 	
 	
 		

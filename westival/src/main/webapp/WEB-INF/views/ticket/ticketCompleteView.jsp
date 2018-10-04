@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:import url="../../../header.jsp" />
+<%-- <c:import url="../../../header.jsp" /> --%>
 <c:set var="import_uid"/> 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,141 +12,40 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
-<link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/owl.carousel.css">
-<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
-<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/animate.css">
-<link rel="stylesheet" type="text/css" href="styles/about_styles.css">
-<link rel="stylesheet" type="text/css" href="styles/about_responsive.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
+<link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/animate.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_styles.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_responsive.css">
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-<script>
+<style type="text/css"></style>
 
-	//css
+<script>
+	
+	
 	$(function(){
+		
+		//css
 		$("input:text").prop("readonly", true);
 		$("input").css("border", "none");
 		$("input:text").css("width", "100%");
-		$("#ticket_count").prop("min", "1");
+		$//("#ticket_count").prop("min", "1");
+		//$("#ticket_count").css("height", "30px").css("width", "60px");
+		//$("#ticket_date").css("height", "30px").css("width", "180px");
+		//$("#ticket_date").css("font-size", "13");
+	    //font-size: 13px;
 		
-		//예매수량 변경시
-		$("#ticket_count").on("change", function(){
-			var resultPrice = ${ticket.price} * $("#ticket_count").val();
-			$("#price").val(resultPrice);
-		});
-		
-		//결제하기 클릭시
-		$("#payBtn").on("click", function(){
-			var payType = $("#pay_type:checked").val();
-			if(payType == "카드"){
-				payCard();
-			}else{
-				payCash();
-			}
-		});
-		
-		//취소하기 클릭시
 	});
 
-	
-
-	//결제 API
-	var IMP = window.IMP; // 생략가능
-	IMP.init('imp69614733'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
-	
-	function payCard(){
-		IMP.request_pay({
-		    pg : 'inicis', // version 1.1.0부터 지원.
-		    pay_method : 'card',
-		    merchant_uid : 'merchant_' + new Date().getTime(),
-		    name : '${festival.name}',
-		    amount : '${ticket.price}',
-		    buyer_email : 'ky0203mm@gmail.com', //${member.user_email}
-		    buyer_name : '${userid}',
-		    buyer_tel : '${member.user_phone}', //
-		    buyer_addr : '${member.user_address}', //
-		    //buyer_postcode : '123-456',
-		    company : 'Westival',
-		    m_redirect_url : 'https://www.yourdomain.com/payments/complete'    
-		}, function(rsp) {
-		    if ( rsp.success ) {
-		        var msg = '결제가 완료되었습니다.';
-		        msg += '고유ID : ' + rsp.imp_uid;
-		        msg += '상점 거래ID : ' + rsp.merchant_uid;
-		        msg += '결제 금액 : ' + rsp.paid_amount;
-		        msg += '카드 승인번호 : ' + rsp.apply_num;
-		    } else {
-		        var msg = '결제에 실패하였습니다.';
-		        msg += '에러내용 : ' + rsp.error_msg;
-		    }
-		    alert(msg);
-		    if(rsp.success){
-		    	$("#import_uid").val(rsp.imp_uid);
-		    	$("#fsubmit").submit();
-		    }
-		});
-		return false;
-	}
-
-	function payCash(){
-		IMP.request_pay({
-		    pg : 'inicis', // version 1.1.0부터 지원.
-		    pay_method : 'vbank',
-		    merchant_uid : 'merchant_' + new Date().getTime(),
-		    name : '${festival.name}',
-		    amount : '${ticket.price}',
-		    buyer_email : 'ky0203mm@gmail.com', //${member.user_email}
-		    buyer_name : '${userid}',
-		    buyer_tel : '010-1234-5678', //${member.user_phone}
-		    buyer_addr : '서울특별시 강남구 삼성동', //${member.user_address}
-		    //buyer_postcode : '123-456',
-		    m_redirect_url : 'https://www.yourdomain.com/payments/complete',
-		    company : 'Westival',
-		    redirect_after : 'ticketComplete.do'
-		}, function(rsp) {
-		    if ( rsp.success ) {
-		        var msg = '결제가 완료되었습니다.';
-		        /* msg += '고유ID : ' + rsp.imp_uid;
-		        msg += '상점 거래ID : ' + rsp.merchant_uid;
-		        msg += '결제 금액 : ' + rsp.paid_amount;
-		        msg += '카드 승인번호 : ' + rsp.apply_num; */
-		        //ticketComplete(1);
-		    } else {
-		        var msg = '결제에 실패하였습니다.';
-		        msg += '에러내용 : ' + rsp.error_msg;
-		    }
-		    alert(msg);
-		    if(rsp.success){
-		    	 $("#fsubmit").submit();
-		    }
-		});
-		return false;
-	}
-	
-	//결제완료시
-	function ticketComplete(result){
-		if(result == 1){
-			
-			location.replace = ("ticketComplete.do");
-			alert("결제완료 페이지로 이동");
-		}else {
-			alert("결제실패 페이지");
-		}
-		
-		return false;
-	} 
-	
-	
-	
-	
-	
 </script>
 
 </head>
 
-<body>dd
+<body>
 
 <div class="super_container">
 	
@@ -255,29 +154,36 @@
 	<div class="home">
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/about_background.jpg"></div>
 		<div class="home_content">
-			<div class="home_title">about us</div>
+			<div class="home_title">예매완료</div>
 		</div>
 	</div>
 
 	<!-- Intro -->
 
-	<div class="intro">
+	<div class="intro" style="background:white;">
+	<h2 class="home_title" style="text-align:center;color:black;">예매가 완료되었습니다!</h2><br><br><br><br>
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-7">
-					<div class="intro_image"><img src="/westival/resources/images/intro.png" alt=""></div>
+					<div class="intro_item_content d-flex flex-column align-items-center justify-content-center">
+					  <img class="img-thumbnail" style="width:550px;height:550px;" src="/westival/resources/images/2561914_image2_1.jpg" alt="">
+					</div>  
 				</div>
 				<div class="col-lg-5">
-				<h3 align="center"></h3>
+				<div class="intro_content">
 				<form id="fsubmit" action="ticketComplete.do" method="post">
 					<table class="table">
 					  <thead>
 					    <tr>
-					      <th scope="col" colspan="2"><h3 align="center">예매정보</h3></th>
-					      <!-- <th scope="col">First</th> -->
+					      <th scope="col" colspan="2" class="section_title" style='text-align:center;vertical-align:middle'>예매정보</th>
+					      
 					    </tr>
 					  </thead>
 					  <tbody>
+					  	<tr>
+					      <th scope="row">예매번호</th>
+					      <td><input value="${ticket.ticket_no }"></td>
+					    </tr>
 					    <tr>
 					      <th scope="row">축제명</th>
 					      <td><input value="${festival.name }"></td>
@@ -291,224 +197,47 @@
 					      <td><input value="${festival.theme }"></td>
 					    </tr>
 					    <tr>
+					      <th scope="row">주최/주관</th>
+					      <td><input value="${festival.manage }"></td>
+					    </tr>
+					    <tr>
 					      <th scope="row">진행일정</th>
 					      <td><input value="${festival.start_date } ~ ${festival.end_date }"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">예매날짜</th>
-					      <td><input name="ticket_date" type="date" value="${ticket.ticket_date }"></td>
+					      <td><input id="ticket_date" name="ticket_date" value="${ticket.ticket_date }"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">예매수량</th>
-					      <td><input id="ticket_count" name="ticket_count" type="number" value="${ticket.ticket_count }"></td>
+					      <td><input id="ticket_count" name="ticket_count" value="${ticket.ticket_count }"></td>
 					    </tr>
 					    <tr>
-					      <th scope="row">합계</th>
-					      <td><input id="price" name="price" value="${ticket.price }"></td>
-					    </tr>	
-					    <tr>
 					      <th scope="row">결제방식</th>
-					      <td><input type="radio" id="pay_type" name="pay_type" value="카드" checked>카드
-					      	  <input type="radio" id="pay_type" name="pay_type" value="가상계좌">가상계좌
-					      </td>
-					    </tr>				  
+					      <td><input value="${ticket.pay_type }"></td>
+					    </tr>
+					    <tr>
+					      <th scope="row">결제일시</th>
+					      <td><input value="${ticket.pay_date }"></td>
+					    </tr>
+					    <tr>
+					      <th scope="row">결제금액</th>
+					      <td><input id="price" name="price" value="${ticket.price }"></td>
+					    </tr>						    				  
 					  </tbody>
 					</table>
 					<input type="hidden" name="user_id" value="test">
-					<input type="hidden" name="state" value="결제완료">
-					<input type="hidden" id="import_uid" name="import_uid">
 					<!-- <div style="float:right;width:800px;"> -->
 					<div style="float: right;">
-						<button id="payBtn" type="button" class="btn btn-danger">결제하기</button>&nbsp;&nbsp;&nbsp;&nbsp;
-						<button id="cancleBtn" type="button" class="btn btn-outline-danger">취소하기</button>
+						<button id="payBtn" type="button" class="btn btn-danger">확인</button>
 					</div>
 					<!-- </div> -->
 				</form>
-				
-					
-					<!-- <div class="intro_content">
-						<div class="intro_title">we have the best tours</div>
-						<p class="intro_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus quis vulputate eros, iaculis consequat nisl. Nunc et suscipit urna. Integer elementum orci eu vehicula pretium. Donec bibendum tristique condimentum. Aenean in lacus ligula. Phasellus euismod gravida eros. Aenean nec ipsum aliquet, pharetra magna id, interdum sapien. Etiam id lorem eu nisl pellentesque semper. Nullam tincidunt metus placerat, suscipit leo ut, tempus nulla. Fusce at eleifend tellus. Ut eleifend dui nunc, non fermentum quam placerat non. Etiam venenatis nibh augue, sed eleifend justo tristique eu</p>
-						<div class="button intro_button"><div class="button_bcg"></div><a href="#">explore now<span></span><span></span><span></span></a></div>
-					</div> -->
-					
-				</div>
-				<!-- <div class="button intro_button" style="position: relative; left: 550px;"><div class="button_bcg"></div><a href="#">결제<span></span><span></span><span></span></a></div>
-				<div class="button intro_button" style="position: relative; right: 300px;"><div class="button_bcg"></div><a href="#">취소<span></span><span></span><span></span></a></div> -->
-			</div>
-		</div>
-	</div>
-
-	<!-- Stats -->
-
-	<div class="stats">
-		<div class="container">
-			<div class="row">
-				<div class="col text-center">
-					<div class="section_title">
-						sss
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-10 offset-lg-1 text-center">
-					<p class="stats_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus quis vulputate eros, iaculis consequat nisl. Nunc et suscipit urna. Integer elementum orci eu vehicula pretium. Donec bibendum tristique condimentum. Aenean in lacus ligula. </p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<div class="stats_years">
-						<div class="stats_years_last">2016</div>
-						<div class="stats_years_new float-right">2017</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<div class="stats_contents">
-						
-						<!-- Stats Item -->
-						<div class="stats_item d-flex flex-md-row flex-column clearfix">
-							<div class="stats_last order-md-1 order-3">
-								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_1.png" alt="">
-								</div>
-								<div class="stats_last_content">
-									<div class="stats_number">1642</div>
-									<div class="stats_type">Clients</div>
-								</div>
-							</div>
-							<div class="stats_bar order-md-2 order-2" data-x="1642" data-y="3527" data-color="#31124b">
-								<div class="stats_bar_perc">
-									<div>
-										<div class="stats_bar_value"></div>
-									</div>
-								</div>
-							</div>
-							<div class="stats_new order-md-3 order-1 text-right">
-								<div class="stats_new_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_1.png" alt="">
-								</div>
-								<div class="stats_new_content">
-									<div class="stats_number">3527</div>
-									<div class="stats_type">Clients</div>
-								</div>
-							</div>
-						</div>
-						
-						<!-- Stats Item -->
-						<div class="stats_item d-flex flex-md-row flex-column clearfix">
-							<div class="stats_last order-md-1 order-3">
-								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_2.png" alt="">
-								</div>
-								<div class="stats_last_content">
-									<div class="stats_number">768</div>
-									<div class="stats_type">Returning Clients</div>
-								</div>
-							</div>
-							<div class="stats_bar order-md-2 order-2" data-x="768" data-y="145" data-color="#a95ce4">
-								<div class="stats_bar_perc">
-									<div>
-										<div class="stats_bar_value"></div>
-									</div>
-								</div>
-							</div>
-							<div class="stats_new order-md-3 order-1 text-right">
-								<div class="stats_new_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_2.png" alt="">
-								</div>
-								<div class="stats_new_content">
-									<div class="stats_number">145</div>
-									<div class="stats_type">Returning Clients</div>
-								</div>
-							</div>
-						</div>
-
-						<!-- Stats Item -->
-						<div class="stats_item d-flex flex-md-row flex-column clearfix">
-							<div class="stats_last order-md-1 order-3">
-								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_3.png" alt="">
-								</div>
-								<div class="stats_last_content">
-									<div class="stats_number">11546</div>
-									<div class="stats_type">Reach</div>
-								</div>
-							</div>
-							<div class="stats_bar order-md-2 order-2" data-x="11546" data-y="9321" data-color="#fa6f1b">
-								<div class="stats_bar_perc">
-									<div>
-										<div class="stats_bar_value"></div>
-									</div>
-								</div>
-							</div>
-							<div class="stats_new order-md-3 order-1 text-right">
-								<div class="stats_new_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_3.png" alt="">
-								</div>
-								<div class="stats_new_content">
-									<div class="stats_number">9321</div>
-									<div class="stats_type">Reach</div>
-								</div>
-							</div>
-						</div>
-
-						<!-- Stats Item -->
-						<div class="stats_item d-flex flex-md-row flex-column clearfix">
-							<div class="stats_last order-md-1 order-3">
-								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_4.png" alt="">
-								</div>
-								<div class="stats_last_content">
-									<div class="stats_number">3729</div>
-									<div class="stats_type">Items</div>
-								</div>
-							</div>
-							<div class="stats_bar order-md-2 order-2" data-x="3729" data-y="17429" data-color="#fa9e1b">
-								<div class="stats_bar_perc">
-									<div>
-										<div class="stats_bar_value"></div>
-									</div>
-								</div>
-							</div>
-							<div class="stats_new order-md-3 order-1 text-right">
-								<div class="stats_new_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_4.png" alt="">
-								</div>
-								<div class="stats_new_content">
-									<div class="stats_number">17429</div>
-									<div class="stats_type">More Items</div>
-								</div>
-							</div>
-						</div>
-
-					</div>
+					</div>					
 				</div>
 			</div>
 		</div>
 	</div>
-
-	<!-- Add -->
-
-	<div class="add">
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<div class="add_container">
-						<div class="add_background" style="background-image:url(/westival/resources/images/add.jpg)"></div>
-						<div class="add_content">
-							<h1 class="add_title">thailand</h1>
-							<div class="add_subtitle">From <span>$999</span></div>
-							<div class="button add_button"><div class="button_bcg"></div><a href="#">explore now<span></span><span></span><span></span></a></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Milestones -->
 
 	<div class="milestones">
 		<div class="container">
@@ -697,18 +426,18 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 </div>
 
-<script src="js/jquery-3.2.1.min.js"></script>
-<script src="styles/bootstrap4/popper.js"></script>
-<script src="styles/bootstrap4/bootstrap.min.js"></script>
-<script src="plugins/greensock/TweenMax.min.js"></script>
-<script src="plugins/greensock/TimelineMax.min.js"></script>
-<script src="plugins/scrollmagic/ScrollMagic.min.js"></script>
-<script src="plugins/greensock/animation.gsap.min.js"></script>
-<script src="plugins/greensock/ScrollToPlugin.min.js"></script>
-<script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
-<script src="plugins/easing/easing.js"></script>
-<script src="plugins/parallax-js-master/parallax.min.js"></script>
-<script src="js/about_custom.js"></script>
+<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
+<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<script src="/westival/resources/plugins/greensock/TweenMax.min.js"></script>
+<script src="/westival/resources/plugins/greensock/TimelineMax.min.js"></script>
+<script src="/westival/resources/plugins/scrollmagic/ScrollMagic.min.js"></script>
+<script src="/westival/resources/plugins/greensock/animation.gsap.min.js"></script>
+<script src="/westival/resources/plugins/greensock/ScrollToPlugin.min.js"></script>
+<script src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+<script src="/westival/resources/plugins/easing/easing.js"></script>
+<script src="/westival/resources/plugins/parallax-js-master/parallax.min.js"></script>
+<script src="/westival/resources/js/about_custom.js"></script>
 
 </body>
 

@@ -22,20 +22,43 @@
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-<script>
+<style type="text/css"></style>
 
-	//css
+<script>
+	
+	
 	$(function(){
+		
+		//css
 		$("input:text").prop("readonly", true);
-		$("input").css("border", "none");
+		$("input").not("#ticket_count").not("#ticket_date").css("border", "none");
 		$("input:text").css("width", "100%");
 		$("#ticket_count").prop("min", "1");
+		$("#ticket_count").css("height", "30px").css("width", "60px");
+		$("#ticket_date").css("height", "30px").css("width", "180px");
+		//$("#ticket_date").css("font-size", "13");
+	    //font-size: 13px;
 		
+		//예매수량 제한
+		if('${ticketOption.ticket_quantity}' > 0){
+			$("#ticket_count").val(1).prop("min", 1).prop("max", '${ticketOption.ticket_quantity}');
+		}else{
+			alert("매진된 축제입니다.")
+		}
+
 		//예매수량 변경시
 		$("#ticket_count").on("change", function(){
-			var resultPrice = ${ticket.price} * $("#ticket_count").val();
+			var resultPrice = '${ticketOption.ticket_price}' * $("#ticket_count").val();
 			$("#price").val(resultPrice);
 		});
+		
+		//예매날짜 범위 제한 
+		var minDate = new Date('${festival.start_date}');
+		var maxDate = new Date('${festival.end_date}');
+		minDate = changeDate(minDate);
+		maxDate = changeDate(maxDate);
+		$("#ticket_date").prop("min", minDate);
+		$("#ticket_date").prop("max", maxDate);
 		
 		//결제하기 클릭시
 		$("#payBtn").on("click", function(){
@@ -48,10 +71,25 @@
 		});
 		
 		//취소하기 클릭시
+		
+		//예매날짜
+		
+		//예매완료 테스트
+		$("#testBtn").on("click", function(){
+			$("#fsubmit").submit();
+		});
+		
 	});
-
 	
-
+	//Date Format
+	function changeDate(date){
+	    function pad(num) {
+	        num = num + '';
+	        return num.length < 2 ? '0' + num : num;
+	    }
+	    return date.getFullYear() + '-' + pad(date.getMonth()+1) + '-' + pad(date.getDate());
+	}
+	
 	//결제 API
 	var IMP = window.IMP; // 생략가능
 	IMP.init('imp69614733'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
@@ -63,7 +101,7 @@
 		    merchant_uid : 'merchant_' + new Date().getTime(),
 		    name : '${festival.name}',
 		    amount : $("#price").val(),
-		    buyer_email : 'ky0203mm@gmail.com', //${member.user_email}
+		    buyer_email : '${member.user_email}', //${member.user_email}
 		    buyer_name : '${userid}',
 		    buyer_tel : '${member.user_phone}', //
 		    buyer_addr : '${member.user_address}', //
@@ -89,37 +127,36 @@
 		});
 		return false;
 	}
-
+	//결제 - 가상계좌 API
 	function payCash(){
 		IMP.request_pay({
 		    pg : 'inicis', // version 1.1.0부터 지원.
 		    pay_method : 'vbank',
 		    merchant_uid : 'merchant_' + new Date().getTime(),
 		    name : '${festival.name}',
-		    amount : '${ticket.price}',
-		    buyer_email : 'ky0203mm@gmail.com', //${member.user_email}
+		    amount : $("#price").val(),
+		    buyer_email : '${member.user_email}', //${member.user_email}
 		    buyer_name : '${userid}',
-		    buyer_tel : '010-1234-5678', //${member.user_phone}
-		    buyer_addr : '서울특별시 강남구 삼성동', //${member.user_address}
+		    buyer_tel : '${member.user_phone}', //
+		    buyer_addr : '${member.user_address}', //
 		    //buyer_postcode : '123-456',
-		    m_redirect_url : 'https://www.yourdomain.com/payments/complete',
 		    company : 'Westival',
-		    redirect_after : 'ticketComplete.do'
+		    m_redirect_url : 'https://www.yourdomain.com/payments/complete'    
 		}, function(rsp) {
 		    if ( rsp.success ) {
 		        var msg = '결제가 완료되었습니다.';
-		        /* msg += '고유ID : ' + rsp.imp_uid;
+		        msg += '고유ID : ' + rsp.imp_uid;
 		        msg += '상점 거래ID : ' + rsp.merchant_uid;
 		        msg += '결제 금액 : ' + rsp.paid_amount;
-		        msg += '카드 승인번호 : ' + rsp.apply_num; */
-		        //ticketComplete(1);
+		        msg += '카드 승인번호 : ' + rsp.apply_num;
 		    } else {
 		        var msg = '결제에 실패하였습니다.';
 		        msg += '에러내용 : ' + rsp.error_msg;
 		    }
 		    alert(msg);
 		    if(rsp.success){
-		    	 $("#fsubmit").submit();
+		    	$("#import_uid").val(rsp.imp_uid);
+		    	$("#fsubmit").submit();
 		    }
 		});
 		return false;
@@ -146,7 +183,7 @@
 
 </head>
 
-<body>dd
+<body>
 
 <div class="super_container">
 	
@@ -255,7 +292,7 @@
 	<div class="home">
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/about_background.jpg"></div>
 		<div class="home_content">
-			<div class="home_title">about us</div>
+			<div class="home_title">예매하기</div>
 		</div>
 	</div>
 
@@ -265,16 +302,9 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-7">
-					<!-- <div class="intro_image"><img src="/westival/resources/images/2561914_image2_1.jpg" alt=""></div> -->
-					<!-- <div class="card" style="width: 18rem;"> -->
-					<!-- <div class=""> -->
 					<div class="intro_item_content d-flex flex-column align-items-center justify-content-center">
-							
-						
-					  <img class="img-thumbnail" style="width:500px;height:400px;" src="/westival/resources/images/2561914_image2_1.jpg" alt="">
+					  <img class="img-thumbnail" style="width:550px;height:550px;" src="/westival/resources/images/2561914_image2_1.jpg" alt="">
 					</div>  
-					<!-- </div> -->
-					<!-- </div> -->
 				</div>
 				<div class="col-lg-5">
 				<div class="intro_content">
@@ -282,8 +312,8 @@
 					<table class="table">
 					  <thead>
 					    <tr>
-					      <th scope="col" colspan="2"><h3 align="center">예매정보</h3></th>
-					      <!-- <th scope="col">First</th> -->
+					      <th scope="col" colspan="2" class="section_title" style='text-align:center;vertical-align:middle'>예매정보</th>
+					      
 					    </tr>
 					  </thead>
 					  <tbody>
@@ -300,20 +330,28 @@
 					      <td><input value="${festival.theme }"></td>
 					    </tr>
 					    <tr>
+					      <th scope="row">주최/주관</th>
+					      <td><input value="${festival.manage }"></td>
+					    </tr>
+					    <tr>
 					      <th scope="row">진행일정</th>
 					      <td><input value="${festival.start_date } ~ ${festival.end_date }"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">예매날짜</th>
-					      <td><input name="ticket_date" type="date" value="${ticket.ticket_date }"></td>
+					      <td><input id="ticket_date" name="ticket_date" type="date" class="form-control" placeholder="date input"></td>
 					    </tr>
 					    <tr>
 					      <th scope="row">예매수량</th>
-					      <td><input id="ticket_count" name="ticket_count" type="number" value="${ticket.ticket_count }"></td>
+					      <td><input id="ticket_count" name="ticket_count" type="number" class="form-control" placeholder="number input"></td>
 					    </tr>
 					    <tr>
+					      <th scope="row">가격 (1매기준)</th>
+					      <td><input value="${ticketOption.ticket_price }"></td>
+					    </tr>	
+					    <tr>
 					      <th scope="row">합계</th>
-					      <td><input id="price" name="price" value="${ticket.price }"></td>
+					      <td><input id="price" name="price" value="${ticketOption.ticket_price }"></td>
 					    </tr>	
 					    <tr>
 					      <th scope="row">결제방식</th>
@@ -330,194 +368,15 @@
 					<div style="float: right;">
 						<button id="payBtn" type="button" class="btn btn-danger">결제하기</button>&nbsp;&nbsp;&nbsp;&nbsp;
 						<button id="cancleBtn" type="button" class="btn btn-outline-danger">취소하기</button>
+						<button id="testBtn" type="button" class="btn btn-outline-danger">예매완료 페이지 테스트</button>	
 					</div>
 					<!-- </div> -->
 				</form>
-				
-					
-					
-						<!-- <div class="intro_title">we have the best tours</div>
-						<p class="intro_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus quis vulputate eros, iaculis consequat nisl. Nunc et suscipit urna. Integer elementum orci eu vehicula pretium. Donec bibendum tristique condimentum. Aenean in lacus ligula. Phasellus euismod gravida eros. Aenean nec ipsum aliquet, pharetra magna id, interdum sapien. Etiam id lorem eu nisl pellentesque semper. Nullam tincidunt metus placerat, suscipit leo ut, tempus nulla. Fusce at eleifend tellus. Ut eleifend dui nunc, non fermentum quam placerat non. Etiam venenatis nibh augue, sed eleifend justo tristique eu</p>
-						<div class="button intro_button"><div class="button_bcg"></div><a href="#">explore now<span></span><span></span><span></span></a></div> -->
-					</div>
-					
+					</div>					
 				</div>
-				<!-- <div class="button intro_button" style="position: relative; left: 550px;"><div class="button_bcg"></div><a href="#">결제<span></span><span></span><span></span></a></div>
-				<div class="button intro_button" style="position: relative; right: 300px;"><div class="button_bcg"></div><a href="#">취소<span></span><span></span><span></span></a></div> -->
 			</div>
 		</div>
 	</div>
-
-	<!-- Stats -->
-
-	<!-- <div class="stats">
-		<div class="container">
-			<div class="row">
-				<div class="col text-center">
-					<div class="section_title">
-						sss
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-10 offset-lg-1 text-center">
-					<p class="stats_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus quis vulputate eros, iaculis consequat nisl. Nunc et suscipit urna. Integer elementum orci eu vehicula pretium. Donec bibendum tristique condimentum. Aenean in lacus ligula. </p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<div class="stats_years">
-						<div class="stats_years_last">2016</div>
-						<div class="stats_years_new float-right">2017</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<div class="stats_contents">
-						
-						Stats Item
-						<div class="stats_item d-flex flex-md-row flex-column clearfix">
-							<div class="stats_last order-md-1 order-3">
-								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_1.png" alt="">
-								</div>
-								<div class="stats_last_content">
-									<div class="stats_number">1642</div>
-									<div class="stats_type">Clients</div>
-								</div>
-							</div>
-							<div class="stats_bar order-md-2 order-2" data-x="1642" data-y="3527" data-color="#31124b">
-								<div class="stats_bar_perc">
-									<div>
-										<div class="stats_bar_value"></div>
-									</div>
-								</div>
-							</div>
-							<div class="stats_new order-md-3 order-1 text-right">
-								<div class="stats_new_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_1.png" alt="">
-								</div>
-								<div class="stats_new_content">
-									<div class="stats_number">3527</div>
-									<div class="stats_type">Clients</div>
-								</div>
-							</div>
-						</div>
-						
-						Stats Item
-						<div class="stats_item d-flex flex-md-row flex-column clearfix">
-							<div class="stats_last order-md-1 order-3">
-								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_2.png" alt="">
-								</div>
-								<div class="stats_last_content">
-									<div class="stats_number">768</div>
-									<div class="stats_type">Returning Clients</div>
-								</div>
-							</div>
-							<div class="stats_bar order-md-2 order-2" data-x="768" data-y="145" data-color="#a95ce4">
-								<div class="stats_bar_perc">
-									<div>
-										<div class="stats_bar_value"></div>
-									</div>
-								</div>
-							</div>
-							<div class="stats_new order-md-3 order-1 text-right">
-								<div class="stats_new_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_2.png" alt="">
-								</div>
-								<div class="stats_new_content">
-									<div class="stats_number">145</div>
-									<div class="stats_type">Returning Clients</div>
-								</div>
-							</div>
-						</div>
-
-						Stats Item
-						<div class="stats_item d-flex flex-md-row flex-column clearfix">
-							<div class="stats_last order-md-1 order-3">
-								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_3.png" alt="">
-								</div>
-								<div class="stats_last_content">
-									<div class="stats_number">11546</div>
-									<div class="stats_type">Reach</div>
-								</div>
-							</div>
-							<div class="stats_bar order-md-2 order-2" data-x="11546" data-y="9321" data-color="#fa6f1b">
-								<div class="stats_bar_perc">
-									<div>
-										<div class="stats_bar_value"></div>
-									</div>
-								</div>
-							</div>
-							<div class="stats_new order-md-3 order-1 text-right">
-								<div class="stats_new_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_3.png" alt="">
-								</div>
-								<div class="stats_new_content">
-									<div class="stats_number">9321</div>
-									<div class="stats_type">Reach</div>
-								</div>
-							</div>
-						</div>
-
-						Stats Item
-						<div class="stats_item d-flex flex-md-row flex-column clearfix">
-							<div class="stats_last order-md-1 order-3">
-								<div class="stats_last_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_4.png" alt="">
-								</div>
-								<div class="stats_last_content">
-									<div class="stats_number">3729</div>
-									<div class="stats_type">Items</div>
-								</div>
-							</div>
-							<div class="stats_bar order-md-2 order-2" data-x="3729" data-y="17429" data-color="#fa9e1b">
-								<div class="stats_bar_perc">
-									<div>
-										<div class="stats_bar_value"></div>
-									</div>
-								</div>
-							</div>
-							<div class="stats_new order-md-3 order-1 text-right">
-								<div class="stats_new_icon d-flex flex-column align-items-center justify-content-end">
-									<img src="/westival/resources/images/stats_4.png" alt="">
-								</div>
-								<div class="stats_new_content">
-									<div class="stats_number">17429</div>
-									<div class="stats_type">More Items</div>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</div>
-	</div> -->
-
-	<!-- Add -->
-
-	<!-- <div class="add">
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<div class="add_container">
-						<div class="add_background" style="background-image:url(/westival/resources/images/add.jpg)"></div>
-						<div class="add_content">
-							<h1 class="add_title">thailand</h1>
-							<div class="add_subtitle">From <span>$999</span></div>
-							<div class="button add_button"><div class="button_bcg"></div><a href="#">explore now<span></span><span></span><span></span></a></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div> -->
-
-	<!-- Milestones -->
 
 	<div class="milestones">
 		<div class="container">
