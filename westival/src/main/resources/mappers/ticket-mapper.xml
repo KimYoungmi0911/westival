@@ -75,7 +75,7 @@
 		insert into tb_ticket values 
 		(to_char(systimestamp, 'yyyymmddhh24missff3'), 
 		#{no}, #{user_id}, #{ticket_date}, #{ticket_count},
-		#{pay_type}, sysdate, #{price}, #{state}, #{import_uid})
+		#{pay_type}, #{pay_date}, #{price}, #{state}, #{import_uid})
 		]]>
 	</insert>
 	
@@ -85,7 +85,14 @@
 		where import_uid = #{import_uid}
 		]]>
 	</select>
-	
+		
+	<!-- select ticket -->
+	<!-- <select id="selectTicket" parameterType="Ticket" resultMap="resultTicket">
+		<![CDATA[select ticket_no, no, user_id, ticket_date, ticket_count, 
+		pay_type, to_date(to_char(pay_date, 'YYYY-MM-DD hh:mm:ss'), 'YYYY-MM-DD hh:mm:ss'), price, state, import_uid from tb_ticket 
+		where import_uid = #{import_uid}
+		]]>
+	</select> -->
 	
 	<!-- select festival -->
 	<select id="selectFestival" resultMap="resultFestival"
