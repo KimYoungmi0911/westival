@@ -6,7 +6,7 @@ public class Festival implements java.io.Serializable {
    private static final long serialVersionUID = 5L;
    
    private int no; // 축제 번호
-   private String user_id; // 회원 아이디
+   private String reg_user; // 회원 아이디
    private String name; // 축제명
    private String address; //주소
    private String original_img_name; // 원본 이미지 이름
@@ -25,12 +25,12 @@ public class Festival implements java.io.Serializable {
    
    public Festival (){}
 
-   public Festival(int no, String user_id, String name, String address, String original_img_name, String new_img_name,
-         String content, Date start_date, Date end_date, String theme, String telephone, String manage,
-         String ticket, String file_name, String tag, int read_count, int recommend) {
+   public Festival(int no, String reg_user, String name, String address, String original_img_name, String new_img_name,
+         String content, Date start_date, Date end_date, String theme, String telephone, String manage, String ticket,
+         String file_name, String tag, int read_count, int recommend) {
       super();
       this.no = no;
-      this.user_id = user_id;
+      this.reg_user = reg_user;
       this.name = name;
       this.address = address;
       this.original_img_name = original_img_name;
@@ -56,12 +56,12 @@ public class Festival implements java.io.Serializable {
       this.no = no;
    }
 
-   public String getUser_id() {
-      return user_id;
+   public String getReg_user() {
+      return reg_user;
    }
 
-   public void setUser_id(String user_id) {
-      this.user_id = user_id;
+   public void setReg_user(String reg_user) {
+      this.reg_user = reg_user;
    }
 
    public String getName() {
@@ -186,11 +186,11 @@ public class Festival implements java.io.Serializable {
 
    @Override
    public String toString() {
-      return "Festival [no=" + no + ", user_id=" + user_id + ", name=" + name + ", address=" + address
+      return "Festival [no=" + no + ", reg_user=" + reg_user + ", name=" + name + ", address=" + address
             + ", original_img_name=" + original_img_name + ", new_img_name=" + new_img_name + ", content=" + content
             + ", start_date=" + start_date + ", end_date=" + end_date + ", theme=" + theme + ", telephone="
-            + telephone + ", manage=" + manage + ", ticket=" + ticket + ", file_name=" + file_name + ", tag="
-            + tag + ", read_count=" + read_count + ", recommend=" + recommend + "]";
+            + telephone + ", manage=" + manage + ", ticket=" + ticket + ", file_name=" + file_name + ", tag=" + tag
+            + ", read_count=" + read_count + ", recommend=" + recommend + "]";
    }
    
 }
