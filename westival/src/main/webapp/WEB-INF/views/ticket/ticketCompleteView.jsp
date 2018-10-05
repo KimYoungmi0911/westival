@@ -175,8 +175,7 @@
 					<table class="table">
 					  <thead>
 					    <tr>
-					      <th scope="col" colspan="2" class="section_title" style='text-align:center;vertical-align:middle'>예매정보</th>
-					      
+					      <th scope="col" colspan="2" class="section_title" style='text-align:center;vertical-align:middle'>예매정보</th>    
 					    </tr>
 					  </thead>
 					  <tbody>
@@ -229,7 +228,8 @@
 					<input type="hidden" name="user_id" value="test">
 					<!-- <div style="float:right;width:800px;"> -->
 					<div style="float: right;">
-						<button id="payBtn" type="button" class="btn btn-danger">확인</button>
+						<button id="okBtn" type="button" class="btn btn-danger">메인으로</button>
+						<button id="myInfoBtn" type="button" class="btn btn-outline-danger">예매내역 보기</button>
 					</div>
 					<!-- </div> -->
 				</form>

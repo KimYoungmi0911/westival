@@ -1,6 +1,8 @@
 package org.kh.westival.ticket.controller;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.kh.westival.ticket.model.service.TicketService;
 import org.kh.westival.ticket.model.vo.Ticket;
@@ -52,22 +54,32 @@ public class TicketController {
 			@RequestParam(value="user_id") String user_id,
 			@RequestParam(value="pay_type") String pay_type,
 			@RequestParam(value="state") String state, 
-			@RequestParam(value="import_uid") String import_uid) {
+			@RequestParam(value="import_uid") String import_uid, 
+			@RequestParam(value="paid_at") Long paid_at) throws Exception {
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");		
+		java.util.Date date = new java.util.Date();
+		date.setTime(paid_at * 1000);
+		java.sql.Date sDate = new java.sql.Date(date.getTime());
+		//System.out.println(sdf.parse(sDate));
 		ticket.setNo(no);
 		ticket.setUser_id(user_id);
 		ticket.setTicket_date(ticket_date);
 		ticket.setTicket_count(ticket_count);
 		ticket.setPay_type(pay_type);
+		ticket.setPay_date(sDate);
 		ticket.setPrice(price);
 		ticket.setState(state);
 		ticket.setImport_uid(import_uid);
 		
 		int result = tService.insertTicket(ticket);
-		if(result > 0)
+		if(result > 0){
 			ticket = tService.selectTicket(ticket);
+			//ticket.getPay_date();
+			//ticket.setPay_date();
+		}
 		
-		//mv.addObject("member", tService.selectMember(user_id));
+		System.out.println("ticket_date : " + ticket.getPay_date());
 		mv.addObject("festival", tService.selectFestival(no));
 		mv.addObject("ticket", ticket);
 		mv.setViewName("ticket/ticketCompleteView");

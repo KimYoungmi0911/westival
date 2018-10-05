@@ -36,8 +36,6 @@
 		$("#ticket_count").prop("min", "1");
 		$("#ticket_count").css("height", "30px").css("width", "60px");
 		$("#ticket_date").css("height", "30px").css("width", "180px");
-		//$("#ticket_date").css("font-size", "13");
-	    //font-size: 13px;
 		
 		//예매수량 제한
 		if('${ticketOption.ticket_quantity}' > 0){
@@ -111,10 +109,10 @@
 		}, function(rsp) {
 		    if ( rsp.success ) {
 		        var msg = '결제가 완료되었습니다.';
-		        msg += '고유ID : ' + rsp.imp_uid;
+		        /* msg += '고유ID : ' + rsp.imp_uid;
 		        msg += '상점 거래ID : ' + rsp.merchant_uid;
 		        msg += '결제 금액 : ' + rsp.paid_amount;
-		        msg += '카드 승인번호 : ' + rsp.apply_num;
+		        msg += '카드 승인번호 : ' + rsp.apply_num; */
 		    } else {
 		        var msg = '결제에 실패하였습니다.';
 		        msg += '에러내용 : ' + rsp.error_msg;
@@ -122,6 +120,8 @@
 		    alert(msg);
 		    if(rsp.success){
 		    	$("#import_uid").val(rsp.imp_uid);
+		    	$("#paid_at").val(rsp.paid_at);
+		    	//alert(rsp.paid_at);
 		    	$("#fsubmit").submit();
 		    }
 		});
@@ -145,17 +145,21 @@
 		}, function(rsp) {
 		    if ( rsp.success ) {
 		        var msg = '결제가 완료되었습니다.';
-		        msg += '고유ID : ' + rsp.imp_uid;
+		        msg += '가상계좌 입금계좌번호 : ' + rsp.vbank_num;
+		        msg += '가상계좌 은행명 : ' + rsp.vbank_name;
+		        msg += '가상계좌 예금주 : ' + rsp.vbank_holder;
+		        msg += '가상계좌 입금기한 : ' + vbank_date;
+		        /* msg += '고유ID : ' + rsp.imp_uid;
 		        msg += '상점 거래ID : ' + rsp.merchant_uid;
 		        msg += '결제 금액 : ' + rsp.paid_amount;
-		        msg += '카드 승인번호 : ' + rsp.apply_num;
+		        msg += '카드 승인번호 : ' + rsp.apply_num; */
 		    } else {
 		        var msg = '결제에 실패하였습니다.';
 		        msg += '에러내용 : ' + rsp.error_msg;
 		    }
 		    alert(msg);
 		    if(rsp.success){
-		    	$("#import_uid").val(rsp.imp_uid);
+		    	$("#import_uid").val(rsp.imp_uid);com
 		    	$("#fsubmit").submit();
 		    }
 		});
@@ -364,11 +368,11 @@
 					<input type="hidden" name="user_id" value="test">
 					<input type="hidden" name="state" value="결제완료">
 					<input type="hidden" id="import_uid" name="import_uid">
+					<input type="hidden" id="paid_at" name="paid_at">
 					<!-- <div style="float:right;width:800px;"> -->
 					<div style="float: right;">
 						<button id="payBtn" type="button" class="btn btn-danger">결제하기</button>&nbsp;&nbsp;&nbsp;&nbsp;
 						<button id="cancleBtn" type="button" class="btn btn-outline-danger">취소하기</button>
-						<button id="testBtn" type="button" class="btn btn-outline-danger">예매완료 페이지 테스트</button>	
 					</div>
 					<!-- </div> -->
 				</form>
