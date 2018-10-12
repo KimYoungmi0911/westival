@@ -25,6 +25,7 @@ public class Festival implements java.io.Serializable {
    
    public Festival (){}
 
+
    public Festival(int no, String reg_user, String name, String address, String original_img_name, String new_img_name,
          String content, Date start_date, Date end_date, String theme, String telephone, String manage, String ticket,
          String file_name, String tag, int read_count, int recommend) {
@@ -48,141 +49,151 @@ public class Festival implements java.io.Serializable {
       this.recommend = recommend;
    }
 
-   public int getNo() {
-      return no;
-   }
 
-   public void setNo(int no) {
-      this.no = no;
-   }
+	public int getNo() {
+		return no;
+	}
+
+	public void setNo(int no) {
+		this.no = no;
+	}
+
 
    public String getReg_user() {
       return reg_user;
    }
 
+
+
    public void setReg_user(String reg_user) {
       this.reg_user = reg_user;
    }
 
-   public String getName() {
-      return name;
-   }
 
-   public void setName(String name) {
-      this.name = name;
-   }
+	public String getName() {
+		return name;
+	}
 
-   public String getAddress() {
-      return address;
-   }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-   public void setAddress(String address) {
-      this.address = address;
-   }
+	public String getAddress() {
+		return address;
+	}
 
-   public String getOriginal_img_name() {
-      return original_img_name;
-   }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-   public void setOriginal_img_name(String original_img_name) {
-      this.original_img_name = original_img_name;
-   }
+	public String getOriginal_img_name() {
+		return original_img_name;
+	}
 
-   public String getNew_img_name() {
-      return new_img_name;
-   }
+	public void setOriginal_img_name(String original_img_name) {
+		this.original_img_name = original_img_name;
+	}
 
-   public void setNew_img_name(String new_img_name) {
-      this.new_img_name = new_img_name;
-   }
+	public String getNew_img_name() {
+		return new_img_name;
+	}
 
-   public String getContent() {
-      return content;
-   }
+	public void setNew_img_name(String new_img_name) {
+		this.new_img_name = new_img_name;
+	}
 
-   public void setContent(String content) {
-      this.content = content;
-   }
+	public String getContent() {
+		return content;
+	}
 
-   public Date getStart_date() {
-      return start_date;
-   }
+	public void setContent(String content) {
+		this.content = content;
+	}
 
-   public void setStart_date(Date start_date) {
-      this.start_date = start_date;
-   }
+	public Date getStart_date() {
+		return start_date;
+	}
 
-   public Date getEnd_date() {
-      return end_date;
-   }
+	public void setStart_date(Date start_date) {
+		this.start_date = start_date;
+	}
 
-   public void setEnd_date(Date end_date) {
-      this.end_date = end_date;
-   }
+	public Date getEnd_date() {
+		return end_date;
+	}
 
-   public String getTheme() {
-      return theme;
-   }
+	public void setEnd_date(Date end_date) {
+		this.end_date = end_date;
+	}
 
-   public void setTheme(String theme) {
-      this.theme = theme;
-   }
+	public String getTheme() {
+		return theme;
+	}
 
-   public String getTelephone() {
-      return telephone;
-   }
+	public void setTheme(String theme) {
+		this.theme = theme;
+	}
 
-   public void setTelephone(String telephone) {
-      this.telephone = telephone;
-   }
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
 
    public String getManage() {
       return manage;
    }
 
+
+
    public void setManage(String manage) {
       this.manage = manage;
    }
 
-   public String getTicket() {
-      return ticket;
-   }
 
-   public void setTicket(String ticket) {
-      this.ticket = ticket;
-   }
+	public String getTicket() {
+		return ticket;
+	}
 
-   public String getFile_name() {
-      return file_name;
-   }
+	public void setTicket(String ticket) {
+		this.ticket = ticket;
+	}
 
-   public void setFile_name(String file_name) {
-      this.file_name = file_name;
-   }
+	public String getFile_name() {
+		return file_name;
+	}
 
-   public String getTag() {
-      return tag;
-   }
+	public void setFile_name(String file_name) {
+		this.file_name = file_name;
+	}
 
-   public void setTag(String tag) {
-      this.tag = tag;
-   }
+	public String getTag() {
+		return tag;
+	}
 
-   public int getRead_count() {
-      return read_count;
-   }
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
-   public void setRead_count(int read_count) {
-      this.read_count = read_count;
-   }
+	public int getRead_count() {
+		return read_count;
+	}
 
-   public int getRecommend() {
-      return recommend;
-   }
+	public void setRead_count(int read_count) {
+		this.read_count = read_count;
+	}
 
-   public void setRecommend(int recommend) {
-      this.recommend = recommend;
-   }
+	public int getRecommend() {
+		return recommend;
+	}
+
+	public void setRecommend(int recommend) {
+		this.recommend = recommend;
+	}
+
 
    @Override
    public String toString() {
@@ -193,4 +204,5 @@ public class Festival implements java.io.Serializable {
             + ", read_count=" + read_count + ", recommend=" + recommend + "]";
    }
    
+
 }
