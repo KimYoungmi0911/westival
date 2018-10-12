@@ -14,12 +14,26 @@ public interface NoticeServiceImpl {
 	Notice noticeDetail(int notice_no);
 
 	int noticeInsert(Notice notice);
+	
+	int noticeInsert2(Notice notice);
 
 	int noticeDelete(int notice_no);
 
 	int noticeUpdate(Notice notice);
+	
+	int noticeUpdate2(Notice notice);
 
 	Object noticeUpdate(int notice_no);
+	
+	//페이징 뷰
+	int getListCount();
+
+	ArrayList<Notice> selectList(int currentPage, int limit);
+
+	
+
+
+	
 
 	
 

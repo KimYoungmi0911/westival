@@ -8,8 +8,11 @@
 		<typeAlias type="org.kh.westival.community.model.vo.Community" alias="Community" />
 		<typeAlias type="org.kh.westival.festival.model.vo.Festival" alias="Festival" />
 		<typeAlias type="org.kh.westival.notice.model.vo.Notice" alias="Notice" />
+		<typeAlias type="org.kh.westival.notice.model.vo.NoticePage" alias="NoticePage" />
 		<typeAlias type="org.kh.westival.qna.model.vo.Qna" alias="Qna" />
 		<typeAlias type="org.kh.westival.ticket.model.vo.Ticket" alias="Ticket" />
+		<typeAlias type="org.kh.westival.admin.model.vo.Admin" alias="Admin" />
+		<typeAlias type="org.kh.westival.admin.model.vo.AdminTicketPage" alias="AdminTicketPage" />
 	</typeAliases>
 	
 	<mappers>
@@ -19,9 +22,11 @@
 		<mapper resource="mappers/notice-mapper.xml" />
 		<mapper resource="mappers/qna-mapper.xml" />
 		<mapper resource="mappers/ticket-mapper.xml" />
+		<mapper resource="mappers/admin-mapper.xml" />
+		
 	</mappers>
 </configuration>
-
+ 
 <!-- <configuration>
 	<typeAliases>
 		<typeAlias type="org.kh.westival.admin.model.vo.admin" alias="Admin" />

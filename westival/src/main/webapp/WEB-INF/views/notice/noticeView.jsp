@@ -151,7 +151,7 @@ function noticeInsert(){
 				<div class="col-lg-12">
 			
 					<div class="intro_content">
-					<table class="table" width="100%;" style="border:solid 1px;">
+					<table class="table" width="100%;" style="border-bottom : solid 0.1px;"> 
 					  <thead>
 					    <tr align="center">
 					      <th scope="col" width="15%">번호</th>
@@ -185,6 +185,91 @@ function noticeInsert(){
 					   
 					</table>
 						
+<!-- 페이징 처리 -->
+<div style="text-align: center">
+<%-- <% if(currentPage <= 1){ %>
+	[맨처음]&nbsp;
+<% }else{ %>
+	<a href="/second/blist?page=1">[맨처음]</a>
+<% } %> --%>
+<c:if test="${currentPage <= 1 }">
+[맨처음]&nbsp;
+</c:if>
+<c:if test="${currentPage > 1 }">
+<c:url var="mi13" value="noticeview.do">
+	<c:param name="page" value="1"/>
+</c:url>
+<a href="${mi13 }">[맨처음]</a>
+</c:if>
+<%-- <% if((currentPage - 10) < startPage && 
+		(currentPage - 10) > 1){ %>
+	<a href="/second/blist?page=<%= startPage - 10 %>">[이전]</a>
+<% }else{ %>
+	[이전]&nbsp;
+<% } %> --%>
+<c:if test="${(currentPage-10) <  startPage && (currentPage-10) > 1 }">
+	<c:url var="mi14" value="noticeview.do">
+		<c:param name="page" value="${startPage -10 }" />
+	</c:url>
+	<a href="${mi14 }">[이전]</a>
+</c:if>
+<c:if test="${(currentPage-10) >=  startPage || (currentPage-10) <= 1  }">
+[이전]&nbsp;
+</c:if>
+<c:forEach var="cnt" begin="${startPage }" end="${endPage }">
+<c:if test="${cnt == currentPage }">
+	<font color="red" size="4">[${cnt }]</font>
+</c:if>
+<c:if test="${cnt != currentPage }">
+	<c:url var="mid15" value="noticeview.do">
+		<c:param name="page" value="${cnt }" />
+	</c:url>
+	<a href="${mid15 }">${cnt }</a>
+</c:if>
+</c:forEach>
+<c:if test="${(currentPage + 10) > endPage && (currentPage+10) < maxPage }">
+	<c:url var="mid16" value="noticeview.do">
+		<c:param name="page" value="${endPage + 10 }" />
+	</c:url>
+	<a href="${mid16 }">[다음]</a>
+</c:if>
+<c:if test="${!((currentPage + 10) > endPage && (currentPage+10) < maxPage) }">
+	[다음]&nbsp;
+</c:if>
+<c:if test="${currentPage >= maxPage }">
+	[맨끝]&nbsp;
+</c:if>
+<c:if test="${!(currentPage >= maxPage) }">
+<c:url var="mid17" value="noticeview.do">
+	<c:param name="page" value="${maxPage }" />
+</c:url> 
+<a href="${mid17 }">[맨끝]</a>
+</c:if>
+<%-- startPage ~ endPage 출력 --%>
+
+<%-- <% for(int p = startPage; p <= endPage; p++){ 
+		if(p == currentPage){ 
+%>
+	<font color="red" size="4">[<%= p %>]</font>
+<%      }else{ %>
+	<a href="/second/blist?page=<%= p %>"><%= p %></a>
+<% }} %>
+----------------
+<% if((currentPage + 10) > endPage && 
+		(currentPage + 10) < maxPage){ %>
+	<a href="/second/blist?page=<%= endPage + 10 %>">[다음]</a>
+<% }else{ %>
+	[다음]&nbsp;
+<% } %>
+
+<% if(currentPage >= maxPage){ %>
+	[맨끝]&nbsp;
+<% }else{ %>
+	<a href="/second/blist?page=<%= maxPage %>">
+	[맨끝]</a>
+<% } %> --%>
+
+</div>
 
 							
 

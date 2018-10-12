@@ -68,9 +68,9 @@
 							<ul class="main_nav_list">
 								<li class="main_nav_item"><a href="#">home</a></li>
 								<li class="main_nav_item"><a href="about.html">about us</a></li>
-								<li class="main_nav_item"><a href="offers.html">offers</a></li>
-								<li class="main_nav_item"><a href="blog.html">news</a></li>
-								<li class="main_nav_item"><a href="contact.html">contact</a></li>
+								<li class="main_nav_item"><a href="adminfestival.do">축제관리</a></li>
+								<li class="main_nav_item"><a href="adminticket.do">예매관리</a></li>
+								<li class="main_nav_item"><a href="noticeview.do">공지사항</a></li>
 							</ul>
 						</div>
 						<div class="content_search ml-lg-0 ml-auto">

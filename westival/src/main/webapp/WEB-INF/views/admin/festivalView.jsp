@@ -1,28 +1,99 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Contact</title>
+<title>축제관리</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_styles.css">
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_responsive.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/animate.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_styles.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_responsive.css">
 </head>
-<script type="text/javascript">
-function goview(){
-	location.href="noticeview.do"
-}
+<script type="text/javascript" src="/westival/resources/js/jquery-3.2.1.min.js"></script>
+<!-- <script type="text/javascript">
+		var currentPage;
+		var maxPage;
+		var startPage;
+		var endPage;
+		var listCount;
+		var pwdList = [];
+		var memberInfo = new Object();
+		var filter;
 
+	//축제 리스트 전체 조회
+	function allchk(page){
+	if(confirm('축제정보 리스트를 전체조회 하시겠습니까??') == true){
+		$.ajax({
+			url: "allchk.do",
+			type: "post",
+			data: {"page" : page},
+			dataType: "json",
+			success: function(data){
+				//축제리스트 직렬화
+				var jsonStr = JSON.stringify(data);
+				var json = JSON.parse(jsonStr);
+				
+				//페이지 값 추출
+				currentPage = json.currentPage;
+				maxPage = json.maxPage;
+				startPage = json.startPage;
+				listCount = json.listCount;
+				
+				
+				
+				var values = "";
+				for(var i in json.list){
+					for(var j = 0; j < json.list[i].faddress.length; j++){
+						json.list[i].faddress = json.list[i].faddress.replace("+", " ");		
+					}
+					values += "<tr><td>" + decodeURIComponent(json.list[i].fname) + "</td>" 
+					+ "<td>" + decodeURIComponent(json.list[i].faddress) + "</td>" 
+					+ "<td>" + json.list[i].fstartdate + "</td>" 
+					+ "<td>" + decodeURIComponent(json.list[i].fmanage) + "</td>" 
+					+ "<td>" + decodeURIComponent(json.list[i].ftelephone) + "</td>" 
+					+ "<td>" + decodeURIComponent(json.list[i].fticket) + "</td>" 
+					+ "<td>" + json.list[i].freadcount + "</td>" 
+					+ "<td>" + json.list[i].frecommend + "</td></tr>";
+					
+				
+				}	//for
+				$("#tb1").html(values);
+				
+				//페이징 처리
+				var firstP = "<li><a id='firstBtn' href='#' onclick='paging(" + startPage + ")'>[처음으로]</a></li>";
+				var finalP = "<li><a id='finalBtn' href='#' onclick='paging(" + endPage + ")'>[끝으로]</a></li>";
+				
+				for(var p = startPage; p <= endPage; p++){
+					if(p == startPage)
+						$("#domain").html(firstP);
+					
+					$("#domain").append("<li><a href='#' onclick='paging(" + p + ")'>" + p + "</a></li>");
+					
+					if(p == endPage)
+						$("#domain").append(finalP);
+				}//paging for
+			}, //success
+			error:function(request,status,error){
+		        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+		       }//error
+
+		}); //ajax
+	}
+		return false;
+	} 
 </script>
-<body>
+ -->
+ <body>
 
 <div class="super_container">
 	
@@ -49,7 +120,7 @@ function goview(){
 						</div>
 						<div class="user_box ml-auto">
 							<div class="user_box_login user_box_link"><a href="#">login</a></div>
-							<div class="user_box_register user_box_link"><a href="#">register</a></div>
+							<div class="user_box_register user_box_link"><a href="#">등록</a></div>
 						</div>
 					</div>
 				</div>
@@ -68,10 +139,10 @@ function goview(){
 						<div class="main_nav_container ml-auto">
 							<ul class="main_nav_list">
 								<li class="main_nav_item"><a href="index.html">home</a></li>
-								<li class="main_nav_item"><a href="about.html">about us</a></li>
-								<li class="main_nav_item"><a href="offers.html">offers</a></li>
-								<li class="main_nav_item"><a href="blog.html">news</a></li>
-								<li class="main_nav_item"><a href="#">contact</a></li>
+								<li class="main_nav_item"><a href="#">about us</a></li>
+								<li class="main_nav_item"><a href="adminfestival">축제관리</a></li>
+								<li class="main_nav_item"><a href="adminticket.do">예매관리</a></li>
+								<li class="main_nav_item"><a href="noticeview.do">공지사항</a></li>
 							</ul>
 						</div>
 						<div class="content_search ml-lg-0 ml-auto">
@@ -118,73 +189,102 @@ function goview(){
 			<div class="logo menu_logo"><a href="#"><img src="images/logo.png" alt=""></a></div>
 			<ul>
 				<li class="menu_item"><a href="index.html">home</a></li>
-				<li class="menu_item"><a href="about.html">about us</a></li>
+				<li class="menu_item"><a href="#">about us</a></li>
 				<li class="menu_item"><a href="offers.html">offers</a></li>
 				<li class="menu_item"><a href="blog.html">news</a></li>
-				<li class="menu_item"><a href="#">contact</a></li>
+				<li class="menu_item"><a href="contact.html">contact</a></li>
 			</ul>
 		</div>
 	</div>
 
 	<!-- Home -->
 
-	<div class="home">
-		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/contact_background.jpg"></div>
+	<div class="home" >
+		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/about_background.jpg" ></div>
 		<div class="home_content">
-			<div class="home_title">공지사항 등록하기</div>
+			<div class="home_title">축제관리</div>
 		</div>
-	</div>  
+	</div>
+	
+	<!-- search -->	
+	<div style="background:#f6f9fb;">
+					<div class="container" data-wow-delay="0.8s" >
+						
+                            <form action="#" class=" form-inline" method="post" style="margin-top : 0.5%; "> 
 
-	<!-- Contact -->
+                                <div class="form-group" style="margin-left : 34%;">                                   
+                                    <select class="btn dropdown-toggle btn-sm" id="filter" name="filter">
+                                
+										<option value="all">통합검색</option>
+                                        <option value="location">위치</option>
+                                        <option value="fname">축제명</option>
+                                        <option value="manage">주최/주관</option>
+                                        <option value="ticket">티켓</option>
 
-		<div class="contact_form_section" style="padding-top: 2%;">
-			<div class="container">
-				<div class="row">
-					<div class="col">
-
-						<!-- Contact Form -->
-						<div class="contact_form_container"
-							style="background: linear-gradient(to top right, white, white">
-							<table class="table table-hover">
-								<form action="fileup.do" method="post" enctype="multipart/form-data"  onsubmit="return confirm('정말로 등록하시겠습니까 ?');">
-								<tr>
-									<th scope="col" width="10%;">제목</th>
-									<td><input type="text" style="width: 50%;" required name="ntitle" id="ntitle"></td>
-								</tr>
-								<tr>
-									<th scope="col">작성자</th>
-									<td>admin</td>
-								</tr>
-
-								<tr>
-									<th scope="col">첨부파일</th>
-									<td><input type="file" name="file"></td>
-								</tr>
-								<tr>
-									<th scope="col">내용</th>
-									<td><textarea name="ncontent" cols="100" rows="6" required id="ncontent"></textarea></td>
-								</tr>
-
-
-							</table>
-							<div>
-							<center>
-							<input class="btn btn-primary" type="submit" value="등록하기" style="cursor:pointer;">
-							<button type="button" class="btn btn-secondary" onclick="goview();">취소하기</button>
-							</center>
-							</div>
-							</form>
-
-						</div>
-
+                                    </select>
+                                </div>
+                                
+                                 <div class="form-group" >
+                                    <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="searchTF" id="searchTF" style="margin-left:1%; ">
+                                </div>
+                                <button class="btn search-btn" type="submit" style="margin-left:0.5%;"><i class="fa fa-search" ></i></button>
+                                <button class="btn search-btn" type="button" style="margin-left:0.5%;" onclick="allchk(1);"><i class="fa fa-search" >전체조회</i></button>
+								
+                            </form>
+                        </div>
+  </div>
+	<!-- Intro -->
+  
+	<div class="intro" style="padding-top : 2%;">
+		
+	
+	
+		<div class="container">
+		
+			<div class="row">
+				<div class="col-lg-12">
+			
+					<div class="intro_content">
+					<table class="table" width="100%;" style="border-bottom : solid 0.1px;"> 
+					  <thead>
+					    <tr align="center">
+					      
+					      <th scope="col" width="">축제명</th>
+					      <th scope="col" width="">위치</th>
+					      <th scope="col" width="">날짜</th>
+					      <th scope="col" width="">주최/주관</th>
+					      <th scope="col" width="">문의처</th>
+					      <th scope="col" width="">티켓(Y/N)</th>
+					      <th scope="col" width="">조회수</th>
+					      <th scope="col" width="">추천수</th>
+					     
+					    </tr>
+					  </thead>
+					  <tbody id="tb1">
+					  </tbody>
+					  </table>
 					</div>
+					<div class="col-md-12"> 
+                        <div class="pull-right">
+                            <div class="pagination">
+                                <ul id="domain">
+        
+                                </ul>
+                            </div>
+                        </div>                
+                    </div>
 				</div>
+			
 			</div>
 		</div>
+	</div>
 
+	
 
+	
 
-		<br>
+	
+
 	<!-- Footer -->
 
 	<footer class="footer">
@@ -314,10 +414,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 						<div class="footer_nav">
 							<ul class="footer_nav_list">
 								<li class="footer_nav_item"><a href="index.html">home</a></li>
-								<li class="footer_nav_item"><a href="about.html">about us</a></li>
+								<li class="footer_nav_item"><a href="#">about us</a></li>
 								<li class="footer_nav_item"><a href="offers.html">offers</a></li>
 								<li class="footer_nav_item"><a href="blog.html">news</a></li>
-								<li class="footer_nav_item"><a href="#">contact</a></li>
+								<li class="footer_nav_item"><a href="contact.html">contact</a></li>
 							</ul>
 						</div>
 					</div>
@@ -331,9 +431,15 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
 <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
 <script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<script src="/westival/resources/plugins/greensock/TweenMax.min.js"></script>
+<script src="/westival/resources/plugins/greensock/TimelineMax.min.js"></script>
+<script src="/westival/resources/plugins/scrollmagic/ScrollMagic.min.js"></script>
+<script src="/westival/resources/plugins/greensock/animation.gsap.min.js"></script>
+<script src="/westival/resources/plugins/greensock/ScrollToPlugin.min.js"></script>
+<script src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+<script src="/westival/resources/plugins/easing/easing.js"></script>
 <script src="/westival/resources/plugins/parallax-js-master/parallax.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA"></script>
-<script src="/westival/resources/js/contact_custom.js"></script>
+<script src="/westival/resources/js/about_custom.js"></script>
 
 </body>
 

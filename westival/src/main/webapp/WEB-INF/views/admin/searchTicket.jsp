@@ -1,26 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Contact</title>
+<title>예매관리</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_styles.css">
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_responsive.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/animate.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_styles.css">
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_responsive.css">
 </head>
+<script type="text/javascript" src="/westival/resources/js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
-function goview(){
-	location.href="noticeview.do"
-}
-
+	
 </script>
 <body>
 
@@ -49,7 +50,7 @@ function goview(){
 						</div>
 						<div class="user_box ml-auto">
 							<div class="user_box_login user_box_link"><a href="#">login</a></div>
-							<div class="user_box_register user_box_link"><a href="#">register</a></div>
+							<div class="user_box_register user_box_link"><a href="#">등록</a></div>
 						</div>
 					</div>
 				</div>
@@ -68,10 +69,10 @@ function goview(){
 						<div class="main_nav_container ml-auto">
 							<ul class="main_nav_list">
 								<li class="main_nav_item"><a href="index.html">home</a></li>
-								<li class="main_nav_item"><a href="about.html">about us</a></li>
+								<li class="main_nav_item"><a href="#">about us</a></li>
 								<li class="main_nav_item"><a href="offers.html">offers</a></li>
-								<li class="main_nav_item"><a href="blog.html">news</a></li>
-								<li class="main_nav_item"><a href="#">contact</a></li>
+								<li class="main_nav_item"><a href="adminticket.do">예매관리</a></li>
+								<li class="main_nav_item"><a href="noticeview.do">공지사항</a></li>
 							</ul>
 						</div>
 						<div class="content_search ml-lg-0 ml-auto">
@@ -118,73 +119,215 @@ function goview(){
 			<div class="logo menu_logo"><a href="#"><img src="images/logo.png" alt=""></a></div>
 			<ul>
 				<li class="menu_item"><a href="index.html">home</a></li>
-				<li class="menu_item"><a href="about.html">about us</a></li>
+				<li class="menu_item"><a href="#">about us</a></li>
 				<li class="menu_item"><a href="offers.html">offers</a></li>
 				<li class="menu_item"><a href="blog.html">news</a></li>
-				<li class="menu_item"><a href="#">contact</a></li>
+				<li class="menu_item"><a href="contact.html">contact</a></li>
 			</ul>
 		</div>
 	</div>
 
 	<!-- Home -->
 
-	<div class="home">
-		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/contact_background.jpg"></div>
+	<div class="home" >
+		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/about_background.jpg" ></div>
 		<div class="home_content">
-			<div class="home_title">공지사항 등록하기</div>
+			<div class="home_title">예매관리</div>
 		</div>
-	</div>  
+	</div>
+	
+	<!-- search -->
+	<div style="background:#f6f9fb;">
+					<div class="container" data-wow-delay="0.8s" >
+						
+                            <form action="search.do" class=" form-inline" method="post" style="margin-top : 0.5%; "> 
 
-	<!-- Contact -->
+                                <div class="form-group" style="margin-left : 34%;">                                   
+                                    <select class="btn dropdown-toggle btn-sm" id="filter" name="filter">
+                                
+									<option value="all" >통합검색</option>
+                                        <option value="name">이름</option>
+                                        <option value="id" >아이디</option>
+                                        <option value="fname" >축제명</option>
+                                        <option value="tno" >예매번호</option>
+                                        <option value="price" >금액</option>
+                                        <option value="ptype" >결제방식</option>
+                                        <option value="state" >상태</option>
+                                          <option value="account">계좌번호</option>
+                                         	
+                               
 
-		<div class="contact_form_section" style="padding-top: 2%;">
-			<div class="container">
-				<div class="row">
-					<div class="col">
+                                    </select>
+                                </div>
+                                
+                                 <div class="form-group" >
+                                    <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="searchTF" id="searchTF" style="margin-left:1%; ">
+                                </div>
+                                <button class="btn search-btn" type="submit" style="margin-left:0.5%;"><i class="fa fa-search" ></i></button>
+                              
+								
+                            </form>
+                        </div>
+  </div>
+	<!-- Intro -->
+  
+	<div class="intro" style="padding-top : 2%;">
+		
+	
+	
+		<div class="container">
+		
+			<div class="row">
+				<div class="col-lg-12">
+			
+					<div class="intro_content">
+					<table class="table" width="100%;" style="border-bottom : solid 0.1px;"> 
+					  <thead>
+					    <tr align="center">
+					      <th scope="col" width="">이름</th>
+					      <th scope="col" width="">아이디</th>
+					      <th scope="col" width="">축제명</th>
+					      <th scope="col" width="">예매번호</th>
+					      <th scope="col" width="">예매날짜</th>
+					      <th scope="col" width="">수량</th>
+					      <th scope="col" width="">금액</th>
+					      <th scope="col" width="">결제방식</th>
+					      <th scope="col" width="">상태</th>
+					      <th scope="col" width="">계좌번호</th>
+					     
+					    </tr>
+					  </thead>
+					  <tbody id="tb1">
+					
+					    <c:forEach items="${map.list }" var="n">
+							<tr>
+								<td align="center">${n.user_name }</td>
+								
+								<td align="center">${n.user_id }</td>
+								
+								<td align="center">${n.name }</td>
+								
+								<td align="center">${n.ticket_no }</td>
+								
+								<td align="center">${n.ticket_date }</td>
+								
+								<td align="center">${n.ticket_count }</td>
+								
+								<td align="center">${n.price }</td>
+								
+								<td align="center">${n.pay_type }</td>
+								
+								<td align="center">${n.state }</td>
+								
+								<td align="center">${n.account_no }</td>
+							</tr>				    
+					    </c:forEach>
+					  </tbody>
+					  
+					   
+					</table>
+						
+<%-- <div style="text-align: center">
+<% if(currentPage <= 1){ %>
+	[맨처음]&nbsp;
+<% }else{ %>
+	<a href="/second/blist?page=1">[맨처음]</a>
+<% } %>
+<c:if test="${currentPage <= 1 }">
+[맨처음]&nbsp;
+</c:if>
+<c:if test="${currentPage > 1 }">
+<c:url var="mi13" value="adminticket.do">
+	<c:param name="page" value="1"/>
+</c:url>
+<a href="${mi13 }">[맨처음]</a>
+</c:if>
+<% if((currentPage - 10) < startPage && 
+		(currentPage - 10) > 1){ %>
+	<a href="/second/blist?page=<%= startPage - 10 %>">[이전]</a>
+<% }else{ %>
+	[이전]&nbsp;
+<% } %>
+<c:if test="${(currentPage-10) <  startPage && (currentPage-10) > 1 }">
+	<c:url var="mi14" value="adminticket.do">
+		<c:param name="page" value="${startPage -10 }" />
+	</c:url>
+	<a href="${mi14 }">[이전]</a>
+</c:if>
+<c:if test="${(currentPage-10) >=  startPage || (currentPage-10) <= 1  }">
+[이전]&nbsp;
+</c:if>
+<c:forEach var="cnt" begin="${startPage }" end="${endPage }">
+<c:if test="${cnt == currentPage }">
+	<font color="red" size="4">[${cnt }]</font>
+</c:if>
+<c:if test="${cnt != currentPage }">
+	<c:url var="mid15" value="adminticket.do">
+		<c:param name="page" value="${cnt }" />
+	</c:url>
+	<a href="${mid15 }">${cnt }</a>
+</c:if>
+</c:forEach>
+<c:if test="${(currentPage + 10) > endPage && (currentPage+10) < maxPage }">
+	<c:url var="mid16" value="adminticket.do">
+		<c:param name="page" value="${endPage + 10 }" />
+	</c:url>
+	<a href="${mid16 }">[다음]</a>
+</c:if>
+<c:if test="${!((currentPage + 10) > endPage && (currentPage+10) < maxPage) }">
+	[다음]&nbsp;
+</c:if>
+<c:if test="${currentPage >= maxPage }">
+	[맨끝]&nbsp;
+</c:if>
+<c:if test="${!(currentPage >= maxPage) }">
+<c:url var="mid17" value="adminticket.do">
+	<c:param name="page" value="${maxPage }" />
+</c:url> 
+<a href="${mid17 }">[맨끝]</a>
+</c:if>
+startPage ~ endPage 출력
 
-						<!-- Contact Form -->
-						<div class="contact_form_container"
-							style="background: linear-gradient(to top right, white, white">
-							<table class="table table-hover">
-								<form action="fileup.do" method="post" enctype="multipart/form-data"  onsubmit="return confirm('정말로 등록하시겠습니까 ?');">
-								<tr>
-									<th scope="col" width="10%;">제목</th>
-									<td><input type="text" style="width: 50%;" required name="ntitle" id="ntitle"></td>
-								</tr>
-								<tr>
-									<th scope="col">작성자</th>
-									<td>admin</td>
-								</tr>
+<% for(int p = startPage; p <= endPage; p++){ 
+		if(p == currentPage){ 
+%>
+	<font color="red" size="4">[<%= p %>]</font>
+<%      }else{ %>
+	<a href="/second/blist?page=<%= p %>"><%= p %></a>
+<% }} %>
+----------------
+<% if((currentPage + 10) > endPage && 
+		(currentPage + 10) < maxPage){ %>
+	<a href="/second/blist?page=<%= endPage + 10 %>">[다음]</a>
+<% }else{ %>
+	[다음]&nbsp;
+<% } %>
 
-								<tr>
-									<th scope="col">첨부파일</th>
-									<td><input type="file" name="file"></td>
-								</tr>
-								<tr>
-									<th scope="col">내용</th>
-									<td><textarea name="ncontent" cols="100" rows="6" required id="ncontent"></textarea></td>
-								</tr>
+<% if(currentPage >= maxPage){ %>
+	[맨끝]&nbsp;
+<% }else{ %>
+	<a href="/second/blist?page=<%= maxPage %>">
+	[맨끝]</a>
+<% } %>
+
+</div> --%>
 
 
-							</table>
-							<div>
-							<center>
-							<input class="btn btn-primary" type="submit" value="등록하기" style="cursor:pointer;">
-							<button type="button" class="btn btn-secondary" onclick="goview();">취소하기</button>
-							</center>
-							</div>
-							</form>
-
-						</div>
+							
 
 					</div>
 				</div>
+			
 			</div>
 		</div>
+	</div>
 
+	
 
+	
 
-		<br>
+	
+
 	<!-- Footer -->
 
 	<footer class="footer">
@@ -314,10 +457,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 						<div class="footer_nav">
 							<ul class="footer_nav_list">
 								<li class="footer_nav_item"><a href="index.html">home</a></li>
-								<li class="footer_nav_item"><a href="about.html">about us</a></li>
+								<li class="footer_nav_item"><a href="#">about us</a></li>
 								<li class="footer_nav_item"><a href="offers.html">offers</a></li>
 								<li class="footer_nav_item"><a href="blog.html">news</a></li>
-								<li class="footer_nav_item"><a href="#">contact</a></li>
+								<li class="footer_nav_item"><a href="contact.html">contact</a></li>
 							</ul>
 						</div>
 					</div>
@@ -331,9 +474,15 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
 <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
 <script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<script src="/westival/resources/plugins/greensock/TweenMax.min.js"></script>
+<script src="/westival/resources/plugins/greensock/TimelineMax.min.js"></script>
+<script src="/westival/resources/plugins/scrollmagic/ScrollMagic.min.js"></script>
+<script src="/westival/resources/plugins/greensock/animation.gsap.min.js"></script>
+<script src="/westival/resources/plugins/greensock/ScrollToPlugin.min.js"></script>
+<script src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+<script src="/westival/resources/plugins/easing/easing.js"></script>
 <script src="/westival/resources/plugins/parallax-js-master/parallax.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA"></script>
-<script src="/westival/resources/js/contact_custom.js"></script>
+<script src="/westival/resources/js/about_custom.js"></script>
 
 </body>
 

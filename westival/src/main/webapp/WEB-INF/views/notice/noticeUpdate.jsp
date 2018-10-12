@@ -150,7 +150,7 @@ function goview(){
 								<c:param name="no" value="${nudetail.notice_no }"></c:param>
 							</c:url> --%>
 	
-								<form action="nupdate.do" method="post" enctype="multipart/form-data">
+								<form action="nupdate.do" method="post" enctype="multipart/form-data" onsubmit="return confirm('정말로 수정하시겠습니까 ?');">
 								<tr>
 									<th scope="col" width="10%;">글번호</th>
 									<td><input type="text" style="width: 50%;" required name="no" id="no" value="${nudetail.notice_no }" readonly></td>
@@ -177,7 +177,7 @@ function goview(){
 							</table>
 							<div>
 							<center>
-							<input class="btn btn-primary" type="submit" value="수정하기" style="cursor:pointer;">
+							<input class="btn btn-primary" type="submit" value="수정하기" style="cursor:pointer;" >
 							<button type="button" class="btn btn-secondary" onclick="goview();">취소하기</button>
 							</center>
 							</div>

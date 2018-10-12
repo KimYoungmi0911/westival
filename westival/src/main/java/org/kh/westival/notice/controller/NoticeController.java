@@ -32,15 +32,46 @@ public class NoticeController {
 		return "notice/noticeView";
 	}*/
 	
-	@RequestMapping("noticeview.do")
+	/*@RequestMapping("noticeview.do")
 	public ModelAndView selectList(ModelAndView mv){
+		
+		
+		
 		ArrayList<Notice> list = noticeServiceImpl.selectList();
 		
 		mv.addObject("list", list);
 		mv.setViewName("notice/noticeView");
 		System.out.println("dao갔다옴");
 		return mv;
+	}*/
+	@RequestMapping("noticeview.do")
+	public ModelAndView selectList(ModelAndView mv, HttpServletRequest request){
+		int currentPage = 1;
+		int limit = 9;
+		if(request.getParameter("page") != null){
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+		int listCount = noticeServiceImpl.getListCount();
+		ArrayList<Notice> list = noticeServiceImpl.selectList(currentPage, limit);
+		int maxPage = (int) Math.ceil(((double)listCount / limit));
+		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit -1;
+		if(maxPage < endPage)
+			endPage = maxPage;
+		
+		
+		mv.addObject("list", list);
+		mv.addObject("currentPage", currentPage);
+		mv.addObject("maxPage", maxPage);
+		mv.addObject("startPage", startPage);
+		mv.addObject("endPage", endPage);
+		mv.addObject("listCount", listCount);
+		mv.setViewName("notice/noticeView");
+		System.out.println("dao갔다옴");
+		return mv;
 	}
+	
+	
 	
 	/*@RequestMapping("ndetail.do")
 	public String noticeDetail(){
@@ -102,15 +133,18 @@ public class NoticeController {
 			@RequestParam(name="file") MultipartFile file, @RequestParam(name="ntitle") String title,
 			@RequestParam(name="ncontent") String content){
 		
-		String savePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles");
-		System.out.println("path : " + savePath);
+		/*String savePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles");
+		System.out.println("path : " + savePath);*/
 
 		
 		try {
 			String originalFileName = file.getOriginalFilename();
 			String renameFileName = null;
 			
-			if(originalFileName != null){
+			if(!originalFileName.isEmpty()){
+				String savePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles");
+				System.out.println("path : " + savePath);
+				
 				SimpleDateFormat sdf = 
 					new SimpleDateFormat("yyyyMMddHHmmss");
 				renameFileName = sdf.format(new java.sql.Date(System.currentTimeMillis()))
@@ -147,15 +181,28 @@ public class NoticeController {
 						fout.close();					
 						originFile.delete();
 					}	
+					
 					notice.setNotice_title(title);
 					notice.setNotice_content(content);
 					notice.setOriginal_filepath(originalFileName);
 					notice.setRename_filepath(renameFileName);
+					mv.addObject("originalFileName", noticeServiceImpl.noticeInsert(notice));
+					System.out.println("파일있음 : " + ", " + notice.getNotice_title() + ", " + notice.getNotice_content() + 
+							", " + notice.getOriginal_filepath() + ", " + notice.getRename_filepath());
+					
 			}
 			
-
-				mv.addObject("originalFileName", noticeServiceImpl.noticeInsert(notice));
 			
+			 if(originalFileName.isEmpty()){
+					notice.setNotice_title(title);
+					notice.setNotice_content(content);		
+					notice.setOriginal_filepath(null);
+					notice.setRename_filepath(null);
+					mv.addObject("originalFileName", noticeServiceImpl.noticeInsert2(notice));
+					System.out.println("파일없음 : " + ", " + notice.getNotice_title() + ", " + notice.getNotice_content() + 
+							", " + notice.getOriginal_filepath() + ", " + notice.getRename_filepath());
+					
+				}
 				mv.setViewName("redirect:/noticeview.do");
 				
 		} catch (IllegalStateException | IOException e) {
@@ -177,6 +224,7 @@ public class NoticeController {
 	public String noticeRewrite(){
 		return "notice/noticeUpdate";
 	}*/
+	
 	@RequestMapping(value="noticeupdate.do")
 	public ModelAndView noticeUpdate(ModelAndView mv, @RequestParam(value="no1") int notice_no){
 		mv.addObject("nudetail", noticeServiceImpl.noticeUpdate(notice_no));
@@ -191,29 +239,31 @@ public class NoticeController {
 			@RequestParam(name="ncontent") String content, @RequestParam(name="no") int no){
 		System.out.println("noticeUpdate controller 되는지 안되는지");
 		
-		String savePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles");
-		System.out.println("path : " + savePath);
+		/*String savePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles");
+		System.out.println("path : " + savePath);*/
 
 		
 		try {
 			String originalFileName = file.getOriginalFilename();
 			String renameFileName = null;
 
-			if(originalFileName != null){
+			/*if(originalFileName != null){
 				notice.setNotice_no(no);
 				notice.setNotice_title(title);
 				notice.setNotice_content(content);
 				notice.setOriginal_filepath(originalFileName);
 				notice.setRename_filepath(renameFileName);
-			}
+			}*/
 			
-			if(originalFileName != null){
+			if(!originalFileName.isEmpty()){
+				String savePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles");
+				System.out.println("path : " + savePath);
 				SimpleDateFormat sdf = 
 					new SimpleDateFormat("yyyyMMddHHmmss");
 				renameFileName = sdf.format(new java.sql.Date(System.currentTimeMillis()))
 						+ "." + originalFileName.substring(
 								originalFileName.lastIndexOf(".") + 1);
-				//System.out.println("rename : " + renameFileName);
+				System.out.println("rename : " + renameFileName);
 				
 				//전송받은 파일 객체를 지정 폴더에 저장함★★★(반드시해야함)
 				file.transferTo(new File(savePath + "\\" + 
@@ -245,12 +295,29 @@ public class NoticeController {
 						originFile.delete();
 					}	
 					 
+					notice.setNotice_no(no);
+					notice.setNotice_title(title);
+					notice.setNotice_content(content);
+					notice.setOriginal_filepath(originalFileName);
+					notice.setRename_filepath(renameFileName);
 					
+					System.out.println("noticeUpdate Controller " +"," + notice.getNotice_no() + ", " + notice.getNotice_title() + ", " 
+					+ notice.getNotice_content() + ", " + notice.getOriginal_filepath() + ", " + notice.getRename_filepath());
+					mv.addObject("originalFileName", noticeServiceImpl.noticeUpdate(notice));
+			}
+			else if(originalFileName.isEmpty()){
+				notice.setNotice_no(no);
+				notice.setNotice_title(title);
+				notice.setNotice_content(content);
+				notice.setOriginal_filepath(null);
+				notice.setRename_filepath(null);
+				System.out.println("noticeUpdate2 Controller " +"," + notice.getNotice_no() 
+				+ ", " + notice.getNotice_title() + ", " + notice.getNotice_content() + ", " + notice.getOriginal_filepath() + notice.getRename_filepath());
+				mv.addObject("originalFileName", noticeServiceImpl.noticeUpdate2(notice));
 			}
 			
 			
-			System.out.println("noticeUpdate Controller " +"," + notice.getNotice_no() + ", " + notice.getNotice_title() + ", " + notice.getNotice_content() + ", " + notice.getOriginal_filepath());
-				mv.addObject("originalFileName", noticeServiceImpl.noticeUpdate(notice));
+		
 			
 				mv.setViewName("redirect:/noticeview.do");
 				
