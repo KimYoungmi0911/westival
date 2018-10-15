@@ -15,12 +15,18 @@ public class Ticket implements java.io.Serializable {
 	private int price;
 	private String state;
 	private String import_uid;
+	private String vbank_num;
+	private String vbank_name;
+	private String vbank_holder;
+	private Date vbank_date;
+	private Date ticket_receipt_date; 
 
 	public Ticket() {
 	}
 
 	public Ticket(String ticket_no, int no, String user_id, Date ticket_date, int ticket_count, String pay_type,
-			Date pay_date, int price, String state, String import_uid) {
+			Date pay_date, int price, String state, String import_uid, String vbank_num, String vbank_name,
+			String vbank_holder, Date vbank_date, Date ticket_receipt_date) {
 		super();
 		this.ticket_no = ticket_no;
 		this.no = no;
@@ -32,6 +38,11 @@ public class Ticket implements java.io.Serializable {
 		this.price = price;
 		this.state = state;
 		this.import_uid = import_uid;
+		this.vbank_num = vbank_num;
+		this.vbank_name = vbank_name;
+		this.vbank_holder = vbank_holder;
+		this.vbank_date = vbank_date;
+		this.ticket_receipt_date = ticket_receipt_date;
 	}
 
 	public String getTicket_no() {
@@ -114,13 +125,55 @@ public class Ticket implements java.io.Serializable {
 		this.import_uid = import_uid;
 	}
 
+	public String getVbank_num() {
+		return vbank_num;
+	}
+
+	public void setVbank_num(String vbank_num) {
+		this.vbank_num = vbank_num;
+	}
+
+	public String getVbank_name() {
+		return vbank_name;
+	}
+
+	public void setVbank_name(String vbank_name) {
+		this.vbank_name = vbank_name;
+	}
+
+	public String getVbank_holder() {
+		return vbank_holder;
+	}
+
+	public void setVbank_holder(String vbank_holder) {
+		this.vbank_holder = vbank_holder;
+	}
+
+	public Date getVbank_date() {
+		return vbank_date;
+	}
+
+	public void setVbank_date(Date vbank_date) {
+		this.vbank_date = vbank_date;
+	}
+
+	public Date getTicket_receipt_date() {
+		return ticket_receipt_date;
+	}
+
+	public void setTicket_receipt_date(Date ticket_receipt_date) {
+		this.ticket_receipt_date = ticket_receipt_date;
+	}
+
 	@Override
 	public String toString() {
 		return "Ticket [ticket_no=" + ticket_no + ", no=" + no + ", user_id=" + user_id + ", ticket_date=" + ticket_date
 				+ ", ticket_count=" + ticket_count + ", pay_type=" + pay_type + ", pay_date=" + pay_date + ", price="
-				+ price + ", state=" + state + ", import_uid=" + import_uid + "]";
+				+ price + ", state=" + state + ", import_uid=" + import_uid + ", vbank_num=" + vbank_num
+				+ ", vbank_name=" + vbank_name + ", vbank_holder=" + vbank_holder + ", vbank_date=" + vbank_date
+				+ ", ticket_receipt_date=" + ticket_receipt_date + "]";
 	}
 
 	
-	
+		
 }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ticketOptionMapper">
+
+	<resultMap type="TicketOption" id="resultTicketOption">
+		<id property="ticket_no" column="ticket_no" />
+		<result property="no" column="no" />
+		<result property="ticket_name" column="ticket_name" />
+		<result property="ticket_price" column="ticket_price" />
+		<result property="ticket_quantity" column="ticket_quantity" />
+		<result property="company_name" column="company_name" />
+		<result property="ceo_name" column="ceo_name" />
+		<result property="phone" column="phone" />
+		<result property="bank_name" column="bank_name" />
+		<result property="account_holder_name" column="account_holder_name" />
+		<result property="account_no" column="account_no" />
+		<result property="registration_date" column="registration_date" />
+	</resultMap>
+	
+	<resultMap type="TicketOption" id="resultList">
+		<id property="ticket_no" column="ticket_no" />
+		<result property="user_id" column="user_id" />
+		<result property="no" column="no" />
+		<result property="ticket_name" column="ticket_name" />
+		<result property="ticket_price" column="ticket_price" />
+		<result property="ticket_quantity" column="ticket_quantity" />
+		<result property="company_name" column="company_name" />
+		<result property="ceo_name" column="ceo_name" />
+		<result property="company_no" column="company_no" />
+		<result property="phone" column="phone" />
+		<result property="bank_name" column="bank_name" />
+		<result property="account_holder_name" column="account_holder_name" />
+		<result property="account_no" column="account_no" />
+		<result property="registration_date" column="registration_date" />
+	</resultMap>
+	
+<!-- 
+	<select id="loginCheck" parameterType="Member" resultType="Member" resultMap="resultMember">
+		<![CDATA[
+		select * from member where userid = #{userid} and userpwd = #{userpwd}
+		]]>
+	</select>	
+	
+	<select id="selectList" resultMap="resultList">
+		<![CDATA[select * from member]]>
+	</select>
+
+	<select id="selectMember" parameterType="string" resultMap="resultMember">
+		<![CDATA[select * from member where userid = #{userId}]]>
+	</select>
+
+	<select id="dupId" parameterType="string" resultType="_int">
+		<![CDATA[select count(userid) from member where userid = #{userId}]]>
+	</select> -->
+
+	<insert id="insertTicketOption" parameterType="TicketOption" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">	
+		insert into tb_ticket_option values ('ticket'||ticket_seq.nextval, #{user_id}, festival_seq.currval,
+		#{ticket_name}, #{ticket_price}, #{ticket_quantity}, #{company_name}, #{ceo_name}, 
+		#{company_no}, #{phone}, #{bank_name}, #{account_holder_name}, #{account_no}, sysdate)
+	</insert>
+
+	<!-- <update id="updateMember" parameterType="Member" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[
+		update member set userpwd = #{userpwd}, age = #{age}, email =
+		#{email}, phone = #{phone}, hobby = #{hobby}, etc = #{etc} where
+		userid = #{userid}
+		]]>
+	</update>
+
+	<delete id="deleteMember" parameterType="string" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[delete from member where userid = #{userid}]]>
+	</delete> -->
+
+</mapper>

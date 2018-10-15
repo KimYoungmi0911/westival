@@ -25,19 +25,14 @@
 	select * from tb_notice where notice_no = #{notice_no}
 	]]>
 	</select>
+
+	<insert id="noticeInsert1" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
 	
-	<insert id="noticeInsert" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
+	insert into tb_notice values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, #{original_filepath}, #{rename_filepath})
+	</insert>
 	
-	insert into tb_notice 
-	<choose>
-	<when test="original_filepath != null">
-	values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, #{original_filepath}, #{rename_filepath})
-	</when>
-	
-	<otherwise>
-	values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, null, null)
-	</otherwise>
-	</choose>
+	<insert id="noticeInsert2" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
+	insert into tb_notice values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, null, null)
 	</insert>
 
 	<delete id="noticeDelete" parameterType="_int" flushCache="true"
@@ -47,16 +42,44 @@
 		
 	</delete>
 	
-	<update id="noticeUpdate" parameterType="Notice" flushCache="true"
+	<update id="noticeUpdate1" parameterType="Notice" flushCache="true"
 		statementType="PREPARED">
 		update tb_notice set notice_title = #{notice_title}, 
 		notice_content = #{notice_content},
-		original_filepath = #{original_filepath}
+		original_filepath = #{original_filepath},
+		rename_filepath = #{rename_filepath}
+		where notice_no = #{notice_no}
+	</update>
+	
+	<update id="noticeUpdate2" parameterType="Notice" flushCache="true"
+		statementType="PREPARED">
+		update tb_notice set notice_title = #{notice_title}, 
+		notice_content = #{notice_content},
+		original_filepath = null,
+		rename_filepath = null
 		where notice_no = #{notice_no}
 	</update>
 	
 	<select id="noticeSelect"  resultMap="resultList">
 	select * from tb_notice where notice_no = #{notice_no}
+	</select>
+	
+	<!-- 페이징뷰 -->
+	<select id="getListCount" resultType="_int">
+	<![CDATA[
+	select count(*) from tb_notice
+		]]>
+	</select>
+	
+	<select id="selectListPage" parameterType="NoticePage" resultMap="resultList">
+	<![CDATA[
+	select * from (
+				select rownum rnum, notice_no, user_id, 
+				notice_title, notice_date, notice_content, original_filepath, rename_filepath 
+				from (select * from tb_notice 
+				order by notice_no asc))
+				where rnum >= #{startRow} and rnum <= #{endRow} 
+	]]>
 	</select>
 	
 

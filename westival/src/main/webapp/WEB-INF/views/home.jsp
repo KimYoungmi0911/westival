@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,8 +43,8 @@
 							</ul>
 						</div>
 						<div class="user_box ml-auto">
-							<div class="user_box_login user_box_link"><a href="#">login</a></div>
-							<div class="user_box_register user_box_link"><a href="#">register</a></div>
+							<div class="user_box_login user_box_link">${member.user_name }</div>
+							<div class="user_box_register user_box_link"><button id="header-color" data-toggle="modal" data-target="#register"><a href="#">logout</a></button></div>
 						</div>
 					</div>
 				</div>

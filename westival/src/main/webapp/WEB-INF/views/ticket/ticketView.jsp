@@ -40,8 +40,8 @@
 		//예매수량 제한
 		if('${ticketOption.ticket_quantity}' > 0){
 			$("#ticket_count").val(1).prop("min", 1).prop("max", '${ticketOption.ticket_quantity}');
-		}else{
-			alert("매진된 축제입니다.")
+		}else {
+			alert("매진된 축제입니다.");
 		}
 
 		//예매수량 변경시
@@ -60,7 +60,7 @@
 		
 		//결제하기 클릭시
 		$("#payBtn").on("click", function(){
-			var payType = $("#pay_type:checked").val();
+			var payType = $(".pay_type:checked").val();
 			if(payType == "카드"){
 				payCard();
 			}else{
@@ -69,13 +69,7 @@
 		});
 		
 		//취소하기 클릭시
-		
-		//예매날짜
-		
-		//예매완료 테스트
-		$("#testBtn").on("click", function(){
-			$("#fsubmit").submit();
-		});
+
 		
 	});
 	
@@ -100,7 +94,7 @@
 		    name : '${festival.name}',
 		    amount : $("#price").val(),
 		    buyer_email : '${member.user_email}', //${member.user_email}
-		    buyer_name : '${userid}',
+		    buyer_name : '${member.user_id}',
 		    buyer_tel : '${member.user_phone}', //
 		    buyer_addr : '${member.user_address}', //
 		    //buyer_postcode : '123-456',
@@ -120,7 +114,7 @@
 		    alert(msg);
 		    if(rsp.success){
 		    	$("#import_uid").val(rsp.imp_uid);
-		    	$("#paid_at").val(rsp.paid_at);
+		    	//$("#paid_at").val(rsp.paid_at);
 		    	//alert(rsp.paid_at);
 		    	$("#fsubmit").submit();
 		    }
@@ -136,7 +130,7 @@
 		    name : '${festival.name}',
 		    amount : $("#price").val(),
 		    buyer_email : '${member.user_email}', //${member.user_email}
-		    buyer_name : '${userid}',
+		    buyer_name : '${member.user_id}',
 		    buyer_tel : '${member.user_phone}', //
 		    buyer_addr : '${member.user_address}', //
 		    //buyer_postcode : '123-456',
@@ -148,27 +142,62 @@
 		        msg += '가상계좌 입금계좌번호 : ' + rsp.vbank_num;
 		        msg += '가상계좌 은행명 : ' + rsp.vbank_name;
 		        msg += '가상계좌 예금주 : ' + rsp.vbank_holder;
-		        msg += '가상계좌 입금기한 : ' + vbank_date;
-		        /* msg += '고유ID : ' + rsp.imp_uid;
-		        msg += '상점 거래ID : ' + rsp.merchant_uid;
-		        msg += '결제 금액 : ' + rsp.paid_amount;
-		        msg += '카드 승인번호 : ' + rsp.apply_num; */
+		        msg += '가상계좌 입금기한 : ' + rsp.vbank_date;
 		    } else {
 		        var msg = '결제에 실패하였습니다.';
 		        msg += '에러내용 : ' + rsp.error_msg;
 		    }
 		    alert(msg);
 		    if(rsp.success){
-		    	$("#import_uid").val(rsp.imp_uid);com
+		    	$("#import_uid").val(rsp.imp_uid);
+		    	$("#state").val("입금대기");
+		    	//$("#paid_at").val(rsp.paid_at);
+		    	//alert("paid_at : " + rsp.paid_at);
+		    	alert("rsp.vbank_num : " + rsp.vbank_num  + ", rsp.vbank_name : " + rsp.vbank_name
+		    			+ ", rsp.vbank_holder : " + rsp.vbank_holder + ", rsp.vbank_date : " + rsp.vbank_date);
+		    	alert("pay_type : " + $(".pay_type:checked").val());
+		    	$("#fsubmit").append(
+			    	"<input type='hidden' name='vbank_num' value='" + rsp.vbank_num + "'>" 
+			    	+ "<input type='hidden' name='vbank_name' value='" + rsp.vbank_name + "'>"
+			    	+ "<input type='hidden' name='vbank_holder' value='" + rsp.vbank_holder + "'>"
+			    	+ "<input type='date' name='vbank_date' value='" + rsp.vbank_date +"'>"	
+		    	);
+		    	
 		    	$("#fsubmit").submit();
+				
+		    	/* $("#vbank_num").val(rsp.vbank_num);
+		    	$("#vbank_name").val(rsp.vbank_name);
+		    	$("#vbank_holder").val(rsp.vbank_holder);
+		    	$("#vbank_date").val(rsp.vbank_date);
+		    	$("#fsubmit").submit(); */
 		    }
 		});
 		return false;
 	}
 	
 	//결제완료시
-	function ticketComplete(result){
+	/* function ticketComplete(result){
+		
+		if(payType == '카드'){
+			
+		}else {
+			$("#fsubmit").append(
+					$("#import_uid").val(rsp.imp_uid);
+					$("#state").val("입금대기");
+					<input type="hidden" id="vbank_num" name="vbank_num" value="0">
+					<input type="hidden" id="vbank_name" name="vbank_name" value="0">
+					<input type="hidden" id="vbank_holder" name="vbank_holder" value="0">
+					<input type="date" id="vbank_date" name="vbank_date" value="0">		
+					$("#fsubmit").submit();
+			);
+		}
+		
+		
 		if(result == 1){
+			
+			
+			
+			
 			
 			location.replace = ("ticketComplete.do");
 			alert("결제완료 페이지로 이동");
@@ -177,7 +206,7 @@
 		}
 		
 		return false;
-	} 
+	}  */
 	
 	
 	
@@ -359,8 +388,9 @@
 					    </tr>	
 					    <tr>
 					      <th scope="row">결제방식</th>
-					      <td><input type="radio" id="pay_type" name="pay_type" value="카드" checked>카드
-					      	  <input type="radio" id="pay_type" name="pay_type" value="가상계좌">가상계좌
+					      <td>
+					      	  <input type="radio" class="pay_type" name="pay_type" value="카드" checked>카드
+					      	  <input type="radio" class="pay_type" name="pay_type" value="가상계좌">가상계좌
 					      </td>
 					    </tr>				  
 					  </tbody>
@@ -369,6 +399,9 @@
 					<input type="hidden" name="state" value="결제완료">
 					<input type="hidden" id="import_uid" name="import_uid">
 					<input type="hidden" id="paid_at" name="paid_at">
+					
+					
+					
 					<!-- <div style="float:right;width:800px;"> -->
 					<div style="float: right;">
 						<button id="payBtn" type="button" class="btn btn-danger">결제하기</button>&nbsp;&nbsp;&nbsp;&nbsp;

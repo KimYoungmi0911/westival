@@ -1,7 +1,5 @@
 package org.kh.westival.ticket.model.dao;
 
-import java.util.Map;
-
 import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.festival.model.vo.TicketOption;
 import org.kh.westival.member.model.vo.Member;
@@ -16,7 +14,7 @@ public class TicketDao {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 
-	// 예매번호 생성
+	//예매정보 등록
 	public int insertTicket(Ticket ticket) {
 		System.out.println("생성왜안?");
 		return sqlSession.insert("ticketMapper.insertTicket", ticket);
@@ -37,7 +35,7 @@ public class TicketDao {
 		return (TicketOption) sqlSession.selectOne("ticketMapper.selectTicketOption", no);
 	}
 
-	// 결제시 사용할 예매정보
+	// 결제완료시 사용할 예매정보
 	public Ticket selectTicket(Ticket ticket) {
 		return (Ticket) sqlSession.selectOne("ticketMapper.selectTicket", ticket);
 	}
