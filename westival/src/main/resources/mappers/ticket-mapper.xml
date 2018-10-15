@@ -16,11 +16,16 @@
 		<result property="price" column="price" />
 		<result property="state" column="state" />
 		<result property="import_uid" column="import_uid" />
+		<result property="vbank_num" column="vbank_num" />
+		<result property="vbank_name" column="vbank_name" />
+		<result property="vbank_holder" column="vbank_holder" />
+		<result property="vbank_date" column="vbank_date" />
+		<result property="ticket_receipt_date" column="ticket_receipt_date" />
 	</resultMap>
-	
+
 	<resultMap type="Festival" id="resultFestival">
 		<id property="no" column="no" />
-		<result property="user_id" column="user_id" />
+		<result property="reg_user" column="reg_user" />
 		<result property="name" column="name" />
 		<result property="address" column="address" />
 		<result property="original_img_name" column="original_img_name" />
@@ -71,11 +76,23 @@
 	<!-- insert ticket -->
 	<insert id="insertTicket" parameterType="Ticket" flushCache="true"
 		statementType="PREPARED" useGeneratedKeys="true">
-		<![CDATA[
+		<![CDATA[		
 		insert into tb_ticket values 
-		(to_char(systimestamp, 'yyyymmddhh24missff3'), 
+		(to_char(systimestamp, 'yyyymmddhh24missff3'),
 		#{no}, #{user_id}, #{ticket_date}, #{ticket_count},
-		#{pay_type}, #{pay_date}, #{price}, #{state}, #{import_uid})
+		#{pay_type}
+		
+		<if test="pay_type == '카드'">
+			, sysdate, #{price}, #{state}, #{import_uid},
+			#{vbank_num, jdbcType=VARCHAR}, #{vbank_name, jdbcType=VARCHAR}, 
+			#{vbank_holder, jdbcType=VARCHAR}, #{vbank_date, jdbcType=DATE}, sysdate)
+		</if>
+		
+		<if test="pay_type == '가상계좌'">
+			, #{pay_date, jdbcType=DATE}, #{price}, #{state}, #{import_uid},
+			#{vbank_num}, #{vbank_name}, 
+			#{vbank_holder}, #{vbank_date}, sysdate)
+		</if>
 		]]>
 	</insert>
 	

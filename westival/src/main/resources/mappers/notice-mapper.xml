@@ -3,76 +3,88 @@
 "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="noticeMapper">
-
-	<!-- <resultMap type="Member" id="resultMember">
-		<id property="userid" column="userid" />
-		<result property="userpwd" column="userpwd" />
-		<result property="username" column="username" />
-		<result property="gender" column="gender" />
-		<result property="age" column="age" />
-		<result property="phone" column="phone" />
-		<result property="email" column="email" />
-		<result property="hobby" column="hobby" />
-		<result property="etc" column="etc" />
-		<result property="enroll_date" column="enroll_date" />
-		<result property="lastmodified" column="lastmodified" />
-
+	
+	
+	<resultMap type="Notice" id="resultList">
+		<result property="notice_no" column="notice_no" />
+		<result property="user_id" column="user_id" />
+		<result property="notice_title" column="notice_title" />
+		<result property="notice_date" column="notice_date" />
+		<result property="notice_content" column="notice_content" />
+		<result property="original_filepath" column="original_filepath" />
+		<result property="rename_filepath" column="rename_filepath" />
+		
 	</resultMap>
 	
-	<resultMap type="Member" id="resultList">
-		<result property="userid" column="userid" />
-		<result property="userpwd" column="userpwd" />
-		<result property="username" column="username" />
-		<result property="gender" column="gender" />
-		<result property="age" column="age" />
-		<result property="phone" column="phone" />
-		<result property="email" column="email" />
-		<result property="hobby" column="hobby" />
-		<result property="etc" column="etc" />
-		<result property="enroll_date" column="enroll_date" />
-		<result property="lastmodified" column="lastmodified" />
-
-	</resultMap>
-
-	<select id="loginCheck" parameterType="Member" resultType="Member" resultMap="resultMember">
-		<![CDATA[
-		select * from member where userid = #{userid} and userpwd = #{userpwd}
-		]]>
-	</select>	
+	<select id="noticeList"  resultMap="resultList">
+	select * from tb_notice order by notice_no asc
+	</select>
 	
-	<select id="selectList" resultMap="resultList">
-		<![CDATA[select * from member]]>
+	
+	
+	
+	<select id="noticeDetail" parameterType="_int" resultMap="resultList">
+	<![CDATA[
+	select * from tb_notice where notice_no = #{notice_no}
+	]]>
 	</select>
-
-	<select id="selectMember" parameterType="string" resultMap="resultMember">
-		<![CDATA[select * from member where userid = #{userId}]]>
-	</select>
-
-	<select id="dupId" parameterType="string" resultType="_int">
-		<![CDATA[select count(userid) from member where userid = #{userId}]]>
-	</select>
-
-	<insert id="insertMember" parameterType="Member" flushCache="true"
-		statementType="PREPARED" useGeneratedKeys="true">
-		<![CDATA[
-		insert into member values (#{userId}, #{userPwd}, #{userName},
-		#{gender}, #{age}, #{phone}, #{email}, #{hobby}, #{etc},
-		sysdate, sysdate)
-		]]>
+	
+	<insert id="noticeInsert1" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
+	
+	insert into tb_notice values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, #{original_filepath}, #{rename_filepath})
+	</insert>
+	
+	
+	<insert id="noticeInsert2" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
+	insert into tb_notice values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, null, null)
 	</insert>
 
-	<update id="updateMember" parameterType="Member" flushCache="true"
+	<delete id="noticeDelete" parameterType="_int" flushCache="true"
 		statementType="PREPARED">
-		<![CDATA[
-		update member set userpwd = #{userpwd}, age = #{age}, email =
-		#{email}, phone = #{phone}, hobby = #{hobby}, etc = #{etc} where
-		userid = #{userid}
-		]]>
+		
+		delete from tb_notice where notice_no = #{notice_no}
+		
+	</delete>
+	
+	<update id="noticeUpdate1" parameterType="Notice" flushCache="true"
+		statementType="PREPARED">
+		update tb_notice set notice_title = #{notice_title}, 
+		notice_content = #{notice_content},
+		original_filepath = #{original_filepath},
+		rename_filepath = #{rename_filepath}
+		where notice_no = #{notice_no}
 	</update>
-
-	<delete id="deleteMember" parameterType="string" flushCache="true"
+	
+	<update id="noticeUpdate2" parameterType="Notice" flushCache="true"
 		statementType="PREPARED">
-		<![CDATA[delete from member where userid = #{userid}]]>
-	</delete> -->
+		update tb_notice set notice_title = #{notice_title}, 
+		notice_content = #{notice_content},
+		original_filepath = null,
+		rename_filepath = null
+		where notice_no = #{notice_no}
+	</update>
+	
+	<select id="noticeSelect"  resultMap="resultList">
+	select * from tb_notice where notice_no = #{notice_no}
+	</select>
+	
+	<!-- 페이징뷰 -->
+	<select id="getListCount" resultType="_int">
+	<![CDATA[
+	select count(*) from tb_notice
+		]]>
+	</select>
+	
+	<select id="selectListPage" parameterType="NoticePage" resultMap="resultList">
+	<![CDATA[
+	select * from (
+				select rownum rnum, notice_no, user_id, 
+				notice_title, notice_date, notice_content, original_filepath, rename_filepath 
+				from (select * from tb_notice 
+				order by notice_no asc))
+				where rnum >= #{startRow} and rnum <= #{endRow} 
+	]]>
+	</select>
+	
 
 </mapper>

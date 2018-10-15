@@ -4,75 +4,121 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="adminMapper">
 
-	<!-- <resultMap type="Member" id="resultMember">
-		<id property="userid" column="userid" />
-		<result property="userpwd" column="userpwd" />
-		<result property="username" column="username" />
-		<result property="gender" column="gender" />
-		<result property="age" column="age" />
-		<result property="phone" column="phone" />
-		<result property="email" column="email" />
-		<result property="hobby" column="hobby" />
-		<result property="etc" column="etc" />
-		<result property="enroll_date" column="enroll_date" />
-		<result property="lastmodified" column="lastmodified" />
-
+	<resultMap type="Admin" id="resultList">
+		<result property="user_id" column="user_id" />
+		<result property="name" column="name" />
+		<result property="ticket_no" column="ticket_no" />
+		<result property="ticket_date" column="ticket_date" />
+		<result property="ticket_count" column="ticket_count" />
+		<result property="price" column="price" />
+		<result property="pay_type" column="pay_type" />
+		<result property="state" column="state" />
+		<result property="account_no" column="account_no" />
+		<result property="user_name" column="user_name" />
+	
 	</resultMap>
 	
-	<resultMap type="Member" id="resultList">
-		<result property="userid" column="userid" />
-		<result property="userpwd" column="userpwd" />
-		<result property="username" column="username" />
-		<result property="gender" column="gender" />
-		<result property="age" column="age" />
-		<result property="phone" column="phone" />
-		<result property="email" column="email" />
-		<result property="hobby" column="hobby" />
-		<result property="etc" column="etc" />
-		<result property="enroll_date" column="enroll_date" />
-		<result property="lastmodified" column="lastmodified" />
-
+	
+	<resultMap type="Festival" id="festivalList">
+		<result property="no" column="no" />
+		<result property="reg_user" column="reg_user" />
+		<result property="name" column="name" />
+		<result property="address" column="address" />
+		<result property="original_img_name" column="original_img_name" />
+		<result property="new_img_name" column="new_img_name" />
+		<result property="content" column="content" />
+		<result property="start_date" column="start_date" />
+		<result property="end_date" column="end_date" />
+		<result property="theme" column="theme" />
+		<result property="telephone" column="telephone" />
+		<result property="manage" column="manage" />
+		<result property="ticket" column="ticket" />
+		<result property="file_name" column="file_name" />
+		<result property="tag" column="tag" />
+		<result property="read_count" column="read_count" />
+		<result property="recommend" column="recommend" />
+										
 	</resultMap>
 
-	<select id="loginCheck" parameterType="Member" resultType="Member" resultMap="resultMember">
-		<![CDATA[
-		select * from member where userid = #{userid} and userpwd = #{userpwd}
-		]]>
-	</select>	
 	
-	<select id="selectList" resultMap="resultList">
-		<![CDATA[select * from member]]>
+	<select id="adminTicketList"  resultMap="resultList">
+		select * from v_festival_ticket_user
 	</select>
-
-	<select id="selectMember" parameterType="string" resultMap="resultMember">
-		<![CDATA[select * from member where userid = #{userId}]]>
-	</select>
-
-	<select id="dupId" parameterType="string" resultType="_int">
-		<![CDATA[select count(userid) from member where userid = #{userId}]]>
-	</select>
-
-	<insert id="insertMember" parameterType="Member" flushCache="true"
-		statementType="PREPARED" useGeneratedKeys="true">
-		<![CDATA[
-		insert into member values (#{userId}, #{userPwd}, #{userName},
-		#{gender}, #{age}, #{phone}, #{email}, #{hobby}, #{etc},
-		sysdate, sysdate)
+	
+	<select id="ticketgetListCount" resultType="_int">
+	<![CDATA[
+	select count(*) from v_festival_ticket_user
 		]]>
-	</insert>
-
-	<update id="updateMember" parameterType="Member" flushCache="true"
-		statementType="PREPARED">
-		<![CDATA[
-		update member set userpwd = #{userpwd}, age = #{age}, email =
-		#{email}, phone = #{phone}, hobby = #{hobby}, etc = #{etc} where
-		userid = #{userid}
+	</select>
+	
+	<select id="ticketSelectList" parameterType="AdminTicketPage" resultMap="resultList">
+	<![CDATA[
+	select * from (
+				select rownum rnum, user_id, name, ticket_no, ticket_date, 
+				ticket_count, price, pay_type, state, account_no, user_name 
+				from (select * from v_festival_ticket_user 
+				order by ticket_date asc))
+				where rnum >= #{startRow} and rnum <= #{endRow}
+	]]>
+	</select>
+	
+	<select id="searchList" parameterType="string" resultMap="resultList">
+	select * from v_festival_ticket_user 
+	<choose>
+	<when test="filter == 'all'">
+	where user_id like '%'||#{searchTF}||'%' 
+	or name like '%'||#{searchTF}||'%' 
+	or ticket_no like '%'||#{searchTF}||'%' 
+	or user_name like '%'||#{searchTF}||'%' 
+	or ticket_no like '%'||#{searchTF}||'%' 
+	or price like '%'||#{searchTF}||'%' 
+	or pay_type like '%'||#{searchTF}||'%' 
+	or state like '%'||#{searchTF}||'%' 
+	or account_no like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'name'">
+	where user_name like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'id'">
+	where user_id like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'fname'">
+	where name like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter =='tno'">
+	where ticket_no like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'price'">
+	where price like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'ptype'">
+	where pay_type like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'state'">
+	where state like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'account'">
+	where account_no like '%'||#{searchTF}||'%'
+	</when>
+	</choose>
+	</select>
+	
+	<select id="festivalgetListCount" resultType="_int">
+	<![CDATA[
+	select count(*) from tb_festival
 		]]>
-	</update>
-
-	<delete id="deleteMember" parameterType="string" flushCache="true"
-		statementType="PREPARED">
-		<![CDATA[delete from member where userid = #{userid}]]>
-	</delete> -->
+	</select>
+	
+	<select id="festivalSelectList" parameterType="AdminTicketPage" resultMap="festivalList">
+	<![CDATA[
+	select * from (
+        select rownum rnum, name, address, start_date, telephone, 
+        manage, read_count, recommend, ticket 
+        from (select * from tb_festival 
+        order by start_date asc))
+        where rnum >= #{startRow} and rnum <= #{endRow}
+	]]>
+	</select>
+	
 
 </mapper>
