@@ -2,7 +2,6 @@ package org.kh.westival.ticket.controller;
 
 import java.sql.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,6 +31,7 @@ public class TicketController {
 			@RequestParam(value = "user_id") String user_id,
 			@RequestParam(value = "no") int no) {
 		
+		System.out.println("no : " + no);
 		mv.addObject("member", tService.selectMember(user_id));
 		mv.addObject("festival", tService.selectFestival(no));
 		mv.addObject("ticketOption", tService.selectTicketOption(no));
@@ -59,7 +59,7 @@ public class TicketController {
 		
 		
 		// = date.parse(request.getParameter("vbank_date"));
-		if(pay_type == "가상계좌"){
+		/*if(pay_type == "실시간계좌이체"){
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
 			java.util.Date date = new java.util.Date();	
 			date = sdf.parse(request.getParameter("vbank_date"));
@@ -69,7 +69,7 @@ public class TicketController {
 			ticket.setVbank_name(request.getParameter("vbank_name"));
 			ticket.setVbank_holder(request.getParameter("vbank_holder"));
 			ticket.setVbank_date(sDate);
-		}
+		}*/
 		
 		ticket.setNo(no);
 		ticket.setUser_id(user_id);
