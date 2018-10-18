@@ -122,7 +122,7 @@
 		return false;
 	}
 	//결제 - 가상계좌 API
-	function payCash(){
+	/* function payCash(){
 		IMP.request_pay({
 		    pg : 'inicis', // version 1.1.0부터 지원.
 		    pay_method : 'vbank',
@@ -170,6 +170,43 @@
 		    	$("#vbank_holder").val(rsp.vbank_holder);
 		    	$("#vbank_date").val(rsp.vbank_date);
 		    	$("#fsubmit").submit(); */
+		   /*  }
+		});
+		return false;
+	} */ 
+	
+	//결제 - 실시간 계좌이체 API
+	function payCash(){
+		IMP.request_pay({
+		    pg : 'inicis', // version 1.1.0부터 지원.
+		    pay_method : 'trans',
+		    merchant_uid : 'merchant_' + new Date().getTime(),
+		    name : '${festival.name}',
+		    amount : $("#price").val(),
+		    buyer_email : '${member.user_email}', //${member.user_email}
+		    buyer_name : '${member.user_id}',
+		    buyer_tel : '${member.user_phone}', //
+		    buyer_addr : '${member.user_address}', //
+		    //buyer_postcode : '123-456',
+		    company : 'Westival',
+		    m_redirect_url : 'https://www.yourdomain.com/payments/complete'    
+		}, function(rsp) {
+		    if ( rsp.success ) {
+		        var msg = '결제가 완료되었습니다.';
+		        /* msg += '고유ID : ' + rsp.imp_uid;
+		        msg += '상점 거래ID : ' + rsp.merchant_uid;
+		        msg += '결제 금액 : ' + rsp.paid_amount;
+		        msg += '카드 승인번호 : ' + rsp.apply_num; */
+		    } else {
+		        var msg = '결제에 실패하였습니다.';
+		        msg += '에러내용 : ' + rsp.error_msg;
+		    }
+		    alert(msg);
+		    if(rsp.success){
+		    	$("#import_uid").val(rsp.imp_uid);
+		    	//$("#paid_at").val(rsp.paid_at);
+		    	//alert(rsp.paid_at);
+		    	$("#fsubmit").submit();
 		    }
 		});
 		return false;
@@ -390,7 +427,7 @@
 					      <th scope="row">결제방식</th>
 					      <td>
 					      	  <input type="radio" class="pay_type" name="pay_type" value="카드" checked>카드
-					      	  <input type="radio" class="pay_type" name="pay_type" value="가상계좌">가상계좌
+					      	  <input type="radio" class="pay_type" name="pay_type" value="실시간계좌이체">실시간계좌이체
 					      </td>
 					    </tr>				  
 					  </tbody>

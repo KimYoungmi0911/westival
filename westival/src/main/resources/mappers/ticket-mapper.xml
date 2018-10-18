@@ -74,34 +74,24 @@
 	<!-- resultMap end -->
 	
 	<!-- insert ticket -->
-	<insert id="insertTicket" parameterType="Ticket" flushCache="true"
+	<!-- <insert id="insertTicket" parameterType="Ticket" flushCache="true"
 		statementType="PREPARED" useGeneratedKeys="true">
 		<![CDATA[		
 		insert into tb_ticket values 
 		(to_char(systimestamp, 'yyyymmddhh24missff3'),
 		#{no}, #{user_id}, #{ticket_date}, #{ticket_count},
-		#{pay_type}
-		
-		<if test="pay_type == '카드'">
-			, sysdate, #{price}, #{state}, #{import_uid},
-			#{vbank_num, jdbcType=VARCHAR}, #{vbank_name, jdbcType=VARCHAR}, 
-			#{vbank_holder, jdbcType=VARCHAR}, #{vbank_date, jdbcType=DATE}, sysdate)
-		</if>
-		
-		<if test="pay_type == '가상계좌'">
-			, #{pay_date, jdbcType=DATE}, #{price}, #{state}, #{import_uid},
-			#{vbank_num}, #{vbank_name}, 
-			#{vbank_holder}, #{vbank_date}, sysdate)
-		</if>
+		#{pay_type}, sysdate, #{price}, #{state}, #{import_uid},
+		#{vbank_num, jdbcType=VARCHAR}, #{vbank_name, jdbcType=VARCHAR}, 
+		#{vbank_holder, jdbcType=VARCHAR}, #{vbank_date, jdbcType=DATE}, sysdate)
 		]]>
-	</insert>
+	</insert> -->
 	
 	<!-- select ticket -->
-	<select id="selectTicket" parameterType="Ticket" resultMap="resultTicket">
+	<!-- <select id="selectTicket" parameterType="Ticket" resultMap="resultTicket">
 		<![CDATA[select * from tb_ticket 
 		where import_uid = #{import_uid}
 		]]>
-	</select>
+	</select> -->
 		
 	<!-- select ticket -->
 	<!-- <select id="selectTicket" parameterType="Ticket" resultMap="resultTicket">
