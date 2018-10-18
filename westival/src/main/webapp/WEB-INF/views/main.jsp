@@ -24,7 +24,7 @@
 <script src="/westival/resources/plugins/easing/easing.js"></script>
 <script src="/westival/resources/js/custom.js"></script>
 
-<script type="text/javascript">
+<script type="text/javascript"> 
 	
 	$(function(){ 		
 		// 오늘의 축제

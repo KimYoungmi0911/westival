@@ -347,9 +347,8 @@ public class FestivalController {
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
 		out.flush();
-		out.close();		
+		out.close();		  
 	}
-	
 	
 	// scrap 체크 후 추가/취소
 	@RequestMapping(value="scrapCheck.do", method=RequestMethod.POST)

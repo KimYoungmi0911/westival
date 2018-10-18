@@ -23,7 +23,7 @@ public class MemberServiceImpl implements MemberService {
 	public Member loginCheck(Member member) {
 		return memberDao.loginCheck(member);
 	}
-	
+	 
 	@Override
 	public Member checkId(Member member) {
 		return memberDao.checkId(member);

@@ -14,7 +14,7 @@
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_styles.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_responsive.css">
 <script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
-</head>
+</head> 
 <style type="text/css">
 	#home {
 		height: 90%;

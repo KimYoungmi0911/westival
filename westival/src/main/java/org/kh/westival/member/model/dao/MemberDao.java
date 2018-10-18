@@ -20,7 +20,7 @@ public class MemberDao {
 	
 	//병훈
 	public Member loginCheck(Member member) {
-		
+		 
 		System.out.println(member);
 		return (Member) sqlSession.selectOne("memberMapper.loginCheck", member);
 	}

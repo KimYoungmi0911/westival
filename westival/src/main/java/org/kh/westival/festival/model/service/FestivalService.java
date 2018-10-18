@@ -15,7 +15,7 @@ public interface FestivalService {
 	int insertFestival(Festival festival);
 
 	int insertTicketOption(TicketOption ticketOption);
-
+ 
 	ArrayList<Festival> locationSearch(Festival festival);
 
 	ArrayList<Festival> tagSearch(Festival festival);

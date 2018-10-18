@@ -29,7 +29,7 @@ public class MemberController {
 
 	@Autowired
 	private MemberService memberService;
-
+ 
 	//병훈
 	@RequestMapping(value="login.do", method=RequestMethod.POST)
 	public void loginMethod(Member member, 

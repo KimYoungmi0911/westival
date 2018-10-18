@@ -15,7 +15,7 @@
 		<result property="user_email" column="user_email" />
 		<result property="user_gender" column="user_gender" />
 		<result property="user_confirm_check" column="user_confirm_check" />
-	</resultMap>
+	</resultMap> 
 
 	<select id="loginCheck" parameterType="Member" resultMap="resultMember">
 		<![CDATA[

@@ -17,7 +17,7 @@ public class FestivalServiceImpl implements FestivalService {
 
 	@Autowired
 	private FestivalDao festivalDao;
-	
+	 
 	//경호
 	@Override
 	public int insertFestival(Festival festival) {

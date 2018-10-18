@@ -15,7 +15,7 @@ public interface MemberService {
 	Member selectMember(Member member);
 
 	Member checkId(Member member);
-
+ 
 	//충섭
 	//Member selectMember(Member member);
 	Member selectMemberInfo(String user_id);

@@ -131,7 +131,7 @@
 		statementType="PREPARED">
 		<![CDATA[delete from tb_festival where no = #{no}]]>
 	</delete>
-	
+	 
 	<select id="selectFestivalName" parameterType="_int" resultType="string">
 		select name from tb_festival where no = #{no}
 	</select>	

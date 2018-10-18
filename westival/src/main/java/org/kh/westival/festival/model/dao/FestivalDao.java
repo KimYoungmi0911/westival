@@ -20,7 +20,7 @@ public class FestivalDao {
 
 	@Autowired
 	private SqlSessionTemplate sqlSession;
-	
+	 
 	//경호
 	public int insertFestival(Festival festival) {
 		int result = 0;
