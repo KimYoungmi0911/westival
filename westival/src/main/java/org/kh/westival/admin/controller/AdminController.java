@@ -157,6 +157,61 @@ public class AdminController {
 		
 	}
 	
+	@RequestMapping("fpage.do")
+	public void festivalList(HttpServletResponse response, HttpServletRequest request) throws IOException{
+		JSONObject json = null;
+		
+		int currentPage = Integer.parseInt(request.getParameter("page"));
+		int limit = 10;
+		if(request.getParameter("page") != null){
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		int listCount =  adminService.fGetListCount();
+		ArrayList<Festival> list = adminService.fAllSelectList(currentPage, limit);
+		
+		int maxPage = (int) Math.ceil(((double)listCount / limit));
+		
+		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1;
+		
+		int endPage = startPage + limit - 1;
+		
+		if(maxPage < endPage) {
+			endPage = maxPage;
+		}
+		json = new JSONObject();
+		JSONArray jarr = new JSONArray();
+		
+		for(Festival f : list){
+			JSONObject job = new JSONObject();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String strdate = sdf.format(f.getStart_date());
+		
+			job.put("fname", URLEncoder.encode(f.getName(), "UTF-8"));
+			job.put("faddress", URLEncoder.encode(f.getAddress(), "UTF-8"));
+			job.put("fstart", URLEncoder.encode(strdate, "UTF-8"));
+			job.put("ftelephone", URLEncoder.encode(f.getTelephone(), "UTF-8"));
+			job.put("fmanage", URLEncoder.encode(f.getManage(), "UTF-8"));
+			job.put("freadcount", f.getRead_count());
+			job.put("frecommend", f.getRecommend());
+			job.put("fticket", URLEncoder.encode(f.getTicket(), "UTF-8"));
+			
+			jarr.add(job);
+		}
+		System.out.println("jarr : " + jarr.toJSONString());
+		json.put("list", jarr);
+		json.put("currentPage", currentPage);
+		json.put("maxPage", maxPage);
+		json.put("startPage", startPage);
+		json.put("endPage", endPage);
+		
+		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		out.print(json.toJSONString());
+		out.flush();
+		out.close();
+	}
 	
 	
 }

@@ -20,20 +20,16 @@
 	select * from tb_notice order by notice_no asc
 	</select>
 	
-	
-	
-	
 	<select id="noticeDetail" parameterType="_int" resultMap="resultList">
 	<![CDATA[
 	select * from tb_notice where notice_no = #{notice_no}
 	]]>
 	</select>
-	
+
 	<insert id="noticeInsert1" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
 	
 	insert into tb_notice values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, #{original_filepath}, #{rename_filepath})
 	</insert>
-	
 	
 	<insert id="noticeInsert2" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
 	insert into tb_notice values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, null, null)

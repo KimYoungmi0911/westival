@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import org.kh.westival.admin.model.vo.Admin;
 import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.ticket.model.vo.Ticket;
-import org.springframework.stereotype.Service;
 
-@Service("adminServiceImpl")
 public interface AdminService {
 
 	//	ArrayList<Ticket> selectList();
@@ -23,6 +21,10 @@ public interface AdminService {
 	int festivalgetListCount();
 	//페이징 뷰(축제)
 	ArrayList<Festival> festivalSelectList(int currentPage, int limit);
+	
+	//축제관리2(집에서한거)
+	int fGetListCount();
+	ArrayList<Festival> fAllSelectList(int currentPage, int limit);
 
 	
 	

@@ -55,6 +55,20 @@ public class AdminServiceImpl implements AdminService{
 	
 	
 	
+	//축제관리(집)
+	@Override
+	public int fGetListCount() {
+		 System.out.println("fGetListCount serviceImpl");
+		return adminDao.fGetListCount();
+	}
+	@Override
+	public ArrayList<Festival> fAllSelectList(int currentPage, int limit) {
+		System.out.println("fAllSelectList serviceImple");
+		return adminDao.fAllSelectList(currentPage, limit);
+	}
+	
+	
+	
 
 
 	

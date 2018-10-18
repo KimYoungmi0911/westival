@@ -18,6 +18,29 @@
 	
 	</resultMap>
 	
+	
+	<resultMap type="Festival" id="festivalList">
+		<result property="no" column="no" />
+		<result property="reg_user" column="reg_user" />
+		<result property="name" column="name" />
+		<result property="address" column="address" />
+		<result property="original_img_name" column="original_img_name" />
+		<result property="new_img_name" column="new_img_name" />
+		<result property="content" column="content" />
+		<result property="start_date" column="start_date" />
+		<result property="end_date" column="end_date" />
+		<result property="theme" column="theme" />
+		<result property="telephone" column="telephone" />
+		<result property="manage" column="manage" />
+		<result property="ticket" column="ticket" />
+		<result property="file_name" column="file_name" />
+		<result property="tag" column="tag" />
+		<result property="read_count" column="read_count" />
+		<result property="recommend" column="recommend" />
+										
+	</resultMap>
+
+	
 	<select id="adminTicketList"  resultMap="resultList">
 		select * from v_festival_ticket_user
 	</select>
@@ -86,14 +109,14 @@
 		]]>
 	</select>
 	
-	<select id="festivalSelectList" parameterType="AdminTicketPage" resultMap="resultList">
+	<select id="festivalSelectList" parameterType="AdminTicketPage" resultMap="festivalList">
 	<![CDATA[
 	select * from (
         select rownum rnum, name, address, start_date, telephone, 
         manage, read_count, recommend, ticket 
         from (select * from tb_festival 
         order by start_date asc))
-        where rnum >= #{startRow} and rnum <= #{endRow};
+        where rnum >= #{startRow} and rnum <= #{endRow}
 	]]>
 	</select>
 	

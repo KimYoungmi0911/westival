@@ -4,8 +4,189 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ticketMapper">
 	
+	<!-- resultMap start -->
+	<resultMap type="Ticket" id="resultTicket">
+		<id property="ticket_no" column="ticket_no" />
+		<result property="no" column="no" />
+		<result property="user_id" column="user_id" />
+		<result property="ticket_date" column="ticket_date" />
+		<result property="ticket_count" column="ticket_count" />
+		<result property="pay_type" column="pay_type" />
+		<result property="pay_date" column="pay_date" />
+		<result property="price" column="price" />
+		<result property="state" column="state" />
+		<result property="import_uid" column="import_uid" />
+		<result property="vbank_num" column="vbank_num" />
+		<result property="vbank_name" column="vbank_name" />
+		<result property="vbank_holder" column="vbank_holder" />
+		<result property="vbank_date" column="vbank_date" />
+		<result property="ticket_receipt_date" column="ticket_receipt_date" />
+	</resultMap>
+
+	<resultMap type="Festival" id="resultFestival">
+		<id property="no" column="no" />
+		<result property="reg_user" column="reg_user" />
+		<result property="name" column="name" />
+		<result property="address" column="address" />
+		<result property="original_img_name" column="original_img_name" />
+		<result property="new_img_name" column="new_img_name" />
+		<result property="content" column="content" />
+		<result property="start_date" column="start_date" />
+		<result property="end_date" column="end_date" />
+		<result property="theme" column="theme" />
+		<result property="telephone" column="telephone" />
+		<result property="manage" column="manage" />
+		<result property="ticket" column="ticket" />
+		<result property="file_name" column="file_name" />
+		<result property="tag" column="tag" />
+		<result property="read_count" column="read_count" />
+		<result property="recommend" column="recommend" />
+	</resultMap>
+	
+	<resultMap type="Member" id="resultMember">
+		<id property="user_id" column="user_id" />
+		<result property="user_pwd" column="user_pwd" />
+		<result property="user_name" column="user_name" />
+		<result property="user_birth" column="user_birth" />
+		<result property="user_address" column="user_address" />
+		<result property="user_phone" column="user_phone" />
+		<result property="user_email" column="user_email" />
+		<result property="user_gender" column="user_gender" />
+		<result property="user_confirm_check" column="user_confirm_check" />
+	</resultMap>
+	
+	<resultMap type="TicketOption" id="resultTicketOption">
+		<id property="ticket_no" column="ticket_no" />
+		<result property="user_id" column="user_id" />
+		<result property="no" column="no" />
+		<result property="ticket_name" column="ticket_name" />
+		<result property="ticket_price" column="ticket_price" />
+		<result property="ticket_quantity" column="ticket_quantity" />
+		<result property="company_name" column="company_name" />
+		<result property="ceo_name" column="ceo_name" />
+		<result property="company_no" column="company_no" />
+		<result property="phone" column="phone" />
+		<result property="bank_name" column="bank_name" />
+		<result property="account_holder_name" column="account_holder_name" />
+		<result property="account_no" column="account_no" />
+		<result property="registration_date" column="registration_date" />
+	</resultMap>
+	<!-- resultMap end -->
+	
+	<!-- insert ticket -->
+	<insert id="insertTicket" parameterType="Ticket" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		<![CDATA[		
+		insert into tb_ticket values 
+		(to_char(systimestamp, 'yyyymmddhh24missff3'),
+		#{no}, #{user_id}, #{ticket_date}, #{ticket_count},
+		#{pay_type}
+		
+		<if test="pay_type == '카드'">
+			, sysdate, #{price}, #{state}, #{import_uid},
+			#{vbank_num, jdbcType=VARCHAR}, #{vbank_name, jdbcType=VARCHAR}, 
+			#{vbank_holder, jdbcType=VARCHAR}, #{vbank_date, jdbcType=DATE}, sysdate)
+		</if>
+		
+		<if test="pay_type == '가상계좌'">
+			, #{pay_date, jdbcType=DATE}, #{price}, #{state}, #{import_uid},
+			#{vbank_num}, #{vbank_name}, 
+			#{vbank_holder}, #{vbank_date}, sysdate)
+		</if>
+		]]>
+	</insert>
+	
+	<!-- select ticket -->
+	<select id="selectTicket" parameterType="Ticket" resultMap="resultTicket">
+		<![CDATA[select * from tb_ticket 
+		where import_uid = #{import_uid}
+		]]>
+	</select>
+		
+	<!-- select ticket -->
+	<!-- <select id="selectTicket" parameterType="Ticket" resultMap="resultTicket">
+		<![CDATA[select ticket_no, no, user_id, ticket_date, ticket_count, 
+		pay_type, to_date(to_char(pay_date, 'YYYY-MM-DD hh:mm:ss'), 'YYYY-MM-DD hh:mm:ss'), price, state, import_uid from tb_ticket 
+		where import_uid = #{import_uid}
+		]]>
+	</select> -->
+	
+	<!-- select festival -->
+	<select id="selectFestival" resultMap="resultFestival"
+		parameterType="_int">
+		<![CDATA[select * from tb_festival where no = #{no}]]>
+	</select>
+	
+	<!-- select member -->
+	<select id="selectMember" parameterType="string" resultMap="resultMember">
+		<![CDATA[select * from tb_user where user_id = #{user_id}]]>
+	</select>
+	
+	<!-- select ticket option -->
+	<select id="selectTicketOption" parameterType="_int" resultMap="resultTicketOption">
+		<![CDATA[select * from tb_ticket_option where no = #{no}]]>
+	</select>
 	
 	
 	
+	
+		
+
+	<!-- 
+	<resultMap type="Member" id="resultList">
+		<result property="userid" column="userid" />
+		<result property="userpwd" column="userpwd" />
+		<result property="username" column="username" />
+		<result property="gender" column="gender" />
+		<result property="age" column="age" />
+		<result property="phone" column="phone" />
+		<result property="email" column="email" />
+		<result property="hobby" column="hobby" />
+		<result property="etc" column="etc" />
+		<result property="enroll_date" column="enroll_date" />
+		<result property="lastmodified" column="lastmodified" />
+
+	</resultMap>
+
+	<select id="loginCheck" parameterType="Member" resultType="Member" resultMap="resultMember">
+		<![CDATA[
+		select * from member where userid = #{userid} and userpwd = #{userpwd}
+		]]>
+	</select>	
+	
+	<select id="selectList" resultMap="resultList">
+		<![CDATA[select * from member]]>
+	</select>
+
+	<select id="selectMember" parameterType="string" resultMap="resultMember">
+		<![CDATA[select * from member where userid = #{userId}]]>
+	</select>
+
+	<select id="dupId" parameterType="string" resultType="_int">
+		<![CDATA[select count(userid) from member where userid = #{userId}]]>
+	</select>
+
+	<insert id="insertMember" parameterType="Member" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		<![CDATA[
+		insert into member values (#{userId}, #{userPwd}, #{userName},
+		#{gender}, #{age}, #{phone}, #{email}, #{hobby}, #{etc},
+		sysdate, sysdate)
+		]]>
+	</insert>
+
+	<update id="updateMember" parameterType="Member" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[
+		update member set userpwd = #{userpwd}, age = #{age}, email =
+		#{email}, phone = #{phone}, hobby = #{hobby}, etc = #{etc} where
+		userid = #{userid}
+		]]>
+	</update>
+
+	<delete id="deleteMember" parameterType="string" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[delete from member where userid = #{userid}]]>
+	</delete> -->
 
 </mapper>

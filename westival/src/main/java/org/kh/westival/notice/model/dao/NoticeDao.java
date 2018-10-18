@@ -3,7 +3,7 @@ package org.kh.westival.notice.model.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kh.westival.notice.model.service.NoticePageService;
+import org.kh.westival.notice.model.service.NoticePageServiceImpl;
 import org.kh.westival.notice.model.vo.Notice;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +84,7 @@ public class NoticeDao {
 	}
 
 	public ArrayList<Notice> selectList(int currentPage, int limit) {
-		return (ArrayList<Notice>) sqlSession.selectList("noticeMapper.selectListPage", new NoticePageService().noticePage(currentPage, limit));
+		return (ArrayList<Notice>) sqlSession.selectList("noticeMapper.selectListPage", new NoticePageServiceImpl().noticePage(currentPage, limit));
 		
 	}
 

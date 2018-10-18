@@ -25,30 +25,28 @@ public class Festival implements java.io.Serializable {
    
    public Festival (){}
 
-
-   public Festival(int no, String reg_user, String name, String address, String original_img_name, String new_img_name,
-         String content, Date start_date, Date end_date, String theme, String telephone, String manage, String ticket,
-         String file_name, String tag, int read_count, int recommend) {
-      super();
-      this.no = no;
-      this.reg_user = reg_user;
-      this.name = name;
-      this.address = address;
-      this.original_img_name = original_img_name;
-      this.new_img_name = new_img_name;
-      this.content = content;
-      this.start_date = start_date;
-      this.end_date = end_date;
-      this.theme = theme;
-      this.telephone = telephone;
-      this.manage = manage;
-      this.ticket = ticket;
-      this.file_name = file_name;
-      this.tag = tag;
-      this.read_count = read_count;
-      this.recommend = recommend;
-   }
-
+	public Festival(int no, String reg_user, String name, String address, String original_img_name, String new_img_name,
+			String content, Date start_date, Date end_date, String theme, String telephone, String manage, String ticket,
+			String file_name, String tag, int read_count, int recommend) {
+		super();
+		this.no = no;
+		this.reg_user = reg_user;
+		this.name = name;
+		this.address = address;
+		this.original_img_name = original_img_name;
+		this.new_img_name = new_img_name;
+		this.content = content;
+		this.start_date = start_date;
+		this.end_date = end_date;
+		this.theme = theme;
+		this.telephone = telephone;
+		this.manage = manage;
+		this.ticket = ticket;
+		this.file_name = file_name;
+		this.tag = tag;
+		this.read_count = read_count;
+		this.recommend = recommend;
+	}
 
 	public int getNo() {
 		return no;
@@ -58,17 +56,13 @@ public class Festival implements java.io.Serializable {
 		this.no = no;
 	}
 
+	public String getReg_user() {
+		return reg_user;
+	}
 
-   public String getReg_user() {
-      return reg_user;
-   }
-
-
-
-   public void setReg_user(String reg_user) {
-      this.reg_user = reg_user;
-   }
-
+	public void setReg_user(String reg_user) {
+		this.reg_user = reg_user;
+	}
 
 	public String getName() {
 		return name;
@@ -142,17 +136,13 @@ public class Festival implements java.io.Serializable {
 		this.telephone = telephone;
 	}
 
+	public String getManage() {
+		return manage;
+	}
 
-   public String getManage() {
-      return manage;
-   }
-
-
-
-   public void setManage(String manage) {
-      this.manage = manage;
-   }
-
+	public void setManage(String manage) {
+		this.manage = manage;
+	}
 
 	public String getTicket() {
 		return ticket;
@@ -194,15 +184,13 @@ public class Festival implements java.io.Serializable {
 		this.recommend = recommend;
 	}
 
-
-   @Override
-   public String toString() {
-      return "Festival [no=" + no + ", reg_user=" + reg_user + ", name=" + name + ", address=" + address
-            + ", original_img_name=" + original_img_name + ", new_img_name=" + new_img_name + ", content=" + content
-            + ", start_date=" + start_date + ", end_date=" + end_date + ", theme=" + theme + ", telephone="
-            + telephone + ", manage=" + manage + ", ticket=" + ticket + ", file_name=" + file_name + ", tag=" + tag
-            + ", read_count=" + read_count + ", recommend=" + recommend + "]";
-   }
-   
-
+	@Override
+	public String toString() {
+		return "Festival [no=" + no + ", reg_user=" + reg_user + ", name=" + name + ", address=" + address
+				+ ", original_img_name=" + original_img_name + ", new_img_name=" + new_img_name + ", content=" + content
+				+ ", start_date=" + start_date + ", end_date=" + end_date + ", theme=" + theme + ", telephone="
+				+ telephone + ", manage=" + manage + ", ticket=" + ticket + ", file_name=" + file_name + ", tag=" + tag
+				+ ", read_count=" + read_count + ", recommend=" + recommend + "]";
+	}
+	
 }

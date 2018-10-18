@@ -20,79 +20,94 @@
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_responsive.css">
 </head>
 <script type="text/javascript" src="/westival/resources/js/jquery-3.2.1.min.js"></script>
-<!-- <script type="text/javascript">
-		var currentPage;
-		var maxPage;
-		var startPage;
-		var endPage;
-		var listCount;
-		var pwdList = [];
-		var memberInfo = new Object();
-		var filter;
-
-	//축제 리스트 전체 조회
-	function allchk(page){
-	if(confirm('축제정보 리스트를 전체조회 하시겠습니까??') == true){
-		$.ajax({
-			url: "allchk.do",
-			type: "post",
-			data: {"page" : page},
-			dataType: "json",
-			success: function(data){
-				//축제리스트 직렬화
-				var jsonStr = JSON.stringify(data);
-				var json = JSON.parse(jsonStr);
-				
-				//페이지 값 추출
-				currentPage = json.currentPage;
-				maxPage = json.maxPage;
-				startPage = json.startPage;
-				listCount = json.listCount;
-				
-				
-				
-				var values = "";
-				for(var i in json.list){
-					for(var j = 0; j < json.list[i].faddress.length; j++){
-						json.list[i].faddress = json.list[i].faddress.replace("+", " ");		
+ <script type="text/javascript">
+ function paging(page){
+	 var currentPage;
+	 var maxPage;
+	 var startPage;
+	 var endPage;
+	
+	 $.ajax({
+		 url: "fpage.do",
+		 type: "get",
+		 data: {"page" :page},
+		 dataType: "json",
+		 success: function(data){
+			 var jsonStr = JSON.stringify(data);
+			 var json = JSON.parse(jsonStr);
+			 
+			 
+					currentPage = json.currentPage;
+					maxPage = json.maxPage;
+					startPage = json.startPage;
+					endPage = json.endPage;
+					
+					var values = "";
+					for(var i in json.list){
+						for(var j = 0; j < json.list[i].faddress.length; j++){
+							json.list[i].faddress = json.list[i].faddress.replace("+", " ");		
+						}
+						for(var a = 0; a < json.list[i].fname.length; a++){
+							json.list[i].fname = json.list[i].fname.replace("+", " ");
+						}
+						for(var b = 0; b < json.list[i].fmanage.length; b++){
+							json.list[i].fmanage = json.list[i].fmanage.replace("+", " ");
+						}
+						values += "<tr align='center'><td>" + decodeURIComponent(json.list[i].fname) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].faddress) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].fstart) + "</td>" 
+						+ "<td>" + decodeURIComponent(json.list[i].fmanage) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].ftelephone) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].fticket) + "</td>"
+						+ "<td>" + json.list[i].freadcount + "</td>"
+						+ "<td>" + json.list[i].frecommend + "</td></tr>";
+					}//for
+					$("#tb1").html(values);
+					
+					//페이징
+					$("#domain").html("");
+					if(currentPage <= 1){
+					}else{
+						$("#domain").append("<li><a href='#' onclick='paging(1)'><<</a></li>");
 					}
-					values += "<tr><td>" + decodeURIComponent(json.list[i].fname) + "</td>" 
-					+ "<td>" + decodeURIComponent(json.list[i].faddress) + "</td>" 
-					+ "<td>" + json.list[i].fstartdate + "</td>" 
-					+ "<td>" + decodeURIComponent(json.list[i].fmanage) + "</td>" 
-					+ "<td>" + decodeURIComponent(json.list[i].ftelephone) + "</td>" 
-					+ "<td>" + decodeURIComponent(json.list[i].fticket) + "</td>" 
-					+ "<td>" + json.list[i].freadcount + "</td>" 
-					+ "<td>" + json.list[i].frecommend + "</td></tr>";
 					
-				
-				}	//for
-				$("#tb1").html(values);
-				
-				//페이징 처리
-				var firstP = "<li><a id='firstBtn' href='#' onclick='paging(" + startPage + ")'>[처음으로]</a></li>";
-				var finalP = "<li><a id='finalBtn' href='#' onclick='paging(" + endPage + ")'>[끝으로]</a></li>";
-				
-				for(var p = startPage; p <= endPage; p++){
-					if(p == startPage)
-						$("#domain").html(firstP);
+					if(currentPage == 1) {
+					} else {
+						$("#domain").append("<li><a href='#' onclick='paging(" + currentPage + " - 1)'><</a></li>");
+					}
 					
-					$("#domain").append("<li><a href='#' onclick='paging(" + p + ")'>" + p + "</a></li>");
+					for (var p = startPage; p <= endPage; p++) { 
+						if (p == currentPage) {
+							$("#domain").append("<li><a href='#'><font color='red'>" + p + "</font></a></li>");
+						} else {
+							$("#domain").append("<li><a href='#' onclick='paging(" + p + ")'>" + p + "</a></li>");
+						}
+					}
 					
-					if(p == endPage)
-						$("#domain").append(finalP);
-				}//paging for
-			}, //success
-			error:function(request,status,error){
-		        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-		       }//error
+					if (currentPage == maxPage) {
+					} else {
+						$("#domain").append("<li><a href='#' onclick='paging(" + currentPage + " + 1)'> ></a></li>");
+					}
+					
+					if (currentPage >= maxPage) {
+					} else {
+						$("#domain").append("<li><a href='#' onclick='paging(" + maxPage + ")'> >> </a></li>");
+					}
+					
+					
+					
+					
+				},//success
+				error: function(jqXHR, textstatus, errorThrown){
+					console.log("error : " + jqXHR + ", " + textstatus + ", " + errorThrown);
+					
 
-		}); //ajax
-	}
-		return false;
-	} 
-</script>
- -->
+				
+				}//error
+			});
+		}
+	</script>
+ 
  <body>
 
 <div class="super_container">
@@ -228,7 +243,7 @@
                                     <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="searchTF" id="searchTF" style="margin-left:1%; ">
                                 </div>
                                 <button class="btn search-btn" type="submit" style="margin-left:0.5%;"><i class="fa fa-search" ></i></button>
-                                <button class="btn search-btn" type="button" style="margin-left:0.5%;" onclick="allchk(1);"><i class="fa fa-search" >전체조회</i></button>
+                                <button class="btn search-btn" type="button" style="margin-left:0.5%; cursor:pointer;" id="listBtn" name="listBtn" onclick="paging(1);"><i class="fa fa-search" >전체조회</i></button>
 								
                             </form>
                         </div>
@@ -243,8 +258,83 @@
 		
 			<div class="row">
 				<div class="col-lg-12">
+			<button type="button" class="btn btn-outline-primary" style="margin-left:90%; margin-bottom:0.5%; cursor:pointer;"  
+			data-toggle="modal" data-target="#fiModal">축제 등록</button>
 			
-					<div class="intro_content">
+<!-- 모달 -->
+						<div class="modal fade" id="fiModal">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+										<h4 class="modal-title"></h4>
+									</div>
+									<div class="modal-body">
+									<form action="#" onsubmit="return confirm('축제를 등록하시겠습니까?');">
+										<tr>
+											<th scope="col" >  <label>축제명</label></th>
+											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
+										</tr>
+										<tr>
+											<th scope="col" >  <label>장소</label></th>
+											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
+										</tr>
+										<tr>
+											<th scope="col" >  <label>썸네일</label></th>
+											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
+										</tr>
+										<tr>
+											<th scope="col" >  <label>내용</label></th>
+											<td> <textarea class="form-control" rows="3"></textarea></td>
+										</tr>
+										<tr>
+											<th scope="col" >  <label>기간</label></th>
+											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
+										</tr>
+										<tr>
+											<th scope="col" >  <label>테마</label></th>
+											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
+										</tr>
+										<tr>
+											<th scope="col" >  <label>연락처</label></th>
+											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
+										</tr>
+										<tr>
+											<th scope="col" >  <label>주최/주관</label></th>
+											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
+										</tr>
+										<tr>
+											<th scope="col" >  <label>티켓</label></th>
+											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
+										</tr>
+										<tr>
+											<th scope="col" >  <label>사진</label></th>
+											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
+										</tr>
+										<tr>
+											<th scope="col" >  <label>태그</label></th>
+											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
+										</tr>
+									
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default"
+											data-dismiss="modal">취소</button>
+										<button type="submit" class="btn btn-primary">등록하기</button>
+											</form>
+									</div>
+								</div>
+								<!-- /.modal-content -->
+							</div>
+							<!-- /.modal-dialog -->
+						</div>
+						<!-- /.modal -->
+						
+<!-- 테이블 -->
+						<div class="intro_content">
 					<table class="table" width="100%;" style="border-bottom : solid 0.1px;"> 
 					  <thead>
 					    <tr align="center">
@@ -260,19 +350,31 @@
 					     
 					    </tr>
 					  </thead>
+					  
 					  <tbody id="tb1">
 					  </tbody>
+					  
 					  </table>
 					</div>
-					<div class="col-md-12"> 
-                        <div class="pull-right">
-                            <div class="pagination">
-                                <ul id="domain">
+					
+					<!-- <div class="col-md-12" > 
+                        <div class="pull-right" >
+                            <div class="pagination" >
+                                <ul id="domain" >
         
                                 </ul>
                             </div>
                         </div>                
-                    </div>
+                    </div> -->
+                   
+ <nav aria-label="Page navigation example" >
+ 
+  <ul class="pagination" id="domain" style="width:100%; margin-left : 50%;">
+    
+  </ul>
+ 
+</nav>
+
 				</div>
 			
 			</div>

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.kh.westival.notice.model.service.NoticeServiceImpl;
+import org.kh.westival.notice.model.service.NoticeService;
 import org.kh.westival.notice.model.vo.Notice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class NoticeController {
 	
 	@Autowired
-	private NoticeServiceImpl noticeServiceImpl;
+	private NoticeService noticeServiceImpl;
 	
 	/*@RequestMapping("noticeview.do")
 	public String noticeView(){

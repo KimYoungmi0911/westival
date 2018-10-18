@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kh.westival.admin.model.service.AdminFestivalPageService;
-import org.kh.westival.admin.model.service.AdminTicketPageService;
+import org.kh.westival.admin.model.service.AdminFestivalPageServiceImpl;
+import org.kh.westival.admin.model.service.AdminTicketPageServiceImpl;
 import org.kh.westival.admin.model.vo.Admin;
 import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.ticket.model.vo.Ticket;
@@ -37,7 +37,7 @@ public class AdminDao {
 	//페이징 뷰(예매)
 	public ArrayList<Ticket> ticketselectList(int currentPage, int limit) {
 		System.out.println("ticketselectList 페이징뷰 dao");
-		return (ArrayList<Ticket>) sqlSession.selectList("adminMapper.ticketSelectList", new AdminTicketPageService().adminTicketPage(currentPage, limit));
+		return (ArrayList<Ticket>) sqlSession.selectList("adminMapper.ticketSelectList", new AdminTicketPageServiceImpl().adminTicketPage(currentPage, limit));
 	}
 	//검색(예매)
 	public ArrayList<Admin> searchList(String filter, String searchTF) {
@@ -56,7 +56,20 @@ public class AdminDao {
 	//페이징뷰(축제)
 	public ArrayList<Festival> festivalSelectList(int currentPage, int limit) {
 		System.out.println("festivalSelectList 페이징 dao");
-		return (ArrayList<Festival>) sqlSession.selectList("adminMapper.festivalSelectList", new AdminFestivalPageService().adminFestivalPage(currentPage, limit));
+		return (ArrayList<Festival>) sqlSession.selectList("adminMapper.festivalSelectList", new AdminFestivalPageServiceImpl().adminFestivalPage(currentPage, limit));
+	}
+	
+	
+	
+	//축제관리(집)
+	public int fGetListCount() {
+		System.out.println("fGetListCount dao");
+		return (int) sqlSession.selectOne("adminMapper.festivalgetListCount");
+	}
+
+	public ArrayList<Festival> fAllSelectList(int currentPage, int limit) {
+		System.out.println("fAllSelectList dao");
+		return (ArrayList<Festival>) sqlSession.selectList("adminMapper.festivalSelectList", new AdminFestivalPageServiceImpl().adminFestivalPage(currentPage, limit));
 	}
 	
 	
