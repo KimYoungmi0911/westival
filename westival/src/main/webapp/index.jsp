@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <%
-	request.getRequestDispatcher("main.do").forward(request, response);
+	request.getRequestDispatcher("main.do").forward(request, response); 
 %>
 </html>
 
