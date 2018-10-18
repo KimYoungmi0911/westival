@@ -4,75 +4,160 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="qnaMapper">
 
-	<!-- <resultMap type="Member" id="resultMember">
-		<id property="userid" column="userid" />
-		<result property="userpwd" column="userpwd" />
-		<result property="username" column="username" />
-		<result property="gender" column="gender" />
-		<result property="age" column="age" />
-		<result property="phone" column="phone" />
-		<result property="email" column="email" />
-		<result property="hobby" column="hobby" />
-		<result property="etc" column="etc" />
-		<result property="enroll_date" column="enroll_date" />
-		<result property="lastmodified" column="lastmodified" />
-
+	 <resultMap type="Qna" id="resultQna">
+		<id property="qna_no" column="qna_no" />
+		<result property="user_id" column="user_id" />
+		<result property="category" column="category" />
+		<result property="state" column="state" />
+		<result property="qna_date" column="qna_date" />
+		<result property="subject" column="subject" />
+		<result property="content" column="content" />
+		<result property="read_count" column="read_count" />
+		<result property="file_name" column="file_name" />
+		<result property="active" column="active" />
 	</resultMap>
 	
-	<resultMap type="Member" id="resultList">
-		<result property="userid" column="userid" />
-		<result property="userpwd" column="userpwd" />
-		<result property="username" column="username" />
-		<result property="gender" column="gender" />
-		<result property="age" column="age" />
-		<result property="phone" column="phone" />
-		<result property="email" column="email" />
-		<result property="hobby" column="hobby" />
-		<result property="etc" column="etc" />
-		<result property="enroll_date" column="enroll_date" />
-		<result property="lastmodified" column="lastmodified" />
-
+	<resultMap type="Qna" id="resultQnaList">
+		<id property="qna_no" column="qna_no" />
+		<result property="user_id" column="user_id" />
+		<result property="category" column="category" />
+		<result property="state" column="state" />
+		<result property="qna_date" column="qna_date" />
+		<result property="subject" column="subject" />
+		<result property="content" column="content" />
+		<result property="read_count" column="read_count" />
+		<result property="file_name" column="file_name" />
+		<result property="active" column="active" />
 	</resultMap>
-
-	<select id="loginCheck" parameterType="Member" resultType="Member" resultMap="resultMember">
-		<![CDATA[
-		select * from member where userid = #{userid} and userpwd = #{userpwd}
+	
+	<resultMap type="QnaReply" id="resultQnaReplyList">
+		<id property="reply_no" column="reply_no" />
+		<result property="reply_user_id" column="reply_user_id" />
+		<result property="qna_no" column="qna_no" />
+		<result property="reply_content" column="reply_content" />
+		<result property="reply_level" column="reply_level" />
+		<result property="reply_seq" column="reply_seq" />
+		<result property="reply_date" column="reply_date" />
+		<result property="reply_ref" column="reply_ref" />
+	</resultMap>
+	
+	<!-- qna 게시글 목록 -->
+	<select id="selectListQna" resultMap="resultQnaList">
+		<![CDATA[select * from (select ROWNUM RNUM, qna_no, user_id, category, state,
+		qna_date, subject, content, read_count, file_name, active from (select * from tb_qna order by qna_no desc))
+		where RNUM >= #{startRow} and RNUM <= #{endRow}
 		]]>
-	</select>	
+	</select>
 	
-	<select id="selectList" resultMap="resultList">
-		<![CDATA[select * from member]]>
+	<!-- qna 게시글 수 -->
+	<select id="listCountQna" resultType="_int">
+		<![CDATA[select count(*) from tb_qna]]>
 	</select>
-
-	<select id="selectMember" parameterType="string" resultMap="resultMember">
-		<![CDATA[select * from member where userid = #{userId}]]>
-	</select>
-
-	<select id="dupId" parameterType="string" resultType="_int">
-		<![CDATA[select count(userid) from member where userid = #{userId}]]>
-	</select>
-
-	<insert id="insertMember" parameterType="Member" flushCache="true"
+	
+	<!-- qna 글등록 -->
+	<insert id="insertQna" parameterType="Qna" flushCache="true"
 		statementType="PREPARED" useGeneratedKeys="true">
 		<![CDATA[
-		insert into member values (#{userId}, #{userPwd}, #{userName},
-		#{gender}, #{age}, #{phone}, #{email}, #{hobby}, #{etc},
-		sysdate, sysdate)
+		insert into tb_qna values ((select NVL(max(qna_no) + 1, 1) from tb_qna),
+		#{user_id}, #{category}, default, sysdate, #{subject},
+		#{content}, default, #{file_name, jdbcType=INTEGER}, #{active})
 		]]>
 	</insert>
-
-	<update id="updateMember" parameterType="Member" flushCache="true"
+	
+	<!-- qna게시글 상세보기 -->
+	<select id="selectQna" parameterType="_int" resultMap="resultQna">
+		<![CDATA[select * from tb_qna where qna_no = #{qna_no}]]>
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateCountQna" parameterType="_int" flushCache="true"
 		statementType="PREPARED">
 		<![CDATA[
-		update member set userpwd = #{userpwd}, age = #{age}, email =
-		#{email}, phone = #{phone}, hobby = #{hobby}, etc = #{etc} where
-		userid = #{userid}
+		update tb_qna set read_count = read_count + 1 where qna_no = #{qna_no}
 		]]>
 	</update>
-
-	<delete id="deleteMember" parameterType="string" flushCache="true"
-		statementType="PREPARED">
-		<![CDATA[delete from member where userid = #{userid}]]>
-	</delete> -->
-
+	
+	<!-- 검색 게시글 목록 -->
+	<select id="selectListSearchQna" parameterType="java.util.Map" resultMap="resultQnaList">
+		select * from (
+		select ROWNUM RNUM, qna_no, user_id, category, state,
+		qna_date, subject, content, read_count, file_name, active
+		from (select * from tb_qna
+		where qna_no > 0
+		<if test="category1 != 'total'">
+			and category like #{ category1 }
+		</if>
+		<choose>
+		<when test="category2 == 'subject'">
+			and ( subject like '%' || #{ keyword } || '%' )
+		</when>
+		<when test="category2 == 'content'">
+			and ( content like '%' || #{ keyword } || '%' )
+		</when>
+		<when test="category2 == 'total'">
+			and ( content like '%' || #{ keyword } || '%' or subject like '%' || #{ keyword } || '%' )
+		</when>
+		</choose>
+		order by qna_no desc))
+		where RNUM between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 검색 게시글 수 -->
+	<select id="searchListCountQna" resultType="_int">
+		select count(*) from tb_qna
+		where qna_no > 0
+		<if test="category1 != 'total'">
+			and category like #{ category1 }
+		</if>
+		<choose>
+		<when test="category2 == 'subject'">
+			and ( subject like '%' || #{ keyword } || '%' )
+		</when>
+		<when test="category2 == 'content'">
+			and ( content like '%' || #{ keyword } || '%' )
+		</when>
+		<when test="category2 == 'total'">
+			and ( content like '%' || #{ keyword } || '%' or subject like '%' || #{ keyword } || '%' )
+		</when>
+		</choose>
+	</select>
+	
+	<!-- 댓글 등록 -->
+	<insert id="insertQnaReply" parameterType="QnaReply" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		<![CDATA[
+		insert into tb_qna_reply values 
+		((select NVL(max(reply_no)+1,1) from tb_qna_reply), #{reply_user_id}, #{qna_no},
+		#{reply_content}, #{reply_level}, (select NVL(max(reply_seq)+1,1) from tb_qna_reply where qna_no = #{qna_no}),
+		sysdate, #{reply_ref})
+		]]>
+	</insert>
+	
+	<!-- 댓글 목록 -->
+	<select id="selectQnaReplyList" parameterType="_int" resultMap="resultQnaReplyList">
+		<![CDATA[
+		select * from (select ROWNUM RNUM, reply_no, reply_user_id, qna_no, reply_content,
+		reply_level, reply_seq, reply_date, reply_ref
+		from (select * from tb_qna_reply where qna_no = #{no} order by reply_no asc, reply_seq asc))
+		]]>
+	</select>
+	
+	<!-- 검색 조건문 -->
+	<!-- <sql id="search">
+		<if test="category1 != null">
+			and category like #{ category1 }
+		</if>
+		<choose>
+		<when test="category2 == 'subject'">
+			and ( subject like '%' || #{ keyword } || '%' )
+		</when>
+		<when test="category2 == 'content'">
+			and ( content like '%' || #{ keyword } || '%' )
+		</when>
+		<when test="category2 == 'total'">
+			and ( content like '%' || #{ keyword } || '%' or subject like '%' || #{ keyword } || '%' )
+		</when>
+		</choose>
+	</sql> -->
+	
 </mapper>
