@@ -4,75 +4,65 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="memberMapper">
 
-	<!-- <resultMap type="Member" id="resultMember">
-		<id property="userid" column="userid" />
-		<result property="userpwd" column="userpwd" />
-		<result property="username" column="username" />
-		<result property="gender" column="gender" />
-		<result property="age" column="age" />
-		<result property="phone" column="phone" />
-		<result property="email" column="email" />
-		<result property="hobby" column="hobby" />
-		<result property="etc" column="etc" />
-		<result property="enroll_date" column="enroll_date" />
-		<result property="lastmodified" column="lastmodified" />
-
-	</resultMap>
-	
-	<resultMap type="Member" id="resultList">
-		<result property="userid" column="userid" />
-		<result property="userpwd" column="userpwd" />
-		<result property="username" column="username" />
-		<result property="gender" column="gender" />
-		<result property="age" column="age" />
-		<result property="phone" column="phone" />
-		<result property="email" column="email" />
-		<result property="hobby" column="hobby" />
-		<result property="etc" column="etc" />
-		<result property="enroll_date" column="enroll_date" />
-		<result property="lastmodified" column="lastmodified" />
-
+	<!-- 병훈 -->
+	<resultMap type="Member" id="resultMember">
+		<id property="user_id" column="user_id" />
+		<result property="user_pwd" column="user_pwd" />
+		<result property="user_name" column="user_name" />
+		<result property="user_birth" column="user_birth" />
+		<result property="user_address" column="user_address" />
+		<result property="user_phone" column="user_phone" />
+		<result property="user_email" column="user_email" />
+		<result property="user_gender" column="user_gender" />
+		<result property="user_confirm_check" column="user_confirm_check" />
 	</resultMap>
 
-	<select id="loginCheck" parameterType="Member" resultType="Member" resultMap="resultMember">
+	<select id="loginCheck" parameterType="Member" resultMap="resultMember">
 		<![CDATA[
-		select * from member where userid = #{userid} and userpwd = #{userpwd}
+		select * from tb_user where user_id = #{user_id} and user_pwd = #{user_pwd}
+		
 		]]>
 	</select>	
 	
-	<select id="selectList" resultMap="resultList">
-		<![CDATA[select * from member]]>
-	</select>
-
-	<select id="selectMember" parameterType="string" resultMap="resultMember">
-		<![CDATA[select * from member where userid = #{userId}]]>
-	</select>
-
-	<select id="dupId" parameterType="string" resultType="_int">
-		<![CDATA[select count(userid) from member where userid = #{userId}]]>
-	</select>
-
-	<insert id="insertMember" parameterType="Member" flushCache="true"
-		statementType="PREPARED" useGeneratedKeys="true">
+	<!-- 로그인성공시  -->
+	<select id="selectMember" parameterType="Member" resultMap="resultMember">
 		<![CDATA[
-		insert into member values (#{userId}, #{userPwd}, #{userName},
-		#{gender}, #{age}, #{phone}, #{email}, #{hobby}, #{etc},
-		sysdate, sysdate)
+		select * from tb_user where user_id = #{user_id} and user_pwd = #{user_pwd}
+		
 		]]>
-	</insert>
-
-	<update id="updateMember" parameterType="Member" flushCache="true"
-		statementType="PREPARED">
+	</select>	
+	<select id="checkId" parameterType="Member" resultMap="resultMember">
 		<![CDATA[
-		update member set userpwd = #{userpwd}, age = #{age}, email =
-		#{email}, phone = #{phone}, hobby = #{hobby}, etc = #{etc} where
-		userid = #{userid}
+		select * from tb_user where user_id = #{user_id}
 		]]>
+	</select>
+	
+	<!-- 충섭 -->	
+	<select id="selectMemberInfo" parameterType="string" resultType="Member">
+		select * from tb_user where user_id = #{user_id}
+	</select>
+	
+	<update id="updateMemberInfo" parameterType="Member">
+		update tb_user
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="user_pwd != null">user_pwd = #{user_pwd},</if>
+			<if test="user_phone != null">user_phone = #{user_phone},</if>
+			<if test="user_address != null">user_address = #{user_address}</if>
+		</trim>
+		where user_id = #{user_id}
 	</update>
-
-	<delete id="deleteMember" parameterType="string" flushCache="true"
-		statementType="PREPARED">
-		<![CDATA[delete from member where userid = #{userid}]]>
-	</delete> -->
-
+		
+	<delete id="deleteMemberInfo" parameterType="string">
+		delete from tb_user where user_id = #{user_id}
+	</delete>
+	
+	<select id="selectMemberTicketInfo" parameterType="Member" resultType="Festival">
+		select new_img_name, no, name, address, content, start_date, end_date, manage from tb_festival
+		<if test="user_id != null">where reg_user = #{user_id}</if>
+	</select>
+	
+	<!-- 마이페이지 예매 내역 -->
+	<select id="recommendList" resultType="Member" parameterType="string">
+		select * from tb_ticket where user_id = #{user_id}
+	</select>
 </mapper>

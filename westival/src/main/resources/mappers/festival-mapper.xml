@@ -118,11 +118,6 @@
 		]]>
 	</select>
 	
-	<insert id="insertScrap" parameterType="Scrap" flushCache="true"
-		statementType="PREPARED" useGeneratedKeys="true">
-		insert into tb_scrap values (#{user_id}, #{no})	
-	</insert>	
-	
 	<!-- <update id="updateMember" parameterType="Member" flushCache="true"
 		statementType="PREPARED">
 		<![CDATA[
@@ -135,6 +130,109 @@
 	<delete id="deleteFestival" parameterType="_int" flushCache="true"
 		statementType="PREPARED">
 		<![CDATA[delete from tb_festival where no = #{no}]]>
+	</delete>
+	
+	<select id="selectFestivalName" parameterType="_int" resultType="string">
+		select name from tb_festival where no = #{no}
+	</select>	
+	
+	
+	<!-- 다혜 -->
+	
+	<resultMap type="FestivalReply" id="resultReplyList">
+		<result property="reply_no" column="reply_no" />
+		<result property="reply_user_id" column="reply_user_id" />
+		<result property="reply_content" column="reply_content" />
+		<result property="reply_date" column="reply_date" />
+		<result property="festival_no" column="festival_no" />
+		<result property="reply_seq" column="reply_seq" />
+	</resultMap>
+	
+	<resultMap type="Scrap" id="resultScrap">
+		<result property="user_id" column="user_id" />
+		<result property="no" column="no" />
+	</resultMap>
+	
+	<resultMap type="Recommend" id="resultRecommend">
+		<result property="user_id" column="user_id" />
+		<result property="no" column="no" />
+		<result property="recommend_date" column="recommend_date" />
+	</resultMap>
+
+	<select id="infoFestival" parameterType="_int" resultMap="resultFestival">
+		<![CDATA[select * from tb_festival where no = #{no}]]>
+	</select>
+	
+	<select id="listCount" parameterType="_int" resultType="int">
+		<![CDATA[select count(*) from tb_festival_reply where festival_no = #{no}]]>
+	</select>
+	
+	<select id="selectReplyList" parameterType="java.util.Map" resultMap="resultReplyList">
+		<!-- <![CDATA[select * from tb_festival_reply where festival_no = #{no}]]> -->
+		<![CDATA[
+		select * from (select ROWNUM RNUM, reply_no, reply_user_id, reply_content, reply_date,
+		festival_no, reply_seq from (select * from tb_festival_reply where festival_no = #{no} order by reply_no DESC, reply_seq DESC))
+		where RNUM >= #{startRow} and RNUM <= #{endRow}
+		]]>
+	</select>
+	
+	<insert id="insertReply" parameterType="FestivalReply" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		<![CDATA[
+		insert into tb_festival_reply values ((select NVL(max(reply_no)+1,1) from tb_festival_reply), #{reply_user_id}, #{reply_content},
+		sysdate, #{festival_no}, (select NVL(max(reply_seq)+1,1) from tb_festival_reply where festival_no = #{festival_no} ))
+		]]>
+	</insert>
+	
+	<update id="updateReply" parameterType="FestivalReply" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[
+		update tb_festival_reply set reply_content = #{reply_content} where reply_no = #{reply_no}
+		]]>
+	</update>
+	
+	<delete id="deleteReply" parameterType="_int" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[delete from tb_festival_reply where reply_no = #{reply_no}]]>
+	</delete>
+	
+	<update id="updateCount" parameterType="_int" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[
+		update tb_festival set read_count = read_count + 1 where no = #{no}
+		]]>
+	</update>
+	
+	<select id="scrapCheck" parameterType="Scrap" resultType="_int">
+		<![CDATA[select count(*) from tb_scrap where user_id = #{user_id} and no = #{no}]]>
+	</select>
+	
+	<insert id="insertScrap" parameterType="Scrap" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		<![CDATA[
+		insert into tb_scrap values (#{user_id}, #{no})
+		]]>
+	</insert>
+	
+	<delete id="deleteScrap" parameterType="Scrap" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[delete from tb_scrap where user_id = #{user_id} and no = #{no}]]>
+	</delete>
+	
+	<select id="recommendCheck" parameterType="Recommend" resultType="_int">
+		<![CDATA[select count(*) from tb_recommend where user_id = #{user_id} and no = #{no}]]>
+	</select>
+	
+	<insert id="insertRecommend" parameterType="Recommend" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		<![CDATA[
+		insert into tb_recommend values (#{user_id}, #{no}, sysdate)
+		]]>
+	</insert>
+	
+	<delete id="deleteRecommend" parameterType="Recommend" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[delete from tb_recommend where user_id = #{user_id} and no = #{no}]]>
 	</delete>
 	
 	
