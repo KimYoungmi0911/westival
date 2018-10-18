@@ -5,7 +5,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head> 
 <title>Contact</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,6 +16,7 @@
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_styles.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_responsive.css">
 </head>
+
 <script type="text/javascript">
 /* function ndelete(){
 	
@@ -24,6 +25,7 @@
 function nrewrite(){
 	location.href="noticerewrite.do"
 } */
+
 </script>
 <body>
 
@@ -198,9 +200,20 @@ function nrewrite(){
 </c:url>
 <!-- <button type="button" class="btn btn-dark" onclick="" style="cursor:pointer;" >수정</button> -->
 <!-- <button type="button" class="btn btn-dark" onclick="ndelete();" style="cursor:pointer;" >삭제</button> -->
-<a href="${noticeupdate }">수정</a>
-<a href="${ndelete }">삭제</a>
-
+<button type="button" class="btn btn-dark" onclick="location.href='${noticeupdate}'" style="cursor:pointer;">수정</button>
+<button type="button" class="btn btn-dark" onclick="deleteBtn();" style="cursor:pointer;">삭제</button>
+<%-- <a href="${noticeupdate }">수정</a>
+<a href="${ndelete }" onclick="return confirm('정말로 삭제하시겠습니까 ?');">삭제</a> --%>
+<script type="text/javascript">
+function deleteBtn(){
+	if(confirm('정말로 삭제하시겠습니까 ? ') == true){
+	
+		location.href="${ndelete}";
+		alert("정상적으로 삭제되었습니다.");
+	}else
+		return;
+}
+</script>
 </div>
 </c:if>
 						

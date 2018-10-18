@@ -8,7 +8,7 @@ public class AdminTicketPage {
 
 	public AdminTicketPage(int startRow, int endRow) {
 		super();
-		this.startRow = startRow;
+		this.startRow = startRow; 
 		this.endRow = endRow;
 	}
 

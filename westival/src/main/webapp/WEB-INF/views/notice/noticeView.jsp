@@ -5,7 +5,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head> 
 <title>About Us</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,14 +23,106 @@
 function noticeInsert(){
 	location.href="ninsert.do"
 }
+
+function selectBtnClick(page){
+	var filter = $("#filter").val();
+	var searchTF = $("#searchTF").val();
+	console.log(filter + ", " + searchTF);
+	 var currentPage;
+	 var maxPage;
+	 var startPage;
+	 var endPage;
+	 
+	 $.ajax({
+		 url: "nselectbtn.do",
+		 type: "get",
+		 data: {"filter" : filter, "searchTF" : searchTF, "page" : page},
+		 dataType: "json",
+		 success: function(data){
+			 
+			 var jsonStr = JSON.stringify(data);
+				var json = JSON.parse(jsonStr);
+				
+				currentPage = json.currentPage;
+				maxPage = json.maxPage;
+				startPage = json.startPage;
+				endPage = json.endPage;
+				
+				var values = "";
+				for(var i in json.list){
+					for(var j = 0; j < json.list[i].ntitle.length; j++){
+						json.list[i].ntitle = json.list[i].ntitle.replace("+", " ");		
+					}
+					values += "<tr align='center'><td>" + json.list[i].nno + "</td>"
+					+ "<td>" + decodeURIComponent(json.list[i].ntitle) + "</td>"
+					+ "<td>" + decodeURIComponent(json.list[i].nof) + "</td>"
+					+ "<td>" + decodeURIComponent(json.list[i].ndate) + "</td></tr>";
+				}//for
+				$("#tb1").html(values);
+				
+				$("#domain").html("");
+				if(currentPage <= 1) {	
+				} else {
+					$("#domain").append("<li><a href='#' onclick='selectBtnClick(1)'>&nbsp;<<&nbsp;</a></li>");
+				}
+				
+				if(currentPage == 1) {
+				} else {
+					$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " - 1)'>&nbsp;<&nbsp;</a></li>");
+				}
+				
+				for (var p = startPage; p <= endPage; p++) { 
+					if (p == currentPage) {
+						$("#domain").append("<li><a href='#'><font color='red'>" + p + "</font></a></li>");
+					} else {
+						$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + p + ")'>" + p + "</a></li>");
+					}
+				}
+				
+				if (currentPage == maxPage) {
+				} else {
+					$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " + 1)'>&nbsp;>&nbsp;</a></li>");
+				}
+				
+				if (currentPage == maxPage) {
+				} else {
+					$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " + 1)'>&nbsp;>&nbsp;  </a></li>");
+				}
+		 },//success
+		 error: function(jqXHR, textstatus, errorThrown){
+				console.log("error : " + jqXHR + ", " + textstatus + ", " + errorThrown);
+				
+
+			
+			}//error
+	 });
+	 
+	 
+	 
+	 
+}
+
+
+
+
 </script>
+<style type="text/css">
+#home {
+		height: 90%;
+		display: block;
+	}
+	 
+	.home_background {
+		position: relative;
+	}
+</style>
 <body>
 
 <div class="super_container">
 	
 	<!-- Header -->
 
-	<header class="header">
+	<c:import url="/WEB-INF/views/header.jsp" />
 
 		<!-- Top Bar -->
 
@@ -114,28 +206,39 @@ function noticeInsert(){
 
 	</header>
 
-	<div class="menu trans_500">
-		<div class="menu_content d-flex flex-column align-items-center justify-content-center text-center">
-			<div class="menu_close_container"><div class="menu_close"></div></div>
-			<div class="logo menu_logo"><a href="#"><img src="images/logo.png" alt=""></a></div>
-			<ul>
-				<li class="menu_item"><a href="index.html">home</a></li>
-				<li class="menu_item"><a href="#">about us</a></li>
-				<li class="menu_item"><a href="offers.html">offers</a></li>
-				<li class="menu_item"><a href="blog.html">news</a></li>
-				<li class="menu_item"><a href="contact.html">contact</a></li>
-			</ul>
-		</div>
-	</div>
-
 	<!-- Home -->
 
-	<div class="home" >
+	<div class="home" id="home">
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/about_background.jpg" ></div>
 		<div class="home_content">
 			<div class="home_title">공지사항</div>
 		</div>
 	</div>
+	<!-- search -->	
+	<div style="background:#f6f9fb;">
+					<div class="container" data-wow-delay="0.8s" >
+						
+                            <form action="#" class=" form-inline" method="post" style="margin-top : 0.5%; "> 
+
+                                <div class="form-group" style="margin-left : 35.5%;">                                   
+                                    <select class="btn dropdown-toggle btn-sm" id="filter" name="filter">
+                                
+										<option value="ntitle">제목</option>
+                                        
+
+                                    </select>
+                                </div>
+                                
+                                 <div class="form-group" >
+                                    <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="searchTF" id="searchTF" style="margin-left:1%; ">
+                                </div>
+                               <button class="btn search-btn" type="button" style="margin-left:0.5%; cursor:pointer;" id="listBtn" name="listBtn" onclick="selectBtnClick(1);"><i class="fa fa-search" ></i></button>
+								  
+								  
+                            </form>
+                          
+                        </div>
+  </div>
 
 	<!-- Intro -->
   
@@ -144,14 +247,14 @@ function noticeInsert(){
 	
 	
 		<div class="container">
-		<%-- <c:if test="${!empty sessionScope.user_id && sessionScope.user_id eq 'admin' }"> --%>
+		<c:if test="${!empty sessionScope.member.user_id && sessionScope.member.user_id eq 'admin' }">
 		<button type="button" class="btn btn-outline-primary" style="margin-left: 89%; margin-bottom: 1%;" onclick="noticeInsert();">공지사항 등록</button>
-		<%-- </c:if> --%> 
+		</c:if> 
 			<div class="row">
 				<div class="col-lg-12">
 			
 					<div class="intro_content">
-					<table class="table" width="100%;" style="border:solid 1px;">
+					<table class="table" width="100%;" style="border-bottom : solid 0.1px;"> 
 					  <thead>
 					    <tr align="center">
 					      <th scope="col" width="15%">번호</th>
@@ -161,8 +264,8 @@ function noticeInsert(){
 					     
 					    </tr>
 					  </thead>
-					  <tbody>
-					
+					  <c:if test="${!empty list}">  
+					  <tbody id="tb1">
 					    <c:forEach items="${list }" var="n">
 							<tr>
 								<td align="center">${n.notice_no }</td>
@@ -181,11 +284,79 @@ function noticeInsert(){
 							</tr>				    
 					    </c:forEach>
 					  </tbody>
-					  
+					</c:if>
+					 
+					 <c:if test="${empty list }">
+					 <tbody>
+					 <td colspan="4" align="center">등록된 글이 없습니다.</td>
+					 </tbody>
+					 </c:if>
 					   
 					</table>
 						
+<!-- 페이징 처리 -->
+<div style="text-align: center">
+<c:if test="${currentPage <= 1 }">
+[맨처음]&nbsp;
+</c:if>
+<c:if test="${currentPage > 1 }">
+<c:url var="mi13" value="noticeview.do">
+	<c:param name="page" value="1"/>
+</c:url>
+<a href="${mi13 }">[맨처음]</a>
+</c:if>
+<c:if test="${(currentPage-10) <=  startPage && (currentPage-10) >= 1 }">
+	<c:url var="mi14" value="noticeview.do">
+		<c:param name="page" value="${startPage -10 }" />
+	</c:url>
+	
+	<a href="${mi14 }">[이전]</a>
+</c:if>
+<c:if test="${(currentPage-10) >=  startPage || (currentPage-10) <= 1  }">
+&nbsp;
+</c:if>
+<c:forEach var="cnt" begin="${startPage }" end="${endPage }">
+<c:if test="${cnt == currentPage }">
+	<font color="red" size="4">[${cnt }]</font>
+</c:if>
+<c:if test="${cnt != currentPage }">
+	<c:url var="mid15" value="noticeview.do">
+		<c:param name="page" value="${cnt }" />
+	</c:url>
+	<a href="${mid15 }">${cnt }</a>
+</c:if>
+</c:forEach>
+<c:if test="${(currentPage + 10) > endPage}">
+	<c:url var="mid16" value="noticeview.do">
+		<c:param name="page" value="${endPage + 1 }" />
+	</c:url>
+	<a href="${mid16 }">[다음]s</a>
+</c:if>
+<c:if test="${!((currentPage + 10) > endPage && (currentPage+10) < maxPage) }">
+	&nbsp;
+</c:if>
 
+<c:if test="${currentPage >= maxPage }">
+	[맨끝]&nbsp;
+</c:if>
+<c:if test="${!(currentPage >= maxPage) }">
+<c:url var="mid17" value="noticeview.do">
+	<c:param name="page" value="${maxPage }" />
+</c:url> 
+<a href="${mid17 }">[맨끝]</a>
+</c:if>
+
+</div>
+
+<%-- <c:if test="">
+<nav aria-label="Page navigation example" >
+ 
+  <ul class="pagination" id="domain" style="width:100%; margin-left : 50%;">
+    
+  </ul>
+ 
+</nav>
+</c:if> --%>
 							
 
 					</div>

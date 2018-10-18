@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>축제관리</title> 
+<title>회원관리</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
@@ -20,7 +20,7 @@
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_responsive.css">
 </head>
 <style type="text/css">
-#home {
+	#home {
 		height: 90%;
 		display: block;
 	}
@@ -28,6 +28,38 @@
 	.home_background {
 		position: relative;
 	}
+	#domain {  
+    text-align:center;  
+}  
+#domain li {  
+    display:inline;  
+    vertical-align:middle;  
+}  
+#domain li a {  
+    display:-moz-inline-stack;  /*FF2*/  
+    display:inline-block;  
+    vertical-align:top;  
+    padding:4px;  
+    margin-right:3px;  
+    width:30px !important;  
+    color:#000;  
+    font:bold 12px tahoma;  
+    border:1px solid #eee;  
+    text-align:center;  
+    text-decoration:none;  
+    width /**/:30px;    /*IE 5.5*/  
+}  
+#domain li a.now {  
+    color:#fff;  
+    background-color:#f40;  
+    border:1px solid #f40;  
+}  
+#domain li a:hover, ul li a:focus {  
+    color:#fff;  
+    border:1px solid #f40;  
+    background-color:#f40;  
+}  
+	
 </style>
 <script type="text/javascript" src="/westival/resources/js/jquery-3.2.1.min.js"></script>
  <script type="text/javascript">
@@ -38,7 +70,7 @@
 	 var endPage;
 	
 	 $.ajax({
-		 url: "fpage.do",
+		 url: "mpage.do",
 		 type: "get",
 		 data: {"page" :page},
 		 dataType: "json",
@@ -54,23 +86,18 @@
 					
 					var values = "";
 					for(var i in json.list){
-						for(var j = 0; j < json.list[i].faddress.length; j++){
-							json.list[i].faddress = json.list[i].faddress.replace("+", " ");		
+						for(var j = 0; j < json.list[i].maddress.length; j++){
+							json.list[i].maddress = json.list[i].maddress.replace("+", " ");		
 						}
-						for(var a = 0; a < json.list[i].fname.length; a++){
-							json.list[i].fname = json.list[i].fname.replace("+", " ");
-						}
-						for(var b = 0; b < json.list[i].fmanage.length; b++){
-							json.list[i].fmanage = json.list[i].fmanage.replace("+", " ");
-						}
-						values += "<tr align='center'><td>" + decodeURIComponent(json.list[i].fname) + "</td>"
-						+ "<td>" + decodeURIComponent(json.list[i].faddress) + "</td>"
-						+ "<td>" + decodeURIComponent(json.list[i].fstart) + "</td>" 
-						+ "<td>" + decodeURIComponent(json.list[i].fmanage) + "</td>"
-						+ "<td>" + decodeURIComponent(json.list[i].ftelephone) + "</td>"
-						+ "<td>" + decodeURIComponent(json.list[i].fticket) + "</td>"
-						+ "<td>" + json.list[i].freadcount + "</td>"
-						+ "<td>" + json.list[i].frecommend + "</td></tr>";
+						
+						values += "<tr align='center'><td>" + decodeURIComponent(json.list[i].mid) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].mname) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].mbirth) + "</td>" 
+						+ "<td>" + decodeURIComponent(json.list[i].maddress) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].mphone) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].memail) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].mgender) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].mconfirm) + "</td></tr>";
 					}//for
 					$("#tb1").html(values);
 					
@@ -96,7 +123,7 @@
 					
 					if (currentPage == maxPage) {
 					} else {
-						$("#domain").append("<li><a href='#' onclick='paging(" + currentPage + " + 1)'> ></a></li>");
+						$("#domain").append("<li><a href='#' onclick='paging(" + currentPage + " + 1)'> > </a></li>");
 					}
 					
 					if (currentPage >= maxPage) {
@@ -116,10 +143,12 @@
 				}//error
 			});
 		}
- 
+ 	
+  //검색함수
 	  function selectBtnClick(page){
 		 var filter = $("#filter").val();
 		 var searchTF = $("#searchTF").val();
+		 
 		 console.log(filter + ", " + searchTF);
 		 var currentPage;
 		 var maxPage;
@@ -131,7 +160,7 @@
 	 
  		
 	  $.ajax({
-		url: "selectbtn.do",
+		url: "mselectbtn.do",
 		type: "post",
 		data: {"filter" : filter, "searchTF" : searchTF, "page" : page},
 		dataType: "json",
@@ -147,35 +176,31 @@
 			
 			var values = "";
 			for(var i in json.list){
-				for(var j = 0; j < json.list[i].faddress.length; j++){
-					json.list[i].faddress = json.list[i].faddress.replace("+", " ");		
+				
+				for(var j = 0; j < json.list[i].maddress.length; j++){
+					json.list[i].maddress = json.list[i].maddress.replace("+", " ");		
 				}
-				for(var a = 0; a < json.list[i].fname.length; a++){
-					json.list[i].fname = json.list[i].fname.replace("+", " ");
-				}
-				for(var b = 0; b < json.list[i].fmanage.length; b++){
-					json.list[i].fmanage = json.list[i].fmanage.replace("+", " ");
-				}
-				values += "<tr align='center'><td>" + decodeURIComponent(json.list[i].fname) + "</td>"
-				+ "<td>" + decodeURIComponent(json.list[i].faddress) + "</td>"
-				+ "<td>" + decodeURIComponent(json.list[i].fstart) + "</td>" 
-				+ "<td>" + decodeURIComponent(json.list[i].fmanage) + "</td>"
-				+ "<td>" + decodeURIComponent(json.list[i].ftelephone) + "</td>"
-				+ "<td>" + decodeURIComponent(json.list[i].fticket) + "</td>"
-				+ "<td>" + json.list[i].freadcount + "</td>"
-				+ "<td>" + json.list[i].frecommend + "</td></tr>";
+				
+				values += "<tr align='center'><td>" + decodeURIComponent(json.list[i].mid) + "</td>"
+				+ "<td>" + decodeURIComponent(json.list[i].mname) + "</td>"
+				+ "<td>" + decodeURIComponent(json.list[i].mbirth) + "</td>" 
+				+ "<td>" + decodeURIComponent(json.list[i].maddress) + "</td>"
+				+ "<td>" + decodeURIComponent(json.list[i].mphone) + "</td>"
+				+ "<td>" + decodeURIComponent(json.list[i].memail) + "</td>"
+				+ "<td>" + decodeURIComponent(json.list[i].mgender) + "</td>"
+				+ "<td>" + decodeURIComponent(json.list[i].mconfirm) + "</td></tr>";
 			}//for
-			$("#tb1").html(values);
+			$("#tb1").html(values);  
 			
 			$("#domain").html("");
 			if(currentPage <= 1) {	
 			} else {
-				$("#domain").append("<li><a href='#' onclick='selectBtnClick(1)'><<</a></li>");
+				$("#domain").append("<li><a href='#' onclick='selectBtnClick(1)'> << </a></li>");
 			}
 			
 			if(currentPage == 1) {
 			} else {
-				$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " - 1)'><</a></li>");
+				$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " - 1)'> < </a></li>");
 			}
 			
 			for (var p = startPage; p <= endPage; p++) { 
@@ -188,12 +213,12 @@
 			
 			if (currentPage == maxPage) {
 			} else {
-				$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " + 1)'> ></a></li>");
+				$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " + 1)'> > </a></li>");
 			}
 			
 			if (currentPage == maxPage) {
 			} else {
-				$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " + 1)'> ></a></li>");
+				$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + maxPage + " )'> >> </a></li>");
 			}
 			
 			
@@ -206,9 +231,78 @@
 		}//error
 	  });
 	  }
- 
- 
- 
+  
+  
+  /* var searchTFValue = $("#searchTF").val();
+	var filterValue = $("#filter").val();
+ 	//검색함수
+ 	function paging(searchTF, filter, Page){
+ 		$.ajax({
+ 			url: "mselectbtn.do",
+ 			data: {"searchTF": searchTFValue, "filter":filterValue, "page":Page},
+ 			type:"post",
+ 			dataType:"json",
+ 			success: function(obj){
+ 				var objStr = JSON.stringify(obj);
+	            var jsonObj = JSON.parse(objStr);
+	               
+	            var outValues= '';
+	   
+	            
+	            if(obj.totalCount == 0){
+	            	 outValues += '<td colspan="8">검색 결과가 존재하지 않습니다.</td>';
+	            }else{
+	            	for(var i in jsonObj.list){
+	            		outValues += '<tr><td>' + obj.list[i].mid + '</td>';
+	            		outValues += '<td>' + obj.list[i].mname + '</td>';
+	            		outValues += '<td>' + obj.list[i].mbirth + '</td>';
+	            		outValues += '<td>' + obj.list[i].maddress + '</td>';
+	            		outValues += '<td>' + obj.list[i].mphone + '</td>';
+	            		outValues += '<td>' + obj.list[i].memail + '</td>';
+	            		outValues += '<td>' + obj.list[i].mgender + '</td>';
+	            		outValues += '<td>' + obj.list[i].mconfirm + '</td></tr>';
+	            	}
+	            }
+	            $("#tb1").html(outValues);
+	          //페이징
+				$("#domain").html("");
+				if(currentPage <= 1){
+				}else{
+					$("#domain").append("<li><a href='#' onclick='paging(searchTF, filter, 1)'><<</a></li>");
+				}
+				
+				if(currentPage == 1) {
+				} else {
+					$("#domain").append("<li><a href='#' onclick='paging(searchTF, filter, " + currentPage + " - 1)'><</a></li>");
+				}
+				
+				for (var p = startPage; p <= endPage; p++) { 
+					if (p == currentPage) {
+						$("#domain").append("<li><a href='#'><font color='red'>" + p + "</font></a></li>");
+					} else {
+						$("#domain").append("<li><a href='#' onclick='paging(searchTF, filter, " + p + ")'>" + p + "</a></li>");
+					}
+				}
+				
+				if (currentPage == maxPage) {
+				} else {
+					$("#domain").append("<li><a href='#' onclick='paging(searchTF, filter, " + currentPage + " + 1)'> > </a></li>");
+				}
+				
+				if (currentPage >= maxPage) {
+				} else {
+					$("#domain").append("<li><a href='#' onclick='paging(searchTF, filter, " + maxPage + ")'> >> </a></li>");
+				}
+	            
+
+	            
+ 			},//success
+ 			error: function(request, status, errorData){
+	               alert("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
+	                     + "error : " + errorData);
+	        }//error
+ 		});
+ 	} */
  
  
 	</script>
@@ -219,14 +313,15 @@
 	
 	<!-- Header -->
 
-		<c:import url="/WEB-INF/views/header.jsp" />
+	<c:import url="/WEB-INF/views/header.jsp" />
 
+		
 	<!-- Home -->
 
 	<div class="home" id="home">
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/about_background.jpg" ></div>
 		<div class="home_content">
-			<div class="home_title">축제관리</div>
+			<div class="home_title">회원관리</div>
 		</div>
 	</div>
 	
@@ -239,11 +334,14 @@
                                 <div class="form-group" style="margin-left : 34%;">                                   
                                     <select class="btn dropdown-toggle btn-sm" id="filter" name="filter">
                                 
-										<option value="all">통합검색</option>
-                                        <option value="location">위치</option>
-                                        <option value="fname">축제명</option>
-                                        <option value="manage">주최/주관</option>
-                                        <option value="ticket">티켓</option>
+										<!-- <option value="all">통합검색</option> -->
+                                        <option value="mid">아이디</option>
+                                        <option value="mname">이름</option>
+                                        <option value="maddress">주소</option>
+                                        <option value="mtelephone">전화번호</option>
+                                        <option value="memail">이메일</option>
+                                        <option value="mgender">성별</option>	
+                                        <option value="mconfirm">위치동의</option>
 
                                     </select>
                                 </div>
@@ -251,7 +349,7 @@
                                  <div class="form-group" >
                                     <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="searchTF" id="searchTF" style="margin-left:1%; ">
                                 </div>
-                               <button class="btn search-btn" type="button" style="margin-left:0.5%; cursor:pointer;" id="listBtn" name="listBtn" onclick="selectBtnClick(1);"><i class="fa fa-search" ></i></button>
+                               <button class="btn search-btn" type="button" style="margin-left:0.5%; cursor:pointer;" id="searchBtn" name="searchBtn" onclick="selectBtnClick(1);"><i class="fa fa-search" ></i></button>
 								  <button class="btn search-btn" type="button" style="margin-left:0.5%; cursor:pointer;" id="listBtn" name="listBtn" onclick="paging(1);"><i class="fa fa-search" >전체조회</i></button>
 								  
                             </form>
@@ -269,79 +367,27 @@
 			<div class="row">
 				<div class="col-lg-12">
 			<button type="button" class="btn btn-outline-primary" style="margin-left:90%; margin-bottom:0.5%; cursor:pointer;"  
-			data-toggle="modal" data-target="#fiModal">축제 등록</button>
+			data-toggle="modal" data-target="#register">회원 등록</button>
 			
 <!-- 모달 -->
-						<div class="modal fade" id="fiModal">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal"
-											aria-label="Close">
-											<span aria-hidden="true">&times;</span>
-										</button>
-										<h4 class="modal-title"></h4>
-									</div>
-									<div class="modal-body">
-									<form action="#" onsubmit="return confirm('축제를 등록하시겠습니까?');">
-										<tr>
-											<th scope="col" >  <label>축제명</label></th>
-											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
-										</tr>
-										<tr>
-											<th scope="col" >  <label>장소</label></th>
-											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
-										</tr>
-										<tr>
-											<th scope="col" >  <label>썸네일</label></th>
-											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
-										</tr>
-										<tr>
-											<th scope="col" >  <label>내용</label></th>
-											<td> <textarea class="form-control" rows="3"></textarea></td>
-										</tr>
-										<tr>
-											<th scope="col" >  <label>기간</label></th>
-											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
-										</tr>
-										<tr>
-											<th scope="col" >  <label>테마</label></th>
-											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
-										</tr>
-										<tr>
-											<th scope="col" >  <label>연락처</label></th>
-											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
-										</tr>
-										<tr>
-											<th scope="col" >  <label>주최/주관</label></th>
-											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
-										</tr>
-										<tr>
-											<th scope="col" >  <label>티켓</label></th>
-											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
-										</tr>
-										<tr>
-											<th scope="col" >  <label>사진</label></th>
-											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
-										</tr>
-										<tr>
-											<th scope="col" >  <label>태그</label></th>
-											<td> <input type="text" class="form-control"  placeholder="축제명을 입력하세요"></td>
-										</tr>
-									
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-default"
-											data-dismiss="modal">취소</button>
-										<button type="submit" class="btn btn-primary">등록하기</button>
-											</form>
-									</div>
-								</div>
-								<!-- /.modal-content -->
-							</div>
-							<!-- /.modal-dialog -->
-						</div>
-						<!-- /.modal -->
+<!-- Modal-register -->
+<div class="modal fade" id="register" tabindex="-1"
+			role="dialog" aria-labelledby="exampleModalLongTitle"
+			aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      	<img src="/westival/resources/images/titlelogo.png"	class="modal-title rounded mx-auto d-block" width="80" height="80">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body"><%@ include file="/WEB-INF/views/register.jsp" %></div>
+				</div>
+			</div>
+		</div>
 						
 <!-- 테이블 -->
 						<div class="intro_content">
@@ -349,14 +395,14 @@
 					  <thead>
 					    <tr align="center">
 					      
-					      <th scope="col" width="">축제명</th>
-					      <th scope="col" width="">위치</th>
-					      <th scope="col" width="">날짜</th>
-					      <th scope="col" width="">주최/주관</th>
-					      <th scope="col" width="">문의처</th>
-					      <th scope="col" width="">티켓(Y/N)</th>
-					      <th scope="col" width="">조회수</th>
-					      <th scope="col" width="">추천수</th>
+					      <th scope="col" width="">아이디</th>
+					      <th scope="col" width="">이름</th>
+					      <th scope="col" width="">생일</th>
+					      <th scope="col" width="">주소</th>
+					      <th scope="col" width="">연락처</th>
+					      <th scope="col" width="">이메일</th>
+					      <th scope="col" width="">성별</th>
+					      <th scope="col" width="">위치정보동의여부</th>
 					     
 					    </tr>
 					  </thead>
@@ -367,24 +413,23 @@
 					  </table>
 					</div>
 					
-					<!-- <div class="col-md-12" > 
-                        <div class="pull-right" >
-                            <div class="pagination" >
-                                <ul id="domain" >
-        
-                                </ul>
-                            </div>
-                        </div>                
-                    </div> -->
-                   
- <nav aria-label="Page navigation example" >
- 
-  <ul class="pagination" id="domain" style="width:100%; margin-left : 50%;">
-    
-  </ul>
- 
-</nav>
-
+					
+ 				 <!-- 페이지 -->
+							<div class="paginate">
+									<ul class="pagination" style="justify-content: center;" id="domain">
+										<li class="page-item"><a class="page-link" href="#" style="color: rgba(53, 10, 78, 0.6);">&laquo;</a></li>
+										<c:forEach var="p" begin="${ startPage }" end="${ endPage }">
+										<c:if test="${ p == currentPage }">
+											<li class="page-item"><a class="page-link" href="mpage.do?page=${ p }" style="background: rgba(53, 10, 78, 0.6);color: white;">${ p }</a></li>
+										</c:if>
+										<c:if test="${ p != currentPage }">
+											<li class="page-item"><a class="page-link" href="mpage.do?page=${ p }" style="color: rgba(53, 10, 78, 0.6);">${ p }</a></li>
+										</c:if>
+									</c:forEach>
+										<li class="page-item"><a class="page-link" href="#" style="color: rgba(53, 10, 78, 0.6);">&raquo;</a></li>
+									</ul>
+							</div>
+					<!-- 페이지 끝 -->
 				</div>
 			
 			</div>
@@ -400,7 +445,7 @@
 	<!-- Footer -->
 
 	<footer class="footer">
-		<div class="container">
+		<div class="container" style="margin : 0">
 			<div class="row">
 
 				<!-- Footer Column -->

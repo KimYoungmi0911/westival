@@ -5,7 +5,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head> 
 <title>Contact</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -150,7 +150,7 @@ function goview(){
 								<c:param name="no" value="${nudetail.notice_no }"></c:param>
 							</c:url> --%>
 	
-								<form action="nupdate.do" method="post" enctype="multipart/form-data">
+								<form action="nupdate.do" method="post" enctype="multipart/form-data" onsubmit="return confirm('게시물을 수정하시겠습니까?')">
 								<tr>
 									<th scope="col" width="10%;">글번호</th>
 									<td><input type="text" style="width: 50%;" required name="no" id="no" value="${nudetail.notice_no }" readonly></td>

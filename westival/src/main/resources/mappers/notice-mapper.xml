@@ -4,7 +4,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="noticeMapper">
 	
-	
+	 
 	<resultMap type="Notice" id="resultList">
 		<result property="notice_no" column="notice_no" />
 		<result property="user_id" column="user_id" />
@@ -82,5 +82,30 @@
 	]]>
 	</select>
 	
+	<!-- 페이징검색뷰 -->
+	<select id="nGetSelectListCount" resultType="_int" parameterType="string">
+	<choose>
+	<when test="filter == 'ntitle'">
+	select count(*) from tb_notice where notice_title like '%'||#{searchTF}||'%'
+	</when>
+	</choose> 
+	</select>
+	
+	
+	<!-- 공지 검색(리스트) -->
+	<select id="nSelectList" parameterType="java.util.Map" resultMap="resultList">
+	<![CDATA[
+	select * from (select rownum rnum, notice_no, notice_title, original_filepath, 
+ 	notice_date from (select * from tb_notice))
+	]]>
+	<choose>
+	<when test="filter == 'ntitle'">
+	<![CDATA[
+	where notice_title like '%'||#{searchTF}||'%' 
+	and rnum >= #{startRow} and rnum <= #{endRow}
+	]]>
+	</when>
+	</choose>
+	</select> 
 
 </mapper>

@@ -14,7 +14,7 @@ public class NoticeServiceImpl implements NoticeService{
 	private NoticeDao noticeDao;
 	
 	public NoticeServiceImpl(){}
-		
+		 
 	@Override
 	public ArrayList<Notice> selectList() {
 		System.out.println("selectList service 실행됨");
@@ -75,6 +75,19 @@ public class NoticeServiceImpl implements NoticeService{
 	public ArrayList<Notice> selectList(int currentPage, int limit) {
 		System.out.println("selectList 페이징뷰");
 		return noticeDao.selectList(currentPage, limit);
+	}
+
+	//공지 검색 페이징 및 뷰
+	@Override
+	public int nGetSelectListCount(String filter, String searchTF) {
+		System.out.println("nGetSelectListCount serviceImpl");
+		return noticeDao.nGetSelectListCount(filter, searchTF);
+	}
+
+	@Override
+	public ArrayList<Notice> nSelectList(int currentPage, int limit, String filter, String searchTF) {
+		System.out.println("nSelectList serviceImpl");
+		return noticeDao.nSelectList(currentPage, limit, filter, searchTF);
 	}
 
 	

@@ -12,7 +12,7 @@ public class Notice implements java.io.Serializable{
    private String notice_content;      //공지사항내용
    private String original_filepath;      //첨부파일
    private String rename_filepath;      //수정파일
-   
+    
    public Notice(){}
 
 public Notice(int notice_no, String user_id, String notice_title, Date notice_date, String notice_content,
