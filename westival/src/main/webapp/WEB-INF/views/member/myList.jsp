@@ -315,7 +315,7 @@
 			  </li>
 			</ul>
 		</div>
-		
+		 
 		<div class="festa_summary">
 			<ul class="media-list">
 			  <li class="media">

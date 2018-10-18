@@ -69,6 +69,6 @@
 	     <button class="nav-item nav-link" onClick="myList();" role="tab" data-toggle="tab">내 게시물</button>
 	</div>
 </nav>
-
+ 
 </body>
 </html>

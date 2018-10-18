@@ -25,12 +25,8 @@ public class MemberDao {
 	public Member checkId(Member member){
 		return (Member) sqlSession.selectOne("memberMapper.checkId", member);
 	}
-	
+	 
 	//충섭
-	/*public Member selectMember(Member member) {
-		return (Member) sqlSession.selectOne("memberMapper.selectMember", member);
-	}*/
-	
 	public Member selectMemberInfo(String user_id) {
 		return (Member)sqlSession.selectOne("memberMapper.selectMemberInfo", user_id);
 	}
