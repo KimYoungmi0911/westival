@@ -126,5 +126,5 @@ public class MemberController {
 		mv.addObject(memberService.deleteMemberInfo(user_id));
 		return "redirect:/logout.do";
 	}
-
+ 
 }

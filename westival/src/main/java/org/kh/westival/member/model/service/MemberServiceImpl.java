@@ -49,5 +49,5 @@ public class MemberServiceImpl implements MemberService {
 	public int deleteMemberInfo(String user_id) {
 		return memberDao.deleteMemberInfo(user_id);
 	}
-
+ 
 }
