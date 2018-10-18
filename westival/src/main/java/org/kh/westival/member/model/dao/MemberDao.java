@@ -1,5 +1,8 @@
 package org.kh.westival.member.model.dao;
 
+import java.util.ArrayList;
+
+import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.member.model.vo.Member;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,7 @@ public class MemberDao {
 	public Member checkId(Member member){
 		return (Member) sqlSession.selectOne("memberMapper.checkId", member);
 	}
-	 
+	
 	//충섭
 	public Member selectMemberInfo(String user_id) {
 		return (Member)sqlSession.selectOne("memberMapper.selectMemberInfo", user_id);
@@ -37,6 +40,14 @@ public class MemberDao {
 
 	public int deleteMemberInfo(String user_id) {
 		return sqlSession.delete("memberMapper.deleteMemberInfo", user_id);
+	}
+
+	public ArrayList<Festival> selectMyList(Member member) {
+		return (ArrayList<Festival>)sqlSession.selectList("memberMapper.selectMemberTicketInfo", member);
+	}
+
+	public int deleteMyList(Member member) {
+		return sqlSession.delete("memberMapper.deleteMyList", member);
 	}   
 
 }

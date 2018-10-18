@@ -55,5 +55,14 @@
 	<delete id="deleteMemberInfo" parameterType="string">
 		delete from tb_user where user_id = #{user_id}
 	</delete>
+	
+	<select id="selectMemberTicketInfo" parameterType="Member" resultType="Festival">
+		select new_img_name, no, name, address, content, start_date, end_date, manage from tb_festival
+		<if test="user_id != null">where reg_user = #{user_id}</if>
+	</select>
+	
+ 	<delete id="deleteMemberTicketInfo" parameterType="Member">
+		delete from tb_festival where reg_user = #{user_id}
+	</delete>
 
 </mapper>

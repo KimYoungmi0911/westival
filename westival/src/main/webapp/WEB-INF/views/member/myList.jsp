@@ -13,6 +13,7 @@
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_styles.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_responsive.css">
+<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
 </head>
 <style type="text/css">
 	#home {
@@ -96,18 +97,18 @@
 		color: #350a4e;
 	}
 	
-	.media-body > input {
+ 	 .media-body > input {
 		display: none;
 	}
 	
-	.ticket_no:before { content: '티켓번호 : '; font-weight: bold; }
-	.ticket_date:before { content: '예매날짜 : '; font-weight: bold; }
-	.ticket_name:before { content: '축제명 : '; font-weight: bold; }
+	.festival_no:before { content: '축제번호 : '; font-weight: bold; }
+	.festival_date:before { content: '축제날짜 : '; font-weight: bold; }
+	.festival_name:before { content: '축제명 : '; font-weight: bold; }
 	.company_name:before { content: '주최사 : '; font-weight: bold; }
-	.ticket_count:before { content: '수량 : '; font-weight: bold; }
-	.ticket_credit:before { content: '가격 : '; font-weight: bold; }
+	.festival_placement:before { content: '주소 : '; font-weight: bold; }
+	.festival_content:before { content: '설명 : '; font-weight: bold; }
 	
-	.ticket_name {
+	.festival_name {
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		width: 95%;
@@ -176,8 +177,8 @@
 			width: 15%;
 		}
 		
-		.ticket_no, .ticket_date, .ticket_name,
-		.company_name, .ticket_count, .ticket_credit
+		.festival_no, .festival_date, .festival_name,
+		.company_name, .festival_placement, .festival_content
 		{
 			width: 78%; 
 		}
@@ -194,8 +195,8 @@
 			width: 34vw;
 		}
 		
-		.ticket_no, .ticket_date, .ticket_name,
-		.company_name, .ticket_count, .ticket_credit
+		.festival_no, .festival_date, .festival_name,
+		.company_name, .festival_placement, .festival_content
 		{
 			width: 95%; 
 		}	
@@ -247,6 +248,39 @@
 		}
 	}
 </style>
+<script type="text/javascript">
+	$(function() {
+		
+		$(".festa_summary").on("click", function() {
+			var festivalNo = $(this).children().children().children(":last").children().eq(1).text();
+			var idx = 0;
+			
+			$(".media-body").each(function(index) {
+				var festivalNoIdx = $(this).children().eq(1).text();
+				if(festivalNoIdx == festivalNo)
+					idx = index;
+			});
+			
+			var selectBox = $(".media-body").eq(idx).children(":first");
+				if(selectBox.is(":checked")) {
+					selectBox.prop("checked", false);
+					$(this).css("background-color", "#ffffff");
+				} else {
+					selectBox.prop("checked", true);
+					$(this).css("background-color", "#bebebe");
+				}
+		});
+		
+		$("#delete_button").on("click", function() {
+			var themeArr = document.getElementsByName("select-item");
+	         
+	         for(var i=0; i<themeArr.length; i++){
+	            if(themeArr[i].checked)
+	               console.log(themeArr[i].value);
+	         }
+		});
+	});
+</script>
 <body>
 <div class="super_container">
 	
@@ -278,79 +312,42 @@
 		</div>
 		
 		<!-- information -->
+		<c:forEach items="${list }" var="list">
 		<div class="festa_summary">
 			<ul class="media-list">
 			  <li class="media">
 			    <div class="media-left">
-			    <img class="media-object" src="/westival/resources/images/listing_hotel.jpg" alt="...">
+			    	<img class="media-object" src="/westival/resources/festivalUpImages/${list.new_img_name }" alt="...">
 			    </div>
 			    <div class="media-body">
-			      <input type="checkbox" name="select-item">
-			      <h4 class="ticket_no">T000001</h4>
-			      <h4 class="ticket_date">2018-10-12</h4>
-			      <h4 class="ticket_name">티켓11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</h4>
-			      <h4 class="company_name">대림미술관</h4>
-			      <h4 class="ticket_count">1EA</h4>
-			      <h4 class="ticket_credit">50000원</h4>
+				     <input type="checkbox" name="select-item" value="${list.no }">
+				     <h4 class="festival_no">${list.no }</h4>
+				     <h4 class="festival_date">${list.start_date } ~ ${list.end_date }</h4>
+				     <h4 class="festival_name">${list.name }</h4>
+				     <h4 class="company_name">${list.manage }</h4>
+				     <h4 class="festival_placement">${list.address }</h4>
+				     <h4 class="festival_content">${list.content}</h4>
 			    </div>
 			  </li>
 			</ul>
 		</div>
-		
-		<div class="festa_summary">
-			<ul class="media-list">
-			  <li class="media">
-			    <div class="media-left">
-			    <img class="media-object" src="/westival/resources/images/listing_hotel.jpg" alt="...">
-			    </div>
-			    <div class="media-body">
-			      <input type="checkbox" name="select-item">
-			      <h4 class="ticket_no">T000001</h4>
-			      <h4 class="ticket_date">2018-10-12</h4>
-			      <h4 class="ticket_name">티켓11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</h4>
-			      <h4 class="company_name">대림미술관</h4>
-			      <h4 class="ticket_count">1EA</h4>
-			      <h4 class="ticket_credit">50000원</h4>
-			    </div>
-			  </li>
-			</ul>
-		</div>
-		 
-		<div class="festa_summary">
-			<ul class="media-list">
-			  <li class="media">
-			    <div class="media-left">
-			    <img class="media-object" src="/westival/resources/images/listing_hotel.jpg" alt="...">
-			    </div>
-			    <div class="media-body">
-			      <input type="checkbox" name="select-item">
-			      <h4 class="ticket_no">T000001</h4>
-			      <h4 class="ticket_date">2018-10-12</h4>
-			      <h4 class="ticket_name">티켓11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</h4>
-			      <h4 class="company_name">대림미술관</h4>
-			      <h4 class="ticket_count">1EA</h4>
-			      <h4 class="ticket_credit">50000원</h4>
-			    </div>
-			  </li>
-			</ul>
-		</div>
+		</c:forEach>
 		
 		<!--  delete button -->
 		<div id="delete_container" class="container">
-			<button id="delete_button" type="button" class="btn">삭제</button>
+			<button type="button" id="delete_button" type="button" class="btn">삭제</button>
 		</div>
+	</div>
 </div>
 
 <!-- Footer -->
 <c:import url="/WEB-INF/views/footer.jsp" />
 
-<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
 <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
 <script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
 <script src="/westival/resources/plugins/parallax-js-master/parallax.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA"></script>
 <script src="/westival/resources/js/contact_custom.js"></script>
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 </body>
 
 </html>
