@@ -6,7 +6,7 @@ public class Admin implements java.io.Serializable{
 	private final static long serialVersionUID = 4230L;
 	
 	private String user_id;
-	private String name;
+	private String name; 
 	private String ticket_no;
 	private Date ticket_date;
 	private int ticket_count;

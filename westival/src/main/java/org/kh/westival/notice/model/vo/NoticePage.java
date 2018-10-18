@@ -11,7 +11,7 @@ public class NoticePage {
 		this.startRow = startRow;
 		this.endRow = endRow;
 	}
-
+ 
 	public int getStartRow() {
 		return startRow;
 	}

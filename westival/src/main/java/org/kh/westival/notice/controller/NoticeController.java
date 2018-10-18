@@ -30,7 +30,7 @@ public class NoticeController {
 	
 	@Autowired
 	private NoticeService noticeService;
-	
+	 
 	/*@RequestMapping("noticeview.do")
 	public String noticeView(){
 		return "notice/noticeView";

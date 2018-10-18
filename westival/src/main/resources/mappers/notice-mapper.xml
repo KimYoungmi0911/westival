@@ -4,7 +4,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="noticeMapper">
 	
-	
+	 
 	<resultMap type="Notice" id="resultList">
 		<result property="notice_no" column="notice_no" />
 		<result property="user_id" column="user_id" />

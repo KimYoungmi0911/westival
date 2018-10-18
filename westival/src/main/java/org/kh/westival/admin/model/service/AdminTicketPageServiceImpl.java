@@ -12,6 +12,6 @@ public class AdminTicketPageServiceImpl {
 	public AdminTicketPage adminTicketPage(int currentPage, int limit){
 		AdminTicketPage atpage = new AdminTicketPageDao().adminTicketPage(currentPage, limit);
 		return atpage;
-	}
+	} 
 	
 }

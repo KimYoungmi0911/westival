@@ -244,10 +244,10 @@
 	or user_email like '%'||#{searchTF}||'%'
 	or user_gender like '%'||#{searchTF}||'%'
 	or user_confirm_check like '%'||#{searchTF}||'%'
-	</when> -->
+	</when> --> 
 	<when test="filter == 'mid'">
 	where user_id like '%'||#{searchTF}||'%'
-	</when>
+	</when> 
 	<when test="filter == 'mname'">
 	where user_name like '%'||#{searchTF}||'%'
 	</when>

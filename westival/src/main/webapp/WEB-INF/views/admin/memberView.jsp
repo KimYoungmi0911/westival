@@ -190,7 +190,7 @@
 				+ "<td>" + decodeURIComponent(json.list[i].mgender) + "</td>"
 				+ "<td>" + decodeURIComponent(json.list[i].mconfirm) + "</td></tr>";
 			}//for
-			$("#tb1").html(values);
+			$("#tb1").html(values);  
 			
 			$("#domain").html("");
 			if(currentPage <= 1) {	

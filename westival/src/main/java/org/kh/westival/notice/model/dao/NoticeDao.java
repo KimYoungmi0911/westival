@@ -17,7 +17,7 @@ public class NoticeDao {
 	private SqlSessionTemplate sqlSession;
 	
 	public NoticeDao(){}
-
+ 
 	//공지사항 리스트
 	public ArrayList<Notice> selectList() {
 		System.out.println("selectList dao 실행됨");

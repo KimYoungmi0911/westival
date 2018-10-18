@@ -14,7 +14,7 @@ public class NoticeServiceImpl implements NoticeService{
 	private NoticeDao noticeDao;
 	
 	public NoticeServiceImpl(){}
-		
+		 
 	@Override
 	public ArrayList<Notice> selectList() {
 		System.out.println("selectList service 실행됨");

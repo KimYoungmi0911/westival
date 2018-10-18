@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.kh.westival.notice.model.vo.Notice;
 
 public interface NoticeService {
-
+ 
 	ArrayList<Notice> selectList();
 
 	Notice noticeDetail(int notice_no);

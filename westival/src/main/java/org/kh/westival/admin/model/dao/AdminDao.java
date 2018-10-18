@@ -105,8 +105,8 @@ public class AdminDao {
 		System.out.println("mGetSelectListCount dao");
 		
 		return (int) sqlSession.selectOne("adminMapper.mGetSelectListCount", map);
-	}
-
+	} 
+ 
 	public ArrayList<Member> mSelectList(int currentPage, int limit, String filter, String searchTF) {
 		System.out.println("mSelectList dao");
 		

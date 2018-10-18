@@ -11,5 +11,5 @@ public class AdminFestivalPageServiceImpl {
 	public AdminFestivalPage adminFestivalPage(int currentPage, int limit){
 		AdminFestivalPage afpage = new AdminFestivalPageDao().adminFestivalPage(currentPage, limit);
 		return afpage;
-	}
+	} 
 }

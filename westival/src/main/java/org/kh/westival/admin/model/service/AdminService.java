@@ -31,10 +31,10 @@ public interface AdminService {
 //------------------------------------------------------------------	
 	//회원관리
 	
-	//회원관리뷰(페이징 및 리스트)
+	//회원관리뷰(페이징 및 리스트) 
 	int mGetListCount();
 	ArrayList<Member> mAllSelectList(int currentPage, int limit);
-	
+	 
 	//회원관리뷰(검색)(페이징 및 리스트)
 	int mGetSelectListCount(HashMap map);
 	ArrayList<Member> mSelectList(int currentPage, int limit, String filter, String searchTF);

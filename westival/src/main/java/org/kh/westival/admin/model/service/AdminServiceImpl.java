@@ -86,13 +86,13 @@ public class AdminServiceImpl implements AdminService{
 		System.out.println("mGetSelectListCount serviceImpl");
 		return adminDao.mGetSelectListCount(map);
 	}
-	@Override
+	@Override  
 	public ArrayList<Member> mSelectList(int currentPage, int limit, String filter, String searchTF) {
 		System.out.println("mSelectList serviceImpl");
 		return adminDao.mSelectList(currentPage, limit, filter, searchTF);
 	}
 	
-	
+	 
 	
 
 
