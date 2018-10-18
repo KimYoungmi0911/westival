@@ -13,6 +13,7 @@
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_styles.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/contact_responsive.css">
+<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
 </head>
 <style type="text/css">
 	#home {
@@ -268,8 +269,113 @@
 	}
 </style>
 <script type="text/javascript">
+	
+	$(function(){
+		
+		$.ajax({
+			url : "myTicketList.do",
+			type : "post",
+			dataType : "json",
+			success : function(result){					
+				var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈				
+				var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈	
+			
+				if(jsonObj.list.length==0)
+					console.log("검색 결과가 없습니다.");
+				
+				var myTicketList = '';
+				
+				for(var i in jsonObj.list){
+					myTicketList += "<div class='tbody_tr'><div class='recommend_no'><p>" + jsonObj.list[i].ticket_no + "</p></div><div class='recommend_date'><p>" 
+						+ jsonObj.list[i].ticket_date + "</p></div><div class='recommend_name'><p>" + jsonObj.list[i].festival_name
+						+ "</p></div><div class='recommend_count'><p>" + jsonObj.list[i].ticket_count + "</p></div><div class='recommend_credit'><p>"
+						+ jsonObj.list[i].price + "</p></div><div class='recommend_refund'>"
+						+ "<button class='btn' data-toggle='modal' data-target='#myModal'>환불요청</button></div></div>";
+					
+				}	
+				$("#myTicket").html(myTicketList);
+			},
+			error : function(request, status, errorData){
+				alert("error code : " + request.status + "\n" + "message : " + request.responseText 
+						+ "\n" + "error : " + errorData);
+			} 
+		});
+		
+	});
+	
 	function refund() {
 		alert("test");	
+	}
+	
+	function myTicketSearch(){
+		if( ($("#start_date").val() > $("#end_date").val()) || $("#start_date").val()=='' || $("#end_date").val()=='' ){
+			alert("날짜를 확인해주세요.");	
+			return;
+		} else{
+			var start_date = $("#start_date").val();
+			var end_date = $("#end_date").val();
+			$.ajax({
+				url : "myTicketSearch.do",
+				type : "post",
+				data : {start_date : start_date, end_date : end_date},
+				dataType : "json",
+				success : function(result){
+					var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈				
+					var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈	
+				
+					if(jsonObj.list.length==0)
+						console.log("검색 결과가 없습니다.");
+					
+					var myTicketList = '';
+					
+					for(var i in jsonObj.list){
+						myTicketList += "<div class='tbody_tr'><div class='recommend_no'><p>" + jsonObj.list[i].ticket_no + "</p></div><div class='recommend_date'><p>" 
+							+ jsonObj.list[i].ticket_date + "</p></div><div class='recommend_name'><p>" + jsonObj.list[i].festival_name
+							+ "</p></div><div class='recommend_count'><p>" + jsonObj.list[i].ticket_count + "</p></div><div class='recommend_credit'><p>"
+							+ jsonObj.list[i].price + "</p></div><div class='recommend_refund'>"
+							+ "<button class='btn' data-toggle='modal' data-target='#myModal'>환불요청</button></div></div>";
+						
+					}	
+					$("#myTicket").html(myTicketList);
+				},
+				error : function(request, status, errorData){
+					alert("error code : " + request.status + "\n" + "message : " + request.responseText 
+							+ "\n" + "error : " + errorData);
+				} 
+			});
+		}
+	}
+	
+	function myTicketSearchMonth(month){	
+		$.ajax({
+			url : "myTicketSearchMonth.do",
+			type : "post",
+			data : {month : month},
+			dataType : "json",
+			success : function(result){
+				var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈				
+				var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈	
+			
+				if(jsonObj.list.length==0)
+					console.log("검색 결과가 없습니다.");
+				
+				var myTicketList = '';
+				
+				for(var i in jsonObj.list){
+					myTicketList += "<div class='tbody_tr'><div class='recommend_no'><p>" + jsonObj.list[i].ticket_no + "</p></div><div class='recommend_date'><p>" 
+						+ jsonObj.list[i].ticket_date + "</p></div><div class='recommend_name'><p>" + jsonObj.list[i].festival_name
+						+ "</p></div><div class='recommend_count'><p>" + jsonObj.list[i].ticket_count + "</p></div><div class='recommend_credit'><p>"
+						+ jsonObj.list[i].price + "</p></div><div class='recommend_refund'>"
+						+ "<button class='btn' data-toggle='modal' data-target='#myModal'>환불요청</button></div></div>";
+					
+				}	
+				$("#myTicket").html(myTicketList);
+			},
+			error : function(request, status, errorData){
+				alert("error code : " + request.status + "\n" + "message : " + request.responseText 
+						+ "\n" + "error : " + errorData);
+			} 
+		});
 	}
 </script>
 <body>
@@ -291,14 +397,14 @@
 		
 		<!-- search bar -->
 		<div id="select_month">
-			<button type="button" class="btn" id="1month_button">1개월</button>
-			<button type="button" class="btn" id="3month_button">3개월</button>
-			<button type="button" class="btn" id="6month_button">6개월</button>
+			<button type="button" class="btn" id="1month_button" onclick="myTicketSearchMonth(1); return false;">1개월</button>
+			<button type="button" class="btn" id="3month_button" onclick="myTicketSearchMonth(3); return false;">3개월</button>
+			<button type="button" class="btn" id="6month_button" onclick="myTicketSearchMonth(6); return false;">6개월</button>
 			<div id="search_month">
-				<input type="date" class="YY-MM-dd">
+				<input type="date" class="YY-MM-dd" id="start_date">
 				<span>~</span>
-				<input type="date" class="YY-MM-dd">
-				<button type="button" class="btn">검색</button>
+				<input type="date" class="YY-MM-dd" id="end_date">
+				<button type="button" class="btn" onclick="myTicketSearch(); ">검색</button>
 			</div>
 		</div>
 		
@@ -314,31 +420,8 @@
 					<div class="recommend_refund_head"><p>환불</p></div>
 				</div>
 			</div>
-			<div class="tbody">
-				<div class="tbody_tr">
-					<div class="recommend_no"><p>A000001</p></div>
-					<div class="recommend_date"><p>2018-10-12</p></div>
-					<div class="recommend_name"><p>축제명1111111111111111111111111111111111111111111111111111111111111111111111111</p></div>
-					<div class="recommend_count"><p>1</p></div>
-					<div class="recommend_credit"><p>50000</p></div>
-					<div class="recommend_refund"><button class="btn"  data-toggle="modal" data-target="#myModal">환불요청</button></div>
-				</div>	
-				<div class="tbody_tr">
-					<div class="recommend_no"><p>A000002</p></div>
-					<div class="recommend_date"><p>2018-10-02</p></div>
-					<div class="recommend_name"><p>축제명22222222222222222222222222222222</p></div>
-					<div class="recommend_count"><p>900</p></div>
-					<div class="recommend_credit"><p>105000</p></div>
-					<div class="recommend_refund"><button class="btn"  data-toggle="modal" data-target="#myModal">환불요청</button></div>
-				</div>
-				<div class="tbody_tr">
-					<div class="recommend_no"><p>A000003</p></div>
-					<div class="recommend_date"><p>2018-10-13</p></div>
-					<div class="recommend_name"><p>축제명333333333333333333333333333333</p></div>
-					<div class="recommend_count"><p>10</p></div>
-					<div class="recommend_credit"><p>500000</p></div>
-					<div class="recommend_refund"><button class="btn"  data-toggle="modal" data-target="#myModal">환불요청</button></div>
-				</div>	
+			<div class="tbody" id="myTicket">
+
 			</div>
 		</div>
 	</div>
@@ -404,11 +487,11 @@
       
     </div>
   </div>
+</div>
 
 <!-- Footer -->
 <c:import url="/WEB-INF/views/footer.jsp" />
 
-<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
 <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
 <script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
 <script src="/westival/resources/plugins/parallax-js-master/parallax.min.js"></script>

@@ -4,6 +4,95 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="communityMapper">
 
+	<resultMap type="Community" id="resultList">
+		<result property="community_no" column="community_no" />
+		<result property="no" column="no" />
+		<result property="user_id" column="user_id" />
+		<result property="category" column="category" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="read_count" column="read_count" />
+		<result property="community_date" column="community_date" />
+		<result property="file_name" column="file_name" />
+		<result property="file_rename" column="file_rename" />
+		<result property="user_count" column="user_count" />
+	</resultMap>
+	
+	<resultMap type="Community" id="resultCommunity">
+		<result property="community_no" column="community_no" />
+		<result property="no" column="no" />
+		<result property="user_id" column="user_id" />
+		<result property="category" column="category" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="read_count" column="read_count" />
+		<result property="community_date" column="community_date" />
+		<result property="file_name" column="file_name" />
+		<result property="file_rename" column="file_rename" />
+		<result property="user_count" column="user_count" />
+	</resultMap>
+	
+	<resultMap type="CommunityReply" id="resultCommunityReply">
+		<result property="comment_no" column="comment_no" />
+		<result property="community_no" column="community_no" />
+		<result property="comment_content" column="comment_content" />
+		<result property="comment_level" column="comment_level" />
+		<result property="comment_seq" column="comment_seq" />
+		<result property="comment_date" column="comment_date" />
+		<result property="comment_ref" column="comment_ref" />
+	</resultMap>
+	
+	<!-- private int comment_no;                  //댓글번호
+   private String user_id;                     //작성자
+   private int community_no;               //게시글번호
+   private String comment_content;         //댓글내용
+   private int comment_level;               //댓글레벨
+   private int comment_seq;               //댓글순번
+   private Date comment_date;            //댓글작성일자
+   private int comment_ref;                  //참조댓글번호 -->
+	
+	<!-- 페이징처리용 -->
+	<select id="selectCount" resultType="_int">
+		<![CDATA[select count(*) from tb_community]]>
+	</select>
+	
+	<!-- 커뮤니티 게시글 리스트 조회 -->
+	<select id="selectCommunityList" parameterType="CommunityPaging" resultMap="resultList">
+		<![CDATA[
+		select * from (
+			select rownum rnum, community_no, no, user_id, category, title, content, 
+				read_count, community_date, file_name, file_rename, user_count
+				from (select * from tb_community order by community_no asc)
+				where rnum >= #{startRow} and rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 게시글 상세보기 -->
+	<select id="selectCommunity" parameterType="_int" resultMap="resultCommunity">
+		<![CDATA[select * from tb_community where community_no = #{community_no}]]>
+	</select>
+	
+	<!-- 댓글 상세보기 -->
+	<select id="selectCommunityReply" parameterType="_int" resultMap="resultCommunityReply">
+		<![CDATA[select * from tb_community_reply where community_no = #{community_no}]]>
+	</select>
+	
+	
+	
+	  <!--  private int community_no;            //글번호
+	   private int no;                        //축제번호
+	   private String user_id;                  //작성자
+	   private String category;               //글분류
+	   private String title;                     //글제목
+	   private String content;               //글내용
+	   private int read_count;               //조회수
+	   private Date community_date;         //작성일자
+	   private String file_name;               //첨부파일원본
+	   private String file_rename;            //첨부파일수정
+	   private int user_count;               //동행인원
+ -->
+ 
+ 
 	<!-- <resultMap type="Member" id="resultMember">
 		<id property="userid" column="userid" />
 		<result property="userpwd" column="userpwd" />

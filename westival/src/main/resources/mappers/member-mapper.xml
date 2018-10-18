@@ -64,5 +64,10 @@
  	<delete id="deleteMemberTicketInfo" parameterType="Member">
 		delete from tb_festival where reg_user = #{user_id}
 	</delete>
+	
+	<!-- 마이페이지 예매 내역 -->
+	<select id="recommendList" resultType="Member" parameterType="string">
+		select * from tb_ticket where user_id = #{user_id}
+	</select>
 
 </mapper>

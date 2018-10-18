@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>.
-
-<%-- <c:import url="../../../header.jsp" /> --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,7 +34,7 @@
 		color:black;
 	}
 	
-	a {
+	/* a {
 		background-color:#d5d5d0;
 		border-color:#d5d5d0;
 		border: 1px solid #ced4da;
@@ -46,7 +43,7 @@
 		border-radius: 3px;
 		overflow: hidden;
 		border-color:#929285;
-	}
+	} */
 	
 	#tagResult {
 		background-color:#d5d5d0;
@@ -104,6 +101,15 @@
 	}
 	#content, #theme, #address, .tagbox_area{
 		width: 80%;
+	}
+	
+	#home{
+		height:90%;
+		display:block;
+	}
+	
+	.home_background {
+		position:relative;
 	}
 
 </style>
@@ -183,6 +189,7 @@
 			alert("빈칸을 확인해주세요.")	
 			return false;
 		} else{
+			alert("축제가 등록 되었습니다.");
 			document.insertFestival.submit(); // 폼태그 전송
 		}
 	}
@@ -236,6 +243,7 @@
 			}			
 			var inputTag = "#" + $("#inputTag").val()+" ";
 			$("#tagbox_area").html($("#tagbox_area").html() + inputTag);
+			document.getElementById("inputTag").value = '';
 		}
 	}
 	
@@ -255,7 +263,6 @@
 		} 	
 		
 		$('#tag').val(tagInputValue);
-		console.log($("#tag").val());
 		$("#tag_area").html(tagDiv);
 		$("#tagModal").modal("hide"); // modal창 닫기 
 	}
@@ -265,23 +272,22 @@
 </head>
 <body>
 
-<div class="super_container">
-	<!-- Home -->
+<c:import url="/WEB-INF/views/header.jsp" /> 
 
-	<div class="home">
+<div class="super_container">
+	
+	
+	<!-- Home -->
+	<div class="home" id="home">
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/contact_background.jpg"></div>
 		<div class="home_content">
 			<div class="home_title"></div>
 		</div>
 	</div>
 	
-	<br>
-</div>
-
-
-
-<div class="contact_form_section">
+	<div class="contact_form_section">
 		<div class="container">
+			<c:if test="${sessionScope.member != null }">
 			<div class="row">
 				<div class="col">	
 					<div class="container" align="center">
@@ -291,10 +297,10 @@
 						        <h3 style="margin-bottom: 25px; text-align: center;">축제 등록</h3>
 						        
 						        <div class="form-group" align="left">
-						        	* 축제명 &nbsp;&nbsp; <input type="text" class="form-1 input_field" id="name" name="name" required><br>
+						        	* 축제명 &nbsp;&nbsp; <input type="text" class="form-1" id="name" name="name" required><br>
 									* 축제 주소
 									<div class="form-inline form group" align="left">
-										<input type="text" class="form-1 input_field" id="address" name="address" required readonly>&nbsp;
+										<input type="text" class="form-1" id="address" name="address" required readonly>&nbsp;
 										<input type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기"><br>
 									</div>
 									* 대표 이미지<input type="file" accept="image/*" class="form-1" id="img_name" name="img_name" required><br>
@@ -351,8 +357,15 @@
 					</div>
 				</div>
 			</div>
+			</c:if>
+			<c:if test="${sessionScope.member == null }">
+				<div align="center" style="margin-top: 5%;"><img src="resources/images/logo1.PNG" alt="logo" width="20%" height="10%"></div>
+				<h3 style="text-align: center; margin-top: 5%;">로그인이 필요한 서비스 입니다.</h3>	
+			</c:if>
 		</div>
+	</div>
 </div>
+
 
 
 <!-- 티켓 등록 modal -->
@@ -392,7 +405,7 @@
 	                <input type="checkbox"> Check me out
 	            </label>
 	         </div> -->
-             <button type="submit" class="btn pull-right" onclick="ticketInsert(); return false;">Submit</button>
+             <button type="submit" class="btn pull-right" onclick="ticketInsert(); return false;">등록하기</button>
 		</div>		
 	</div>
   </div>
@@ -404,30 +417,32 @@
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-			<h3 class="modal-title" id="lineModalLabel">태그 등록창</h3>
 		</div>
 		<div class="modal-body">			
             <!-- content goes here -->			
-			<div class="form-group">
+			<div class="form-group" >
                	<label for="tag">태그 입력 후 등록버튼을 눌러주세요</label>
-               	<div class="form-inline form group" align="left">
-	               	<input type="text" class="form-control" id="inputTag" name="inputTag" style="width:60%;" required> &nbsp;
+               	<div class="form-inline form group" align="left" >
+	               	<input type="text" class="form-control" id="inputTag" name="inputTag" style="width:60%;" required > &nbsp;
 	               	<button class="btn" onclick="addTag();">등록</button>
                	</div><br>
                	<div class="tagbox_area" id="tagbox_area"></div>
 	        </div>
 	        <div style="text-align:center;">
 	            <button class="btn" onclick="deleteTag();">초기화하기</button>
-	            <button class="btn" onclick="tagInsert();">등록하기</button>
+	            <button class="btn" onclick="tagInsert();" data-dismiss="modal">등록하기</button>
             </div>
 		</div>		
 	</div>
   </div>
 </div>
+
+
+
 					
 	
-	<!-- Footer -->
-
+<!-- Footer -->
+<c:import url="/WEB-INF/views/footer.jsp" />
 
 <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
 <script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
