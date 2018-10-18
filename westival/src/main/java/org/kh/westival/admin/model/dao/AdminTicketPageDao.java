@@ -1,7 +1,9 @@
 package org.kh.westival.admin.model.dao;
 
 import org.kh.westival.admin.model.vo.AdminTicketPage;
+import org.springframework.stereotype.Repository;
 
+@Repository("adminTicketDao")
 public class AdminTicketPageDao {
 
 	public AdminTicketPage adminTicketPage(int currentPage, int limit) {

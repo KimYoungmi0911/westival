@@ -3,7 +3,6 @@ package org.kh.westival.notice.model.service;
 import java.util.ArrayList;
 
 import org.kh.westival.notice.model.vo.Notice;
-import org.springframework.stereotype.Service;
 
 public interface NoticeService {
 
@@ -26,6 +25,11 @@ public interface NoticeService {
 	int getListCount();
 
 	ArrayList<Notice> selectList(int currentPage, int limit);
+
+	//공지검색 페이징 및 뷰
+	int nGetSelectListCount(String filter, String searchTF);
+
+	ArrayList<Notice> nSelectList(int currentPage, int limit, String filter, String searchTF);
 
 	
 

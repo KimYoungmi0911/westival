@@ -8,6 +8,7 @@ import org.kh.westival.admin.model.service.AdminFestivalPageServiceImpl;
 import org.kh.westival.admin.model.service.AdminTicketPageServiceImpl;
 import org.kh.westival.admin.model.vo.Admin;
 import org.kh.westival.festival.model.vo.Festival;
+import org.kh.westival.member.model.vo.Member;
 import org.kh.westival.ticket.model.vo.Ticket;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,8 @@ public class AdminDao {
 	
 	public AdminDao(){}
 	
-	//예매 리스트
-	/*public ArrayList<Ticket> selectList() {
-		System.out.println("selectList dao 실행됨");
-		
-		List<Ticket> list = (List<Ticket>) sqlSession.selectList("adminMapper.adminTicketList");
-		return (ArrayList<Ticket>) list;
-	}*/
+	//----------------------------------------------------
+	//예매관리
 	
 	//페이징 예매
 	public int ticketgetListCount() {
@@ -48,20 +44,12 @@ public class AdminDao {
 		return (ArrayList<Admin>) sqlSession.selectList("adminMapper.searchList", map);
 	}
 	
-	//페이징(축제)
-	public int festivalgetListCount() {
-		System.out.println("festivalgetListCount 페이징 dao");
-		return (int) sqlSession.selectOne("adminMapper.festivalgetListCount");
-	}
-	//페이징뷰(축제)
-	public ArrayList<Festival> festivalSelectList(int currentPage, int limit) {
-		System.out.println("festivalSelectList 페이징 dao");
-		return (ArrayList<Festival>) sqlSession.selectList("adminMapper.festivalSelectList", new AdminFestivalPageServiceImpl().adminFestivalPage(currentPage, limit));
-	}
+//-------------------------------------------------
+	//축제관리
 	
 	
 	
-	//축제관리(집)
+	//축제관리(페이징 및 리스트)
 	public int fGetListCount() {
 		System.out.println("fGetListCount dao");
 		return (int) sqlSession.selectOne("adminMapper.festivalgetListCount");
@@ -70,6 +58,66 @@ public class AdminDao {
 	public ArrayList<Festival> fAllSelectList(int currentPage, int limit) {
 		System.out.println("fAllSelectList dao");
 		return (ArrayList<Festival>) sqlSession.selectList("adminMapper.festivalSelectList", new AdminFestivalPageServiceImpl().adminFestivalPage(currentPage, limit));
+	}
+
+	//축제관리(검색)(페이징 및 리스트)
+	public int fGetSelectListCount(String filter, String searchTF) {
+		System.out.println("fGetSelectListCount dao");
+		HashMap map = new HashMap();
+		map.put("filter", filter);
+		map.put("searchTF", searchTF);
+		return (int) sqlSession.selectOne("adminMapper.festivalgetSelectListCount", map);
+	}
+	public ArrayList<Festival> festivalSelectList(int currentPage, int limit, String filter, String searchTF) {
+		System.out.println("festivalSelectList dao");
+		HashMap map = new HashMap();
+		int startRow = (currentPage - 1) * limit +1;
+		int endRow = startRow + limit -1;
+		map.put("filter", filter);
+		map.put("searchTF", searchTF);
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		
+		return (ArrayList<Festival>) sqlSession.selectList("adminMapper.fsearchList", map);
+	}
+
+	//-------------------------------------------------------------------
+	//회원관리
+	
+	//회원관리뷰(페이징 및 리스트)
+	public int mGetListCount() {
+		System.out.println("mGetListCount dao");
+		return (int) sqlSession.selectOne("adminMapper.mGetListCount");
+	}
+
+	public ArrayList<Member> mAllSelectList(int currentPage, int limit) {
+		System.out.println("mAllselectList dao");
+		HashMap map = new HashMap();
+		int startRow = (currentPage - 1) * limit +1;
+		int endRow = startRow + limit -1;
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		return (ArrayList<Member>) sqlSession.selectList("adminMapper.mAllSelectList", map);
+	}
+
+	//회원관리(검색)(페이징 및 리스트)
+	public int mGetSelectListCount(HashMap map) {
+		System.out.println("mGetSelectListCount dao");
+		
+		return (int) sqlSession.selectOne("adminMapper.mGetSelectListCount", map);
+	}
+
+	public ArrayList<Member> mSelectList(int currentPage, int limit, String filter, String searchTF) {
+		System.out.println("mSelectList dao");
+		
+		int startRow = (currentPage - 1) * limit + 1;
+		int endRow = startRow + limit - 1;
+		HashMap map = new HashMap();
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		map.put("filter", filter);
+		map.put("searchTF", searchTF);
+		return (ArrayList<Member>) sqlSession.selectList("adminMapper.mSelectList", map);
 	}
 	
 	

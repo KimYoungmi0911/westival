@@ -2,6 +2,9 @@ package org.kh.westival.admin.model.service;
 
 import org.kh.westival.admin.model.dao.AdminFestivalPageDao;
 import org.kh.westival.admin.model.vo.AdminFestivalPage;
+import org.springframework.stereotype.Service;
+
+@Service("adminFestivalService")
 
 public class AdminFestivalPageServiceImpl {
 

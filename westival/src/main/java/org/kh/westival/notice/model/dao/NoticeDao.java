@@ -1,6 +1,7 @@
 package org.kh.westival.notice.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.kh.westival.notice.model.service.NoticePageServiceImpl;
@@ -82,10 +83,33 @@ public class NoticeDao {
 		System.out.println("getListCount 페이징뷰 dao");
 		return (int) sqlSession.selectOne("noticeMapper.getListCount");
 	}
-
+	//리스트
 	public ArrayList<Notice> selectList(int currentPage, int limit) {
 		return (ArrayList<Notice>) sqlSession.selectList("noticeMapper.selectListPage", new NoticePageServiceImpl().noticePage(currentPage, limit));
 		
+	}
+
+	//공지 검색 페이징
+	public int nGetSelectListCount(String filter, String searchTF) {
+		System.out.println("nGetSelectListCount dao");
+		HashMap map = new HashMap();
+		map.put("filter", filter);
+		map.put("searchTF", searchTF);
+		return (int) sqlSession.selectOne("noticeMapper.nGetSelectListCount", map);
+		
+	}
+	//공지 검색 리스트
+	public ArrayList<Notice> nSelectList(int currentPage, int limit, String filter, String searchTF) {
+		System.out.println("nSelectList dao");
+		HashMap map = new HashMap();
+		int startRow = (currentPage - 1) * limit +1;
+		int endRow = startRow + limit -1;
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		map.put("filter", filter);
+		map.put("searchTF", searchTF);
+		
+		return (ArrayList<Notice>) sqlSession.selectList("noticeMapper.nSelectList", map);
 	}
 
 	

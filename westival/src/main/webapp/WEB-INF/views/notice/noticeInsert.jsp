@@ -146,7 +146,7 @@ function goview(){
 						<div class="contact_form_container"
 							style="background: linear-gradient(to top right, white, white">
 							<table class="table table-hover">
-								<form action="fileup.do" method="post" enctype="multipart/form-data"  onsubmit="return confirm('정말로 등록하시겠습니까 ?');">
+								<form action="fileup.do" method="post" enctype="multipart/form-data"  onsubmit="return confirm('게시물을 등록하시겠습니까 ?');">
 								<tr>
 									<th scope="col" width="10%;">제목</th>
 									<td><input type="text" style="width: 50%;" required name="ntitle" id="ntitle"></td>
