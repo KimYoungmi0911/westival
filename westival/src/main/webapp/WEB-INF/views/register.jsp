@@ -9,20 +9,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>회원가입 페이지</title>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-	
-	<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
+
+<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
 <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
 <script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
-<script src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+<script
+	src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
 <script src="/westival/resources/plugins/easing/easing.js"></script>
 <script src="/westival/resources/js/custom.js"></script>
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
-<link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
-<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
-<link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/animate.css">
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/main_styles.css">
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/responsive.css">
+<link rel="stylesheet" type="text/css"
+	href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
+<link
+	href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css"
+	href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+<link rel="stylesheet" type="text/css"
+	href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+<link rel="stylesheet" type="text/css"
+	href="/westival/resources/plugins/OwlCarousel2-2.2.1/animate.css">
+<link rel="stylesheet" type="text/css"
+	href="/westival/resources/styles/main_styles.css">
+<link rel="stylesheet" type="text/css"
+	href="/westival/resources/styles/responsive.css">
+
+
 
 <style type="text/css">
 
@@ -115,12 +126,7 @@ function addressApi(){
 
 </head>
 <body>
-<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
-<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
-<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
-<script src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
-<script src="/westival/resources/plugins/easing/easing.js"></script>
-<script src="/westival/resources/js/custom.js"></script>
+
   				
   		<div> 
 			<form action="" method="post" onsubmit = "return false;">
