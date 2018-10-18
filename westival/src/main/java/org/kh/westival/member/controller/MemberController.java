@@ -1,9 +1,11 @@
 package org.kh.westival.member.controller;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.member.model.service.MemberService;
 import org.kh.westival.member.model.vo.Member;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,5 +128,21 @@ public class MemberController {
 		mv.addObject(memberService.deleteMemberInfo(user_id));
 		return "redirect:/logout.do";
 	}
- 
+	
+	
+	@RequestMapping(value="selectMyList.do", method=RequestMethod.GET)
+	public ModelAndView selectMyList(ModelAndView mv, Member member) {
+		ArrayList<Festival> list = memberService.selectMyList(member);
+		
+		mv.addObject("list", list);
+		mv.setViewName("member/myList");
+		return mv;
+	}
+	
+	@RequestMapping(value="deleteMyList.do", method=RequestMethod.POST)
+	public String selectLikeFesta(ModelAndView mv, Member member) {
+		mv.addObject(memberService.deleteMyList(member));
+		return "member/myList";
+	}
+
 }
