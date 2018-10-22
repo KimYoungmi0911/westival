@@ -74,4 +74,24 @@ public class QnaDao {
 	public ArrayList<QnaReply> selectQnaReply(int no) {
 		return (ArrayList) sqlSession.selectList("qnaMapper.selectQnaReplyList", no);
 	}
+
+	public int updateQnaState(int qna_no) {
+		return (int) sqlSession.update("qnaMapper.updateReplyAdminState", qna_no);
+	}
+
+	public int deleteQna(int qna_no) {
+		return (int) sqlSession.delete("qnaMapper.deleteQna", qna_no);
+	}
+
+	public int updateQna(Qna qna) {
+		return (int) sqlSession.update("qnaMapper.updateQna", qna);
+	}
+
+	public int updateQnaReply(QnaReply qnaReply) {
+		return (int) sqlSession.update("qnaMapper.updateQnaReply", qnaReply);
+	}
+
+	public int deleteQnaReply(int reply_no) {
+		return (int) sqlSession.delete("qnaMapper.deleteQnaReply", reply_no);
+	}
 }

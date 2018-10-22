@@ -57,4 +57,10 @@ public interface FestivalService {
 
 	int deleteReply(int reply_no);
 
+	int selectTotalValue(int no);
+
+	int selectMaleValue(int no);
+
+	int selectFemaleValue(int no);
+
 }

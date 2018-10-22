@@ -14,6 +14,7 @@
 		<result property="content" column="content" />
 		<result property="read_count" column="read_count" />
 		<result property="file_name" column="file_name" />
+		<result property="rename_file_name" column="rename_file_name" />
 		<result property="active" column="active" />
 	</resultMap>
 	
@@ -27,6 +28,7 @@
 		<result property="content" column="content" />
 		<result property="read_count" column="read_count" />
 		<result property="file_name" column="file_name" />
+		<result property="rename_file_name" column="rename_file_name" />
 		<result property="active" column="active" />
 	</resultMap>
 	
@@ -44,7 +46,7 @@
 	<!-- qna 게시글 목록 -->
 	<select id="selectListQna" resultMap="resultQnaList">
 		<![CDATA[select * from (select ROWNUM RNUM, qna_no, user_id, category, state,
-		qna_date, subject, content, read_count, file_name, active from (select * from tb_qna order by qna_no desc))
+		qna_date, subject, content, read_count, file_name, rename_file_name, active from (select * from tb_qna order by qna_no desc))
 		where RNUM >= #{startRow} and RNUM <= #{endRow}
 		]]>
 	</select>
@@ -60,7 +62,7 @@
 		<![CDATA[
 		insert into tb_qna values ((select NVL(max(qna_no) + 1, 1) from tb_qna),
 		#{user_id}, #{category}, default, sysdate, #{subject},
-		#{content}, default, #{file_name, jdbcType=INTEGER}, #{active})
+		#{content}, default, #{file_name, jdbcType=INTEGER}, #{rename_file_name, jdbcType=INTEGER}, #{active})
 		]]>
 	</insert>
 	
@@ -81,7 +83,7 @@
 	<select id="selectListSearchQna" parameterType="java.util.Map" resultMap="resultQnaList">
 		select * from (
 		select ROWNUM RNUM, qna_no, user_id, category, state,
-		qna_date, subject, content, read_count, file_name, active
+		qna_date, subject, content, read_count, file_name, rename_file_name, active
 		from (select * from tb_qna
 		where qna_no > 0
 		<if test="category1 != 'total'">
@@ -122,6 +124,25 @@
 		</choose>
 	</select>
 	
+	<!-- qna 글 삭제 -->
+	<delete id="deleteQna" parameterType="_int" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[delete from tb_qna where qna_no = #{qna_no}]]>
+	</delete>
+	
+	<!-- qna 글 수정 -->
+	<update id="updateQna" parameterType="Qna"
+			flushCache="true" statementType="PREPARED">
+		
+		update tb_qna set category = #{category}, subject = #{subject}, content = #{content}
+		<if test="file_name !='' ">
+			,file_name = #{file_name}, rename_file_name = #{rename_file_name}
+		</if>
+		, active = #{active}
+		where qna_no = #{qna_no}
+		
+	</update>
+	
 	<!-- 댓글 등록 -->
 	<insert id="insertQnaReply" parameterType="QnaReply" flushCache="true"
 		statementType="PREPARED" useGeneratedKeys="true">
@@ -141,6 +162,28 @@
 		from (select * from tb_qna_reply where qna_no = #{no} order by reply_no asc, reply_seq asc))
 		]]>
 	</select>
+	
+	<!-- admin이 댓글 달면 답변완료로 변경 -->
+	<update id="updateReplyAdminState" parameterType="_int" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[
+		update tb_qna set state = '답변완료' where qna_no = #{qna_no}
+		]]>
+	</update>
+	
+	<!-- qna 댓글 수정 -->
+	<update id="updateQnaReply" parameterType="QnaReply"
+			flushCache="true" statementType="PREPARED">
+		update tb_qna_reply
+		set reply_content = #{reply_content}
+		where reply_no = #{reply_no}
+	</update>
+	
+	<!-- qna 댓글 삭제 -->
+	<delete id="deleteQnaReply" parameterType="_int" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[delete from tb_qna_reply where reply_no = #{reply_no}]]>
+	</delete>
 	
 	<!-- 검색 조건문 -->
 	<!-- <sql id="search">

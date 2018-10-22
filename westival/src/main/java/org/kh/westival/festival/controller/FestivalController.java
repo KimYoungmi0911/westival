@@ -412,7 +412,24 @@ public class FestivalController {
 		int endPage = startPage + limit - 1;
 		if (maxPage < endPage)
 			endPage = maxPage;
-
+		
+		/*통계값 가져오기*/
+		//전체
+		int totalValue = festivalService.selectTotalValue(no);
+		//남
+		int maleValue = festivalService.selectMaleValue(no);
+		//여
+		int femaleValue = festivalService.selectFemaleValue(no);
+		
+		System.out.println(totalValue + ", " +maleValue + ", " + femaleValue);
+		
+		//남자,여자 퍼센트
+		int male = (int)((double)maleValue/(double)totalValue * 100.0);
+		int female = (int)((double)femaleValue/(double)totalValue * 100.0);
+		System.out.println(male + ", " + female);
+		mv.addObject("male", male);
+		mv.addObject("female", female);
+		
 		// System.out.println(festivalService.selectFestivalReply(no,currentPage,limit));
 		mv.addObject("festival", festivalService.selectFestival(no));
 		mv.addObject("reply", festivalService.selectFestivalReply(no, currentPage, limit));

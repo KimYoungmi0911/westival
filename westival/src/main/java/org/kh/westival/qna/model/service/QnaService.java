@@ -25,4 +25,14 @@ public interface QnaService {
 
 	ArrayList<QnaReply> selectQnaReply(int no);
 
+	int updateQnaState(int qna_no);
+
+	int deleteQna(int qna_no);
+
+	int updateQna(Qna qna);
+
+	int updateQnaReply(QnaReply qnaReply);
+
+	int deleteQnaReply(int reply_no);
+
 }

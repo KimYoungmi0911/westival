@@ -146,5 +146,17 @@ public class FestivalDao {
 		return (int) sqlSession.delete("festivalMapper.deleteReply", reply_no);
 	}
 
+	public int selectTotalValue(int no) {
+		return (int) sqlSession.selectOne("festivalMapper.selectTotalValueFes", no);
+	}
+
+	public int selectMaleValue(int no) {
+		return (int) sqlSession.selectOne("festivalMapper.selectMaleValueFes", no);
+	}
+
+	public int selectFemaleValue(int no) {
+		return (int) sqlSession.selectOne("festivalMapper.selectFemaleValueFes", no);
+	}
+
 
 }

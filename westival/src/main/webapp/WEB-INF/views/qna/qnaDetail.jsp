@@ -35,7 +35,7 @@
 	.board {
     	border-top: 1.5px solid #ececec;
     	width: 85%;
-    	margin: 35px auto 15px auto;
+    	margin: 35px auto 0 auto;
     	font-size: 14px;
     }
     
@@ -126,9 +126,9 @@
    
    .comment_list_rapper td {
       vertical-align: top;
-       color: #444444;
-       padding: 20px 0;
-       border-bottom: 1px dotted #c2c2c2;
+      color: #444444;
+      padding: 20px 0;
+      border-bottom: 1px dotted #c2c2c2;
    }
    
    .comment_list_rapper .center {
@@ -137,21 +137,25 @@
    
    .comment_list_rapper td.number {
       text-align: center;
-       color: #4a6943;
+      color: #4a6943;
    }
    
    .comment_list_rapper .comment_content {
-       margin-top: 8px;
-       clear: both;
-       white-space: pre-line;
+      margin-top: 8px;
+      clear: both;
+      white-space: pre-line;
    }
    
    .hide {
       position: fixed;
-       top: -10000px;
-       left: -10000px;
+      top: -10000px;
+      left: -10000px;
    }
-    
+   
+   .ptext1 {
+      font-size: 12px;
+      color: #555;
+   }
 </style>
 </head>
 
@@ -183,19 +187,51 @@
 						</tr>
 						<tr>
 							<th>첨부파일</th>
-							<c:if test="${ empty qna.file_name }">
-								<td id="fileName">첨부파일 없음</td>
-							</c:if>
-							<c:if test="${ !empty qna.file_name }">
-								<td id="fileName">${ qna.file_name }</td>
-							</c:if>
+								<td style="width: 43%;">
+									<c:if test="${ empty qna.file_name }">
+										첨부파일 없음
+									</c:if>
+									<c:if test="${ !empty qna.file_name }">
+										<a href="fileDownload.do?ofile=${ qna.file_name }&rfile=${ qna.rename_file_name }">${ qna.file_name }</a>
+									</c:if>
+								</td>
 							<th>분류</th><td>${ qna.category }</td>
 							<th>상태</th><td>${ qna.state }</td>
 						</tr>
+						<tr>
+							<c:if test="${ member.user_id eq qna.user_id or member.user_id eq 'admin' }">
+								<td colspan="6" style="border-bottom: none; padding-bottom:0px;">
+									<button class="btn btn-secondary btn-sm pull-right" id="deleteBtn">삭제</button>
+									<button class="btn btn-secondary btn-sm pull-right" id="modifyBtn" style="margin-right:5px;">수정</button>
+								</td>
+							</c:if>
+						</tr>
 						<tr><td colspan="6" id="content"> ${ qna.content } </td></tr>
 					</table>
-					
-					<!-- 댓글 입력 -->
+			
+               		<!-- 댓글 목록 -->
+	               <div class="comment_listbox">
+	                  <div class="comment_list_rapper">
+	                     <table width="100%" id="replyTable">
+	                        <colgroup>
+	                           <col style="width: 81px;">
+	                           <col>
+	                        </colgroup>
+	                        <thead>
+	                           <tr class="hide">
+	                              <th scope="col">댓글 번호</th>
+	                              <th scope="col">댓글</th>
+	                           </tr>
+	                        </thead>
+	                        <tbody>
+	                           
+	                        </tbody>
+	                     </table>
+	                  </div>
+	               </div>
+	               <!-- 댓글 목록 끝 -->
+	               <br>
+	               	<!-- 댓글 입력 -->
 					<div class="comment_frame">
 	                  <form id="commentInsert" action="" method="post">
 	                     <div class="comment_box">
@@ -210,35 +246,16 @@
 	                     <input type="hidden" name="qna_no" value="${ qna.qna_no }">
 	                     <input type="hidden" name="reply_level" value="1">
 	                  </form>
+	                  <br>
+	                  <button class="btn btn-secondary btn-sm" id="qnaList">목록</button>
                		</div>
-               		
-               		<!-- 댓글 목록 -->
-               <div class="comment_listbox">
-                  <div class="comment_list_rapper">
-                     <table width="100%" id="replyTable">
-                        <colgroup>
-                           <col style="width: 81px;">
-                           <col>
-                        </colgroup>
-                        <thead>
-                           <tr class="hide">
-                              <th scope="col">댓글 번호</th>
-                              <th scope="col">댓글</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                           
-                        </tbody>
-                     </table>
-                  </div>
-               </div>
-               <!-- 댓글 목록 끝 -->
+               		<!-- 댓글 입력 끝 -->
 				</div>
 			</div>
 		</div>
 	</div>
 	<br><br><br><br><br><br>
-	<a href="qnaBoard.do?page=${ currentPage }">목록</a>
+	
 </div>
 
 <script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
@@ -249,14 +266,54 @@
 <script src="/westival/resources/js/custom.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
 
-
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=19b698969a5fbbf08d3bddab4e1ceacc&libraries=services"></script>
 <script>
 	/*jquery*/
 	$(function(){
 		var userid = "${ member.user_id }";
-		var qna_no = "${ qna.qna_no }";
-		callReplyList(qna_no);
+		var qnaNo = "${ qna.qna_no }";
+		var queryString;
+		
+		if("${ keyword }" == ""){
+			queryString = "page=${ currentPage }";
+		}else{
+			queryString = "category=${ category1 }&search=${ category2 }&skeyword=${ keyword }&page=${ currentPage }";
+		}
+		
+		//댓글 리스트
+		callReplyList(qnaNo);
+		
+		//목록 버튼
+		$("#qnaList").on("click", function(){
+			location.href="qnaBoard.do?"+queryString;
+		});
+		
+		//글 수정 버튼
+		$("#modifyBtn").on("click", function(){
+			location.href="qnaUpdateView.do?no=${ qna.qna_no }&"+queryString;
+		});
+		
+		//글 삭제 버튼
+		$("#deleteBtn").on("click", function(){
+			if(confirm("정말 삭제하시겠습니까?") == true){
+				$.ajax({
+					url: "deleteQna.do",
+					data: {no: qnaNo},
+					type: "post",
+					success: function(result){
+						if(result == "ok"){
+							alert("삭제 성공");
+							location.href="qnaBoard.do?"+queryString;
+						}else{
+							alert("삭제 실패");
+						}
+					},
+					error: function(request, status, errorData){
+		                 console.log("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
+		                       + "error : " + errorData);
+		              }
+				});
+			}
+		});
 		
 		//textarea 로그인 체크 이벤트
 	      $("#festival_comment").focus(function(){
@@ -279,6 +336,7 @@
 	      });
 	      $("#festival_comment").keyup();
 	      
+	      //댓글 등록
 	      $("#formBtn").on("click", function(){
 	    	  var formData = $("#commentInsert").serialize();
 	    	  $.ajax({
@@ -288,10 +346,9 @@
 	              success: function(result){
 	                 if(result == "fail")
 	                    alert("실패");
-	                 //callReplyList(number, 1);
 	                 $("#festival_comment").val("");
 	                 $("#wordCount").text("0");
-	                 callReplyList(qna_no);
+	                 callReplyList(qnaNo);
 	              },
 	              error: function(request, status, errorData){
 	                 console.log("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
@@ -299,6 +356,7 @@
 	              }
 	           });
 	      });
+	      modifyReply();
 	});	//jquery
 	
 	//댓글 목록, 페이지 함수
@@ -317,7 +375,7 @@
 	               var outValues= '';
 	               var pageValues='';
 	               
-	               if(obj.totalCount == 0){
+	               if(jsonObj.list.length == 0){
 	                  outValues += '<td colspan="2" class="center">등록된 댓글이 없습니다.</td>';
 	               }else{
 	                  for(var i in jsonObj.list){
@@ -325,7 +383,7 @@
 	                     outValues += '<td><div class="comment_writer">';
 	                     outValues += '<span style="margin-right: 10px; font-weight: bold;">'+decodeURIComponent(obj.list[i].reply_user_id)+'</span> 작성일 : '+obj.list[i].reply_date+'';
 	                     if(userid == obj.list[i].reply_user_id){
-	                        outValues += '&nbsp;&nbsp;&nbsp;&nbsp;<button id="'+obj.list[i].reply_seq+'" type="button" class="btn btn-secondary btn-sm">수정</button>&nbsp;<button id="deleteBtn'+obj.list[i].reply_seq+'" type="button" class="btn btn-secondary btn-sm">삭제</button></div>';   
+	                        outValues += '&nbsp;&nbsp;&nbsp;&nbsp;<button id="seq'+obj.list[i].reply_seq+'" type="button" class="btn btn-secondary btn-sm">수정</button>&nbsp;<button id="deleteBtn'+obj.list[i].reply_seq+'" type="button" class="btn btn-secondary btn-sm">삭제</button></div>';   
 	                     }
 	                     outValues += '<div class="comment_content">'+decodeURIComponent(obj.list[i].reply_content)+'</div>';
 	                     outValues += '<div class="modify_content" style="display:none;margin-top:10px;"><textarea style="height:85px;width:700px">'+decodeURIComponent(obj.list[i].reply_content)+'</textarea></div>';
@@ -335,7 +393,9 @@
 	               }
 	               
 	               $("#replyTable tbody").html(outValues);
-	               
+
+	     	      modifyReply();
+	              
 	            },
 	            error: function(request, status, errorData){
 	               console.log("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
@@ -343,6 +403,89 @@
 	            }
 	         });
 	      });
+	   }
+	
+	 //댓글 수정,삭제
+	   function modifyReply(){
+	      var number = "${ qna.qna_no }";
+	      
+	      for(i=1; i<=$(".number:last").text(); i++){
+	         var selector = '#seq' + i;
+	         var Btnselector = '#' + i + 'Btn';
+	         var cancelSelector = '#cancelBtn'+i;
+	         var deleteSelector = '#deleteBtn'+i;
+	         var replyseq;
+	         var content;
+	         var textarea;
+	         var textareaValue;
+	         var replyno;
+	         
+	         $(selector).on("click", function(){
+	            replyseq = $(this).attr("id");
+	            content = $(this).parents().next("div:first");
+	            textarea = content.next("div");
+	            var textareaBtn = textarea.next("div");
+	            replyno = textareaBtn.next("div").attr("id");
+	            content.css("display", "none");
+	            textarea.css("display", "");
+	            textareaBtn.css("display", "");
+	         });
+	         
+	         //댓글 수정
+	         $(Btnselector).on("click", function(){
+	            var reply_btn = $(this).attr("id");
+	            textareaValue = textarea.children().val();
+	            console.log(textareaValue);
+	            console.log(reply_btn);
+	            
+	            $.ajax({
+	               url: "updateQnaReply.do",
+	               data: { reply_no: replyno, reply_content:textareaValue },
+	               type: "post",
+	               success: function(result){
+	                  if(result == "ok")
+	                     alert("수정완료");
+	                  callReplyList(number);
+	               },
+	               error: function(request, status, errorData){
+	                  console.log("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
+	                        + "error : " + errorData);
+	               }
+	            });
+	         });
+	         
+	         //댓글 수정 취소
+	         $(cancelSelector).on("click", function(){
+	            var textareaBtn = textarea.next("div");
+	            content.css("display", "");
+	            textarea.css("display", "none");
+	            textareaBtn.css("display", "none");
+	         });
+	         
+	         //댓글 삭제
+	         $(deleteSelector).on("click", function(){
+	            replyno = $(this).parents().next("div:first").next("div").next("div").next("div").attr("id");
+	            console.log(replyno);
+	            if(confirm("정말 삭제하시겠습니까?") == true){
+	               $.ajax({
+	                  url: "deleteQnaReply.do",
+	                  data: { reply_no: replyno },
+	                  type: "post",
+	                  success: function(result){
+	                     if(result == "ok")
+	                        alert("삭제완료");
+	                     callReplyList(number);
+	                  },
+	                  error: function(request, status, errorData){
+	                     console.log("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
+	                           + "error : " + errorData);
+	                  }
+	               });
+	            }else{
+	               return false;
+	            }
+	         });
+	      }
 	   }
 </script>
 

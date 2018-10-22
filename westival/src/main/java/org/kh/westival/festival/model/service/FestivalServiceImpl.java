@@ -135,6 +135,21 @@ public class FestivalServiceImpl implements FestivalService {
 		return festivalDao.deleteReply(reply_no);
 	}
 
+	@Override
+	public int selectTotalValue(int no) {
+		return festivalDao.selectTotalValue(no);
+	}
+
+	@Override
+	public int selectMaleValue(int no) {
+		return festivalDao.selectMaleValue(no);
+	}
+
+	@Override
+	public int selectFemaleValue(int no) {
+		return festivalDao.selectFemaleValue(no);
+	}
+
 
 
 }

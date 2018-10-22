@@ -3,7 +3,9 @@ package org.kh.westival.qna.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.kh.westival.festival.model.vo.FestivalReply;
 import org.kh.westival.qna.model.service.QnaService;
 import org.kh.westival.qna.model.vo.Qna;
 import org.kh.westival.qna.model.vo.QnaReply;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -113,14 +113,29 @@ public class QnaController {
 		String result;
 		
 		//파일 저장 폴더
-		String savePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles/qnaFile");
+		String savePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles/QnaFile");
 		
 		String originalFileName = null;
+		String renameFileName = null;
+		//디스크 상 경로 설정할때는 \\ 웹상에서는 // 써도 상관 없음
 		try {
-			originalFileName = file.getOriginalFilename();
-			qna.setFile_name(originalFileName);
+			//파일명을 'yyyyMMddhhmmss.확장자'로 변경함
+			//변경된 파일명이 폴더에 저장되게 함
+			String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1);
+			Date today = new Date();
+			SimpleDateFormat sd = new SimpleDateFormat("yyyyMMddhhmmss");
 			
-			file.transferTo(new File(savePath + "\\" + originalFileName));
+			System.out.println(extension);
+			System.out.println(sd.format(today));
+			
+			originalFileName = file.getOriginalFilename();
+			renameFileName = sd.format(today).toString() +"."+ extension; 
+			
+			file.transferTo(new File(savePath + "\\" + renameFileName));
+			
+			qna.setFile_name(originalFileName);
+			qna.setRename_file_name(renameFileName);
+			
 		} catch (IllegalStateException | IOException e) {
 			e.printStackTrace();
 		}
@@ -136,10 +151,27 @@ public class QnaController {
 		return result;
 	}
 	
+	//파일 다운로드
+	@RequestMapping("fileDownload.do")
+	public ModelAndView fileDownMethod(ModelAndView mv, HttpServletRequest request,
+														@RequestParam(name="ofile") String originalFileName,
+														@RequestParam(name="rfile") String renameFileName){
+		String savePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles/QnaFile");
+		File readFile = new File(savePath + "\\" + renameFileName);
+		File originFile = new File(originalFileName);
+		
+		mv.setViewName("filedownQna");
+		mv.addObject("readFile", readFile);
+		mv.addObject("downFile", originFile);
+		
+		return mv;
+	}
+	
 	//qna 게시글 보기
 	@RequestMapping("qnaDetail.do")
 	public ModelAndView qnaDetailViewMethod(@RequestParam(value="no") int qna_no, 
-											@RequestParam(value="page") int currentPage,ModelAndView mv){
+											@RequestParam(value="page") int currentPage,ModelAndView mv,
+											HttpServletRequest request){
 		System.out.println("게시글 보기 컨트롤러");
 		
 		//조회수 증가
@@ -147,6 +179,12 @@ public class QnaController {
 			System.out.println("조회수 증가 처리 성공");
 		}else{
 			System.out.println("조회수 증가 처리 실패");
+		}
+		
+		if(request.getParameter("keyword") != null){
+			mv.addObject("category1", request.getParameter("category1"));
+			mv.addObject("category2", request.getParameter("category2"));
+			mv.addObject("keyword", request.getParameter("keyword"));
 		}
 		
 		mv.addObject("qna", qnaService.selectQna(qna_no));
@@ -232,6 +270,96 @@ public class QnaController {
 		
 	}
 	
+	//qna 글 삭제
+	@RequestMapping(value="deleteQna.do", method=RequestMethod.POST)
+	public void deleteQnaMethod(@RequestParam(value="no") int qna_no, HttpServletResponse response) throws IOException{
+		System.out.println("qna 삭제 컨트롤러");
+
+		response.setContentType("text/html; charset=utf-8");
+		
+		PrintWriter out = response.getWriter();
+		
+		if(qnaService.deleteQna(qna_no) > 0){
+			out.append("ok");
+		}else{
+			out.append("fail");
+		}
+	}
+	
+	//qna 글 수정 뷰
+	@RequestMapping(value="qnaUpdateView")
+	public ModelAndView qnaUpdateViewMethod(@RequestParam(value="no") int qna_no, ModelAndView mv){
+		System.out.println("글 수정 뷰 컨트롤러");
+		
+		mv.addObject("qna", qnaService.selectQna(qna_no));
+		mv.setViewName("qna/qnaUpdate");
+		
+		return mv;
+	}
+	
+	//qna 글 수정 컨트롤러
+	@RequestMapping(value="qnaUpdate.do", method=RequestMethod.POST)
+	public String updateQnaMethod(Qna qna, HttpServletResponse response, HttpServletRequest request,
+											@RequestParam(name="upfile") MultipartFile file,
+											@RequestParam(name="category") String category,
+											@RequestParam(name="subject") String subject,
+											@RequestParam(name="content") String content,
+											@RequestParam(name="qna_no") int qna_no) throws IOException{
+		System.out.println("qna 수정 컨트롤러");
+		
+		
+		qna.setCategory(category);
+		qna.setSubject(subject);
+		qna.setContent(content);
+		qna.setQna_no(qna_no);
+		
+		if(request.getParameter("active") == null){
+			qna.setActive("Y");
+		}else{
+			qna.setActive(request.getParameter("active"));
+		}
+		
+		String result = "";
+		
+		if(file != null){
+			//파일 저장 폴더
+			String savePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles/QnaFile");
+			
+			String originalFileName = null;
+			String renameFileName = null;
+			//디스크 상 경로 설정할때는 \\ 웹상에서는 // 써도 상관 없음
+			try {
+				//파일명을 'yyyyMMddhhmmss.확장자'로 변경함
+				//변경된 파일명이 폴더에 저장되게 함
+				String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1);
+				Date today = new Date();
+				SimpleDateFormat sd = new SimpleDateFormat("yyyyMMddhhmmss");
+				
+				System.out.println(extension);
+				System.out.println(sd.format(today));
+				
+				originalFileName = file.getOriginalFilename();
+				renameFileName = sd.format(today).toString() +"."+ extension; 
+				
+				file.transferTo(new File(savePath + "\\" + renameFileName));
+				
+				qna.setFile_name(originalFileName);
+				qna.setRename_file_name(renameFileName);
+				
+			} catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println(qna);
+		
+		if(qnaService.updateQna(qna) > 0){
+			System.out.println("성공");
+			result = "forward:/qnaDetail.do";
+		}
+		
+		return result;
+	}
+	
 	//댓글 등록
 	@RequestMapping(value="QnaInsertReply.do", method=RequestMethod.POST)
 	public void QnaInsertReplyMethod(QnaReply qnaReply, HttpServletResponse response) throws IOException{
@@ -242,6 +370,9 @@ public class QnaController {
 		PrintWriter out = response.getWriter();
 		
 		if(qnaService.insertQnaReply(qnaReply) > 0){
+			if(qnaReply.getReply_user_id().equals("admin"))
+				qnaService.updateQnaState(qnaReply.getQna_no());
+			
 			out.append("ok");
 		}else{
 			out.append("fail");
@@ -284,6 +415,42 @@ public class QnaController {
 		out.println(sendJson.toJSONString());
 		System.out.println(sendJson);
 		out.flush();
+		out.close();
+	}
+	
+	//댓글 수정
+	@RequestMapping(value="updateQnaReply.do", method=RequestMethod.POST)
+	public void updateQnaReplyMethod(QnaReply qnaReply, 
+													HttpServletResponse response) throws IOException{
+		System.out.println(qnaReply);
+
+		response.setContentType("text/html; charset=utf-8");
+
+		PrintWriter out = response.getWriter();
+
+		if (qnaService.updateQnaReply(qnaReply) > 0) {
+			out.append("ok");
+		} else {
+			out.append("faile");
+		}
+		out.close();
+	}
+	
+	//댓글 삭제
+	@RequestMapping(value="deleteQnaReply.do", method=RequestMethod.POST)
+	public void deleteQnaReplyMethod(@RequestParam(value = "reply_no") int reply_no, 
+													HttpServletResponse response) throws IOException{
+		System.out.println(reply_no);
+
+		response.setContentType("text/html; charset=utf-8");
+
+		PrintWriter out = response.getWriter();
+
+		if (qnaService.deleteQnaReply(reply_no) > 0) {
+			out.append("ok");
+		} else {
+			out.append("faile");
+		}
 		out.close();
 	}
 }

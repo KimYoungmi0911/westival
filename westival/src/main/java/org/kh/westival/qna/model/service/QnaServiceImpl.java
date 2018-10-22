@@ -64,5 +64,30 @@ public class QnaServiceImpl implements QnaService {
 	public ArrayList<QnaReply> selectQnaReply(int no) {
 		return qnaDao.selectQnaReply(no);
 	}
+
+	@Override
+	public int updateQnaState(int qna_no) {
+		return qnaDao.updateQnaState(qna_no);
+	}
+
+	@Override
+	public int deleteQna(int qna_no) {
+		return qnaDao.deleteQna(qna_no);
+	}
+
+	@Override
+	public int updateQna(Qna qna) {
+		return qnaDao.updateQna(qna);
+	}
+
+	@Override
+	public int updateQnaReply(QnaReply qnaReply) {
+		return qnaDao.updateQnaReply(qnaReply);
+	}
+
+	@Override
+	public int deleteQnaReply(int reply_no) {
+		return qnaDao.deleteQnaReply(reply_no);
+	}
 	
 }
