@@ -111,28 +111,51 @@
 	</select>
 
 	<!-- 마이페이지 예매내역 조회 -->
-	<select id="recommendList" parameterType="_int" resultMap="resultTicket">
+	<select id="recommendList" parameterType="string" resultMap="resultTicket">
+		select * from tb_ticket where user_id = #{user_id}
+	</select>
+	
+	<select id="recommendListNonLogin" resultMap="resultTicket">
 		select * from tb_ticket
-		where user_id = #{user_id}
 	</select>
 
 	<!-- 마이페이지 예매내역 날짜 조회 -->
 	<select id="myTicketSearch" parameterType="java.util.HashMap"
 		resultMap="resultTicket">
+		
 		<![CDATA[
 		select * from tb_ticket
 		where user_id = #{user_id}
 		and ticket_date >= #{start_date} and ticket_date <= #{end_date}
 		]]>
 	</select>
+	
+	<select id="myTicketSearchNonLogin" parameterType="java.util.HashMap"
+		resultMap="resultTicket">
+		
+		<![CDATA[
+		select * from tb_ticket
+		where ticket_date >= #{start_date} and ticket_date <= #{end_date}
+		]]>
+	</select>
 
 	<!-- 마이페이지 예매내역 날짜 조회 (1,3,6개월) -->
 	<select id="myTicketSearchMonth" parameterType="java.util.HashMap"
 		resultMap="resultTicket">
+		
 		<![CDATA[
 		select * from tb_ticket
 		where user_id = #{user_id}
 		and ticket_date >= to_char(add_months(sysdate, #{month}), 'YY/MM/DD') and ticket_date <= sysdate
+		]]>
+	</select>
+	
+	<select id="myTicketSearchMonthNonLogin" parameterType="java.util.HashMap"
+		resultMap="resultTicket">
+		
+		<![CDATA[
+		select * from tb_ticket
+		where ticket_date >= to_char(add_months(sysdate, #{month}), 'YY/MM/DD') and ticket_date <= sysdate
 		]]>
 	</select>
 
@@ -166,3 +189,4 @@
 		userid = #{userid}]]> </delete> -->
 
 </mapper>
+
