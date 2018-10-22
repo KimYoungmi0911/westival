@@ -301,6 +301,86 @@
       padding: .10rem .5rem;
    }
    
+   .chart_box {
+   	position: relative;
+    padding: 31px 0 54px;
+    background: url(/westival/resources/images/bg_chart.gif) repeat-x;
+   }
+   
+   .graph_Wrap {
+	  position: relative;
+	  display: inline-block;
+	  clear: both;
+	}
+	
+	.test {
+	  width: 100px;
+	  height: 100px;
+	  background: url("/westival/resources/images/man (2).png") no-repeat;
+	  background-size: cover;
+	}
+	
+	.wtest {
+	  width: 100px;
+	  height: 100px;
+	  background: url("/westival/resources/images/woman (2).png") no-repeat;
+	  background-size: cover;
+	}
+	
+	.Man {
+	  position: relative;
+	  float: left;
+	  width: 100px;
+	  height: 100px;
+	  top: 0;
+	  display: inline-block;
+	}
+	
+	.Woman {
+	  position: relative;
+	  float: left;
+	  width: 100px;
+	  height: 100px;
+	  top: 0;
+	  display: inline-block;
+	}
+	
+	.Man .tgraph {
+	  position: absolute;
+	  bottom: 0;
+	  left: 0px;
+	  width: 100px;
+	  display: inline-block;
+	  font-size: 0;
+	  background: url("/westival/resources/images/man (1).png") 0 100% no-repeat;
+	  background-size: cover;
+	}
+	
+	.Woman .tgraph {
+	  position: absolute;
+	  bottom: 0;
+	  left: 0px;
+	  width: 100px;
+	  display: inline-block;
+	  font-size: 0;
+	  background: url("/westival/resources/images/woman (1).png") 0 100% no-repeat;
+	  background-size: cover;
+	}
+	
+	.Man .graph_num strong {
+	  color: #d82e2e;
+	  font-weight: bold;
+	  font-family: tahoma;
+	  font-size: 13px;
+	}
+	
+	.Woman .graph_num strong {
+	  color: #d82e2e;
+	  font-weight: bold;
+	  font-family: tahoma;
+	  font-size: 13px;
+	}
+   
    /*지도 css*/
    .map_wrap, .map_wrap * {margin:0; padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
    .map_wrap {position:relative;width:100%;height:562px;}
@@ -368,7 +448,7 @@
                <div class="fesInfoview1">
                   <div class="doc">
                      <div class="fesHead">
-                        <h3>축제 2018</h3>
+                        <h3>${ festival.name }</h3>
                         <ul>
                            <li class="look">조회 : ${ festival.read_count } </li>
                            <li class="likeButton"><img id="recommendBtn" src="/westival/resources/images/like.png" style="width:25px;cursor:pointer;"><span id="recommend">${ festival.recommend }</span></li>
@@ -378,7 +458,7 @@
                      
                      <div class="fesInfo detail">
                         <div class="fes_image">
-                           <img src="/westival/resources/festivalUpImages/${ festival.new_img_name }">
+                           <img src="/westival/resources/uploadFiles/festivalImg/${ festival.new_img_name }">
                         </div>
                         
                         <div class="detailView">
@@ -415,12 +495,12 @@
                                  <a id="find_gido" target="_blank" href="#">찾아오시는길</a>
                               </div>
                               <div class="button intro_button">
-                                 <a href="#">티켓구매</a>
+                                 <a href="ticketing.do?no=${ festival.no }&user_id=${ member.user_id }">티켓구매</a>
                               </div>
                            </c:if>
                            <c:if test="${ festival.ticket == 'N' }">
                               <div class="button intro_button">
-                                 <a href="#">찾아오시는길</a>
+                                 <a id="find_gido" target="_blank" href="#">찾아오시는길</a>
                               </div>
                               <div class="button intro_button">
                                  <a class="notTicket" href="#">티켓구매</a>
@@ -450,7 +530,7 @@
                   </div>
                   
                   <div class="content-box">
-                     <p> ${ festival.content } </p>
+                  ${ festival.content }
                   </div>
                   
                </div>   
@@ -489,32 +569,34 @@
    </div>
    <!-- 지도 끝 -->
    
-   <!-- 이미지들 -->
+   <!-- 통계 -->
    <div class="photos" style="padding:60px;">
       <div class="container">
          <div class="row">
             <div class="col">
                <div class="photos_header">
-                  <img src="/westival/resources/images/photo.png">
-                  <p>관련 사진</p>
+                  <img src="/westival/resources/images/post.png">
+                  <p>어떤 사람들이 좋아요를 눌렀을까요?</p>
                </div>
-               
-               <div class="card-deck">
-                 <div class="card">
-                   <img class="card-img" src="/westival/resources/festivalUpImages/2561887.jpg" alt="Card image">
-                 </div>
-                 <div class="card">
-                   <img class="card-img" src="/westival/resources/festivalUpImages/2561887.jpg" alt="Card image">
-                 </div>
-                 <div class="card">
-                   <img class="card-img" src="/westival/resources/festivalUpImages/2561887.jpg" alt="Card image">
-                 </div>
-               </div>
+               <div class="chart_box">
+	               <div class="graph_Wrap test">
+						<div class="Man">
+							<span id="GrapMale" class="tgraph" style="height:${ male }%"></span>
+							<span class="graph_num" style="color:black;">남자<br><strong id="PerMale">${ male }%</strong></span>
+						</div>
+					</div>
+					<div class="graph_Wrap wtest">
+						<div class="Woman">
+							<span id="GrapFemale" class="tgraph" style="height:${ female }%"></span>
+							<span class="graph_num" style="color:black;">여자<br><strong id="PerFemale">${ female }%</strong></span>
+						</div>
+					</div>
+				</div>
             </div>
          </div>
       </div>
    </div>
-   <!-- 이미지 끝  -->
+   <!-- 통계 끝  -->
    
    <!-- 태그 -->
    <div class="tags" style="padding-bottom:60px;">
@@ -643,6 +725,9 @@
       var userid = "${ member.user_id }";
       var number = "${ festival.no }";   //축제번호
       //var userid = "user01";   //유저아이디
+      
+      /* var festival_content = $(".content-box").text().replace(/(?:\r\n|\r|\n)/g, '<br />');
+      $(".content-box").text(festival_content); */
       
       //로그인 한 유저의 스크랩 여부
       $.ajax({
@@ -782,7 +867,6 @@
          
          $(selector).on("click", function(){
             replyseq = $(this).attr("id");
-            console.log(replyseq);
             content = $(this).parents().next("div:first");
             textarea = content.next("div");
             var textareaBtn = textarea.next("div");
@@ -796,8 +880,6 @@
          $(Btnselector).on("click", function(){
             var reply_btn = $(this).attr("id");
             textareaValue = textarea.children().val();
-            console.log(textareaValue);
-            console.log(reply_btn);
             
             $.ajax({
                url: "updateReply.do",

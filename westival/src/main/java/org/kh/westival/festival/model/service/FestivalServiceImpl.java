@@ -29,15 +29,19 @@ public class FestivalServiceImpl implements FestivalService {
 		return festivalDao.insertTicketOption(ticketOption);
 	}
 
-	// 10/18수정
 	@Override
-	public ArrayList<Festival> locationSearch(Festival festival, int currentPage, int limit) {
-		return (ArrayList<Festival>)festivalDao.locationSearch(festival, currentPage, limit);
+	public ArrayList<Festival> locationSearch(Festival festival) {
+		return (ArrayList<Festival>)festivalDao.locationSearch(festival);
 	}
-	// 10/18수정
+
 	@Override
-	public ArrayList<Festival> tagSearch(Festival festival, int currentPage, int limit) {
-		return (ArrayList<Festival>)festivalDao.tagSearch(festival, currentPage, limit);
+	public ArrayList<Festival> tagSearch(Festival festival) {
+		return (ArrayList<Festival>)festivalDao.tagSearch(festival);
+	}
+	
+	@Override
+	public ArrayList<Festival> todayFestivalSearch(Date currentDate) {
+		return (ArrayList<Festival>)festivalDao.todayFestivalSearch(currentDate);
 	}
 
 	@Override
@@ -131,29 +135,21 @@ public class FestivalServiceImpl implements FestivalService {
 		return festivalDao.deleteReply(reply_no);
 	}
 
-
-	/* 최경호 : 10/18 통합 이후 추가 */
-
-	// 메인 이달의 축제 페이징처리 
 	@Override
-	public int todayFestivalCount(Date currentDate) {
-		return festivalDao.todayFestivalCount(currentDate);
-	}
-	// 메인 이달의 축제
-	@Override
-	public ArrayList<Festival> todayFestivalSearch(Date currentDate, int currentPage, int limit) {
-		return (ArrayList<Festival>) festivalDao.todayFestivalSearch(currentDate, currentPage, limit);
+	public int selectTotalValue(int no) {
+		return festivalDao.selectTotalValue(no);
 	}
 
-	// 위치 검색 페이징 처리
 	@Override
-	public int locationSearchCount(Festival festival) {
-		return festivalDao.locationSearchCount(festival);
+	public int selectMaleValue(int no) {
+		return festivalDao.selectMaleValue(no);
 	}
-	// 태그 검색 페이징처리
+
 	@Override
-	public int tagSearchCount(Festival festival) {
-		return festivalDao.tagSearchCount(festival);
+	public int selectFemaleValue(int no) {
+		return festivalDao.selectFemaleValue(no);
 	}
+
+
 
 }

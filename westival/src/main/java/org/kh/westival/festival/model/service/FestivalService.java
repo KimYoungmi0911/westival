@@ -2,7 +2,6 @@ package org.kh.westival.festival.model.service;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.festival.model.vo.FestivalReply;
@@ -17,10 +16,11 @@ public interface FestivalService {
 
 	int insertTicketOption(TicketOption ticketOption);
 
-	// 10/18수정
-	ArrayList<Festival> locationSearch(Festival festival, int currentPage, int limit);
-	// 10/18수정
-	ArrayList<Festival> tagSearch(Festival festival, int currentPage, int limit);
+	ArrayList<Festival> locationSearch(Festival festival);
+
+	ArrayList<Festival> tagSearch(Festival festival);
+
+	ArrayList<Festival> todayFestivalSearch(Date currentDate);
 
 	ArrayList<Festival> top3FestivalSearch();
 	
@@ -56,19 +56,11 @@ public interface FestivalService {
 	int updateReply(FestivalReply festivalReply);
 
 	int deleteReply(int reply_no);
-	
-	
-	
-	/* 최경호 : 10/18 통합 이후 추가 */
-	
-	// 메인 이달의 축제 페이징처리 
-	int todayFestivalCount(java.sql.Date currentDate);
-	// 메인 이달의 축제 목록
-	List<Festival> todayFestivalSearch(java.sql.Date currentDate, int currentPage, int limit);
 
-	// 위치 검색 페이징처리 
-	int locationSearchCount(Festival festival);
-	// 태그 검색 페이징처리
-	int tagSearchCount(Festival festival);
+	int selectTotalValue(int no);
+
+	int selectMaleValue(int no);
+
+	int selectFemaleValue(int no);
 
 }

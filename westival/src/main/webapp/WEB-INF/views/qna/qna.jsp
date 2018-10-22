@@ -86,10 +86,10 @@
 						<div class="searchDiv pull-right">
 							<select class="form-control" id="category" name="category" style="width:112.2px; height:38px;">
 								<option value="total">분류</option>
-								<option value="subject" >축제문의</option>
-								<option value="content">티켓문의</option>
-								<option value="subject" >환불문의</option>
-								<option value="content">기타문의</option>
+								<option value="축제문의" >축제문의</option>
+								<option value="티켓문의">티켓문의</option>
+								<option value="환불문의" >환불문의</option>
+								<option value="기타문의">기타문의</option>
 							</select>
 							<select class="form-control" id="search" name="search" style="width:80.8px; height:38px;">
 								<option value="total">전체</option>
@@ -151,6 +151,7 @@
 								</table>
 							</div>
 						</div>
+						<a class="btn btn-light" href="qnaBoard.do?page=1">목록</a>
 						<button type="button" class="btn btn-light pull-right" id="writeBtn">글쓰기</button>
 						<br><br>
 						<!-- 페이지 -->
@@ -158,13 +159,13 @@
 									<ul class="pagination" style="justify-content: center;">
 										<li class="page-item"><a class="page-link" href="#" style="color: rgba(53, 10, 78, 0.6);">&laquo;</a></li>
 										<c:forEach var="p" begin="${ startPage }" end="${ endPage }">
-										<c:if test="${ p == currentPage }">
-											<li class="page-item"><a class="page-link" href="qnaBoard.do?page=${ p }" style="background: rgba(53, 10, 78, 0.6);color: white;">${ p }</a></li>
-										</c:if>
-										<c:if test="${ p != currentPage }">
-											<li class="page-item"><a class="page-link" href="qnaBoard.do?page=${ p }" style="color: rgba(53, 10, 78, 0.6);">${ p }</a></li>
-										</c:if>
-									</c:forEach>
+											<c:if test="${ p == currentPage }">
+												<li class="page-item"><a class="page-link" href="qnaBoard.do?page=${ p }" style="background: rgba(53, 10, 78, 0.6);color: white;">${ p }</a></li>
+											</c:if>
+											<c:if test="${ p != currentPage }">
+												<li class="page-item"><a class="page-link" href="qnaBoard.do?page=${ p }" style="color: rgba(53, 10, 78, 0.6);">${ p }</a></li>
+											</c:if>
+										</c:forEach>
 										<li class="page-item"><a class="page-link" href="#" style="color: rgba(53, 10, 78, 0.6);">&raquo;</a></li>
 									</ul>
 							</div>
@@ -184,12 +185,27 @@
 <script src="/westival/resources/js/custom.js"></script>
 
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=19b698969a5fbbf08d3bddab4e1ceacc&libraries=services"></script>
 <script>
 	/*jquery*/
 	$(function(){
 		userid = "${ member.user_id }";
-		$("#wirteBtn").on("click", function(){
+		
+		//쿼리스트링 값 가져오기
+		var oParams = getUrlParams();
+		var a = decodeURI(oParams.category);
+		var b = decodeURI(oParams.search);
+		var c = decodeURI(oParams.skeyword);
+		var d = oParams.page;
+		
+		if( a != "undefined" && b != "undefined" && c != "undefined" ){
+			searchQna(a, b, c, d);
+			$("#category").val(a).prop("selected", true);
+			$("#search").val(b).prop("selected", true);
+			$("#skeyword").val(c);
+		}
+		
+		//글쓰기 버튼
+		$("#writeBtn").on("click", function(){
 			if(userid != ""){
 				location.href="qnaWriteForm.do";
 			}else{
@@ -197,6 +213,7 @@
 			}
 		});
 		
+		//검색 버튼
 		$("#searchBtn").on("click", function(){
 			var categoryValue =$("#category").val();
 			var searchValue = $("#search").val();
@@ -233,10 +250,16 @@
 		            		 outValues += '<tr><td>'+obj.list[i].qna_no+'</td>';
 		            		 outValues += '<td>'+obj.list[i].category+'</td>';
 		            		 outValues += '<td>'+obj.list[i].state+'</td>';
-		            		 if(userid == obj.list[i].user_id || userid == 'admin'){
-		            			 outValues += '<td class="td4"><a href="qnaDetail.do?no='+obj.list[i].qna_no+'&page='+obj.currentPage+'"><img src="resources/images/lock_open.png">'+obj.list[i].subject+'</td>';
+		            		 if(obj.list[i].active == 'Y'){
+		            			 outValues += '<td class="td4"><a href="qnaDetail.do?no='+obj.list[i].qna_no+'&page='+obj.currentPage+'&category1='+obj.category+'&category2='+obj.search+'&keyword='+obj.skeyword+'">';
+		            			 outValues += '<img src="resources/images/lock_open.png">'+obj.list[i].subject+'</td>';
 		            		 }else{
-		            			 outValues += '<td class="td4"><img src="resources/images/lock.png">'+obj.list[i].subject+'</td>';
+		            			 if(userid == obj.list[i].user_id || userid == 'admin'){
+			            			 outValues += '<td class="td4"><a href="qnaDetail.do?no='+obj.list[i].qna_no+'&page='+obj.currentPage+'&category1='+obj.category+'&category2='+obj.search+'&keyword='+obj.skeyword+'">';
+			            			 outValues += '<img src="resources/images/lock_open.png">'+obj.list[i].subject+'</td>';
+			            		 }else if(userid != obj.list[i].user_id && userid != 'admin'){
+			            			 outValues += '<td class="td4"><img src="resources/images/lock.png">'+obj.list[i].subject+'</td>';
+			            		 }
 		            		 }
 		            		 outValues += '<td>'+obj.list[i].user_id+'</td>';
 		            		 outValues += '<td>'+obj.list[i].qna_date+'</td>';
@@ -264,7 +287,13 @@
 		                     + "error : " + errorData);
 		        }
 			});
-		
+	}
+	
+	//쿼리스트링 함수
+	function getUrlParams() {
+	    var params = {};
+	    window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+	    return params;
 	}
 </script>
 
