@@ -2,7 +2,7 @@ package org.kh.westival.community.model.vo;
 
 public class CommunityPaging implements java.io.Serializable{
 	   private final static long serialVersionUID = 11L;
-	   
+	    
 	   private int currentPage;
 	   private int limit = 10;
 	   private int listCount;

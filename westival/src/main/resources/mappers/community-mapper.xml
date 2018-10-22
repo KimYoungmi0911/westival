@@ -13,8 +13,6 @@
 		<result property="content" column="content" />
 		<result property="read_count" column="read_count" />
 		<result property="community_date" column="community_date" />
-		<result property="file_name" column="file_name" />
-		<result property="file_rename" column="file_rename" />
 		<result property="user_count" column="user_count" />
 	</resultMap>
 	
@@ -27,8 +25,6 @@
 		<result property="content" column="content" />
 		<result property="read_count" column="read_count" />
 		<result property="community_date" column="community_date" />
-		<result property="file_name" column="file_name" />
-		<result property="file_rename" column="file_rename" />
 		<result property="user_count" column="user_count" />
 	</resultMap>
 	
@@ -40,6 +36,26 @@
 		<result property="comment_seq" column="comment_seq" />
 		<result property="comment_date" column="comment_date" />
 		<result property="comment_ref" column="comment_ref" />
+	</resultMap>
+	
+	<resultMap type="Festival" id="resultFestivalList">
+		<id property="no" column="no" />
+		<result property="reg_user" column="reg_user" />
+		<result property="name" column="name" />
+		<result property="address" column="address" />
+		<result property="original_img_name" column="original_img_name" />
+		<result property="new_img_name" column="new_img_name" />
+		<result property="content" column="content" />
+		<result property="start_date" column="start_date" />
+		<result property="end_date" column="end_date" />
+		<result property="theme" column="theme" />
+		<result property="telephone" column="telephone" />
+		<result property="manage" column="manage" />
+		<result property="ticket" column="ticket" />
+		<result property="file_name" column="file_name" />
+		<result property="tag" column="tag" />
+		<result property="read_count" column="read_count" />
+		<result property="recommend" column="recommend" />
 	</resultMap>
 	
 	<!-- private int comment_no;                  //댓글번호
@@ -59,11 +75,10 @@
 	<!-- 커뮤니티 게시글 리스트 조회 -->
 	<select id="selectCommunityList" parameterType="CommunityPaging" resultMap="resultList">
 		<![CDATA[
-		select * from (
-			select rownum rnum, community_no, no, user_id, category, title, content, 
-				read_count, community_date, file_name, file_rename, user_count
-				from (select * from tb_community order by community_no asc)
-				where rnum >= #{startRow} and rnum <= #{endRow}
+		select * from (select rownum rnum, community_no, no, user_id, category, title, content, 
+				read_count, community_date, user_count 
+        from (select * from tb_community order by community_no desc)) 
+		where rnum  >=  #{startRow} and rnum <= #{endRow}
 		]]>
 	</select>
 	
@@ -72,56 +87,141 @@
 		<![CDATA[select * from tb_community where community_no = #{community_no}]]>
 	</select>
 	
-	<!-- 댓글 상세보기 -->
-	<select id="selectCommunityReply" parameterType="_int" resultMap="resultCommunityReply">
-		<![CDATA[select * from tb_community_reply where community_no = #{community_no}]]>
+	<!-- 필터조회 페이징 -->
+	<select id="selectFilterCount" resultType="_int" parameterType="map">
+		select count(*) from tb_community
+		
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="category == 'nomal'">
+				category = '일반'
+			</if>
+			<if test="accompany == 'accompany'">
+				category = '동행'
+			</if>
+			
+			<if test="search == 'all'">
+				and title like '%'||#{keyword}||'%' or 
+				content like '%'||#{keyword}||'%' or
+				user_id like '%'||#{keyword}||'%'
+			</if>
+			<if test="search == 'title'">
+				and title like '%'||#{keyword}||'%'
+			</if>
+			<if test="search == 'content'">
+				and content like '%'||#{keyword}||'%'
+			</if>
+			<if test="search == 'writer'">
+				and user_id like '%'||#{keyword}||'%'
+			</if>
+		</trim>
 	</select>
 	
+	<!-- 필터조회 리스트 -->
+	<select id="selectFilterList" parameterType="map" resultMap="resultList">
+		select * from (select rownum rnum, community_no, no, user_id, category, title, content, 
+				read_count, community_date, user_count 
+        from (select * from tb_community 
+        
+        <trim prefix="WHERE" prefixOverrides="AND">
+			<if test="category == 'nomal'">
+				category = '일반'
+			</if>
+			<if test="accompany == 'accompany'">
+				category = '동행'
+			</if>
+			
+			<if test="search == 'all'">
+				and title like '%'||#{keyword}||'%' or 
+				content like '%'||#{keyword}||'%' or
+				user_id like '%'||#{keyword}||'%'
+			</if>
+			<if test="search == 'title'">
+				and title like '%'||#{keyword}||'%'
+			</if>
+			<if test="search == 'content'">
+				and content like '%'||#{keyword}||'%'
+			</if>
+			<if test="search == 'writer'">
+				and user_id like '%'||#{keyword}||'%'
+			</if>
+			
+			order by community_no desc)) 
+			where rnum  &gt;=  #{startRow} and rnum &lt;= #{endRow}
+		</trim>
+	</select>
 	
+	<!-- 축제명 리스트 -->
 	
-	  <!--  private int community_no;            //글번호
-	   private int no;                        //축제번호
-	   private String user_id;                  //작성자
-	   private String category;               //글분류
-	   private String title;                     //글제목
-	   private String content;               //글내용
-	   private int read_count;               //조회수
-	   private Date community_date;         //작성일자
-	   private String file_name;               //첨부파일원본
-	   private String file_rename;            //첨부파일수정
-	   private int user_count;               //동행인원
- -->
+	<select id="selectFestivalNameList" resultMap="resultFestivalList">
+		select * from tb_festival
+	</select>
+	
+	<!-- 글쓰기 -->
+	<insert id="insertCommunity" parameterType="Community" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		insert into tb_community values (
+		
+		<choose>
+	    <when test="no != 0">
+	      community_seq.nextval, #{no}, #{user_id}, #{category},
+				#{title}, #{content}, default, sysdate, #{user_count})
+	    </when>
+	    <otherwise>
+	      community_seq.nextval, null, #{user_id}, #{category},
+				#{title}, #{content}, default, sysdate, null)
+	    </otherwise>
+	  	</choose>
+	</insert>
+
+	<!-- 조회수 증가용 -->
+	<update id="updateCommunityReadCount" parameterType="_int" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[
+		update tb_community set read_count = read_count + 1 where community_no = #{community_no}
+		]]>
+	</update>
+	
+	<!-- 상세보기 축제 이미지 -->
+	<select id="selectFestivalImage" parameterType="_int" resultMap="resultFestivalList">
+		select * from tb_festival where no = #{no}
+	</select>
+	
+	<!-- 댓글등록 -->
+	<insert id="insertCommunityReply" parameterType="CommunityReply" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		<![CDATA[
+		insert into tb_community_reply values 
+		(community_reply_seq.nextval, #{user_id}, #{community_no},
+		#{comment_content}, #{comment_level}, (select NVL(max(comment_seq)+1,1) from tb_community_reply where community_no = #{community_no}),
+		sysdate, #{comment_ref})
+		]]>
+	</insert>
+	
+	<!-- 댓글 목록 -->
+	<select id="selectCommunityReplyList" parameterType="_int" resultMap="resultCommunityReply">
+		<![CDATA[
+		select * from (select ROWNUM RNUM, comment_no, user_id, community_no, comment_content,
+		comment_level, comment_seq, comment_date, comment_ref
+		from (select * from tb_community_reply where community_no = #{no} order by comment_no asc, comment_seq asc))
+		]]>
+	</select>
+ 
+	<select id="selectCommunityReplyCount" parameterType="_int" resultType="_int">
+		select count(*) from tb_community_reply where community_no = #{no}
+	</select>
+	
+	<delete id="deleteCommunity" parameterType="_int" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[delete from tb_community where community_no = #{community_no}]]>
+	</delete> 
+	
+	<delete id="deleteCommunityReply" parameterType="_int" flushCache="true"
+		statementType="PREPARED">
+		<![CDATA[delete from tb_community_reply where community_no = #{community_no}]]>
+	</delete> 
  
  
-	<!-- <resultMap type="Member" id="resultMember">
-		<id property="userid" column="userid" />
-		<result property="userpwd" column="userpwd" />
-		<result property="username" column="username" />
-		<result property="gender" column="gender" />
-		<result property="age" column="age" />
-		<result property="phone" column="phone" />
-		<result property="email" column="email" />
-		<result property="hobby" column="hobby" />
-		<result property="etc" column="etc" />
-		<result property="enroll_date" column="enroll_date" />
-		<result property="lastmodified" column="lastmodified" />
-
-	</resultMap>
-	
-	<resultMap type="Member" id="resultList">
-		<result property="userid" column="userid" />
-		<result property="userpwd" column="userpwd" />
-		<result property="username" column="username" />
-		<result property="gender" column="gender" />
-		<result property="age" column="age" />
-		<result property="phone" column="phone" />
-		<result property="email" column="email" />
-		<result property="hobby" column="hobby" />
-		<result property="etc" column="etc" />
-		<result property="enroll_date" column="enroll_date" />
-		<result property="lastmodified" column="lastmodified" />
-
-	</resultMap>
+	<!-- 
 
 	<select id="loginCheck" parameterType="Member" resultType="Member" resultMap="resultMember">
 		<![CDATA[

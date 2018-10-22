@@ -34,7 +34,7 @@ public class TicketController {
 		System.out.println("no : " + no);
 		mv.addObject("member", tService.selectMember(user_id));
 		mv.addObject("festival", tService.selectFestival(no));
-		mv.addObject("ticketOption", tService.selectTicketOption(no));
+		//mv.addObject("ticketOption", tService.selectTicketOption(no));
 
 		mv.setViewName("ticket/ticketView");
 		

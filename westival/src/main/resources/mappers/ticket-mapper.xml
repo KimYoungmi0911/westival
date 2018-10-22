@@ -55,8 +55,8 @@
 		<result property="user_confirm_check" column="user_confirm_check" />
 	</resultMap>
 
-	<resultMap type="TicketOption" id="resultTicketOption">
-		<id property="ticket_no" column="ticket_no" />
+	<resultMap type="TicketOption" id="resultTicketOption2">
+		<result property="ticket_no" column="ticket_no" />
 		<result property="user_id" column="user_id" />
 		<result property="no" column="no" />
 		<result property="ticket_name" column="ticket_name" />
@@ -72,6 +72,7 @@
 		<result property="registration_date" column="registration_date" />
 	</resultMap>
 	<!-- resultMap end -->
+
 
 	<!-- insert ticket -->
 	<!-- <insert id="insertTicket" parameterType="Ticket" flushCache="true" 
@@ -105,9 +106,8 @@
 	</select>
 
 	<!-- select ticket option -->
-	<select id="selectTicketOption" parameterType="_int"
-		resultMap="resultTicketOption">
-		<![CDATA[select * from tb_ticket_option where no = #{no}]]>
+	<select id="selectTicketOption1" parameterType="_int" resultMap="resultTicketOption2">
+		select * from tb_ticket_option where no = #{no}
 	</select>
 
 	<!-- 마이페이지 예매내역 조회 -->
