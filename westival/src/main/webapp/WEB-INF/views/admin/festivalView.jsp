@@ -11,7 +11,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css"> -->
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
@@ -20,7 +20,7 @@
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_responsive.css">
 </head>
 <style type="text/css">
-#home {
+	#home {
 		height: 90%;
 		display: block;
 	}
@@ -28,6 +28,38 @@
 	.home_background {
 		position: relative;
 	}
+	#domain {  
+    text-align:center;  
+}  
+#domain li {  
+    display:inline;  
+    vertical-align:middle;  
+}  
+#domain li a {  
+    display:-moz-inline-stack;  /*FF2*/  
+    display:inline-block;  
+    vertical-align:top;  
+    padding:4px;  
+    margin-right:3px;  
+    width:30px !important;  
+    color:#000;  
+    font:bold 12px tahoma;  
+    border:1px solid #eee;  
+    text-align:center;  
+    text-decoration:none;  
+    width /**/:30px;    /*IE 5.5*/  
+}  
+#domain li a.now {  
+    color:#fff;  
+    background-color:#f40;  
+    border:1px solid #f40;  
+}  
+#domain li a:hover, ul li a:focus {  
+    color:#fff;  
+    border:1px solid #f40;  
+    background-color:#f40;  
+}  
+	
 </style>
 <script type="text/javascript" src="/westival/resources/js/jquery-3.2.1.min.js"></script>
  <script type="text/javascript">
@@ -78,12 +110,12 @@
 					$("#domain").html("");
 					if(currentPage <= 1){
 					}else{
-						$("#domain").append("<li><a href='#' onclick='paging(1)'><<</a></li>");
+						$("#domain").append("<li><a href='#' onclick='paging(1)'> << </a></li>");
 					}
 					
 					if(currentPage == 1) {
 					} else {
-						$("#domain").append("<li><a href='#' onclick='paging(" + currentPage + " - 1)'><</a></li>");
+						$("#domain").append("<li><a href='#' onclick='paging(" + currentPage + " - 1)'> < </a></li>");
 					}
 					
 					for (var p = startPage; p <= endPage; p++) { 
@@ -96,7 +128,7 @@
 					
 					if (currentPage == maxPage) {
 					} else {
-						$("#domain").append("<li><a href='#' onclick='paging(" + currentPage + " + 1)'> ></a></li>");
+						$("#domain").append("<li><a href='#' onclick='paging(" + currentPage + " + 1)'> > </a></li>");
 					}
 					
 					if (currentPage >= maxPage) {
@@ -193,7 +225,7 @@
 			
 			if (currentPage == maxPage) {
 			} else {
-				$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " + 1)'> ></a></li>");
+				$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " + 1)'> >></a></li>");
 			}
 			
 			
@@ -234,9 +266,9 @@
 	<div style="background:#f6f9fb;">
 					<div class="container" data-wow-delay="0.8s" >
 						
-                            <form action="#" class=" form-inline" method="post" style="margin-top : 0.5%; "> 
+                            <form action="#" class=" form-inline" method="post" style="margin-top : 0.5%;"> 
 
-                                <div class="form-group" style="margin-left : 34%;">                                   
+                                <div class="form-group" style="margin-left : 30%;">                                   
                                     <select class="btn dropdown-toggle btn-sm" id="filter" name="filter">
                                 
 										<option value="all">통합검색</option>
@@ -251,7 +283,7 @@
                                  <div class="form-group" >
                                     <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="searchTF" id="searchTF" style="margin-left:1%; ">
                                 </div>
-                               <button class="btn search-btn" type="button" style="margin-left:0.5%; cursor:pointer;" id="listBtn" name="listBtn" onclick="selectBtnClick(1);"><i class="fa fa-search" ></i></button>
+                               <button class="btn search-btn" type="button" style="margin-left:0.5%; cursor:pointer;" id="selectBtn" name="selectBtn" onclick="selectBtnClick(1);"><i class="fa fa-search" ></i></button>
 								  <button class="btn search-btn" type="button" style="margin-left:0.5%; cursor:pointer;" id="listBtn" name="listBtn" onclick="paging(1);"><i class="fa fa-search" >전체조회</i></button>
 								  
                             </form>
@@ -367,23 +399,23 @@
 					  </table>
 					</div>
 					
-					<!-- <div class="col-md-12" > 
-                        <div class="pull-right" >
-                            <div class="pagination" >
-                                <ul id="domain" >
-        
-                                </ul>
-                            </div>
-                        </div>                
-                    </div> -->
-                   
- <nav aria-label="Page navigation example" >
- 
-  <ul class="pagination" id="domain" style="width:100%; margin-left : 50%;">
-    
-  </ul>
- 
-</nav>
+					
+  <!-- 페이지 -->
+							<div class="paginate">
+									<ul class="pagination" style="justify-content: center;" id="domain">
+										<li class="page-item"><a class="page-link" href="#" style="color: rgba(53, 10, 78, 0.6);">&laquo;</a></li>
+										<c:forEach var="p" begin="${ startPage }" end="${ endPage }">
+										<c:if test="${ p == currentPage }">
+											<li class="page-item"><a class="page-link" href="fpage.do?page=${ p }" style="background: rgba(53, 10, 78, 0.6);color: white;">${ p }</a></li>
+										</c:if>
+										<c:if test="${ p != currentPage }">
+											<li class="page-item"><a class="page-link" href="fpage.do?page=${ p }" style="color: rgba(53, 10, 78, 0.6);">${ p }</a></li>
+										</c:if>
+									</c:forEach>
+										<li class="page-item"><a class="page-link" href="#" style="color: rgba(53, 10, 78, 0.6);">&raquo;</a></li>
+									</ul>
+							</div>
+					<!-- 페이지 끝 -->
 
 				</div>
 			
@@ -541,8 +573,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 </div>
 
 <script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
-<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
-<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<!-- <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script> -->
 <script src="/westival/resources/plugins/greensock/TweenMax.min.js"></script>
 <script src="/westival/resources/plugins/greensock/TimelineMax.min.js"></script>
 <script src="/westival/resources/plugins/scrollmagic/ScrollMagic.min.js"></script>

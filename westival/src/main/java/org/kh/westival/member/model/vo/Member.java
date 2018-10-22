@@ -12,12 +12,12 @@ public class Member implements java.io.Serializable {
    private String user_phone;
    private String user_email;
    private String user_gender;
-   private String user_confirm_check;
+   
    
    public Member() { }
 
    public Member(String user_id, String user_pwd, String user_name, Date user_birth, String user_address,
-         String user_phone, String user_email, String user_gender, String user_confirm_check) {
+         String user_phone, String user_email, String user_gender) {
       super();
       this.user_id = user_id;
       this.user_pwd = user_pwd;
@@ -27,7 +27,7 @@ public class Member implements java.io.Serializable {
       this.user_phone = user_phone;
       this.user_email = user_email;
       this.user_gender = user_gender;
-      this.user_confirm_check = user_confirm_check;
+   
    }
 
    public String getUser_id() {
@@ -94,18 +94,13 @@ public class Member implements java.io.Serializable {
       this.user_gender = user_gender;
    }
 
-   public String getUser_confirm_check() {
-      return user_confirm_check;
-   }
-
-   public void setUser_confirm_check(String user_confirm_check) {
-      this.user_confirm_check = user_confirm_check;
-   }
-
-   @Override
-   public String toString() {
-      return "Member [user_id=" + user_id + ", user_pwd=" + user_pwd + ", user_name=" + user_name + ", user_birth="
-            + user_birth + ", user_address=" + user_address + ", user_phone=" + user_phone + ", user_email="
-            + user_email + ", user_gender=" + user_gender + ", user_confirm_check=" + user_confirm_check + "]";
-   }
+@Override
+public String toString() {
+	return "Member [user_id=" + user_id + ", user_pwd=" + user_pwd + ", user_name=" + user_name + ", user_birth="
+			+ user_birth + ", user_address=" + user_address + ", user_phone=" + user_phone + ", user_email="
+			+ user_email + ", user_gender=" + user_gender + "]";
 }
+
+   
+
+  }

@@ -21,9 +21,9 @@
 	</select>
 	
 	<select id="noticeDetail" parameterType="_int" resultMap="resultList">
-	<![CDATA[
+	
 	select * from tb_notice where notice_no = #{notice_no}
-	]]>
+	
 	</select>
 
 	<insert id="noticeInsert1" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
@@ -66,27 +66,55 @@
 	
 	<!-- 페이징뷰 -->
 	<select id="getListCount" resultType="_int">
-	<![CDATA[
+	
 	select count(*) from tb_notice
-		]]>
+	
 	</select>
 	
 	<select id="selectListPage" parameterType="NoticePage" resultMap="resultList">
-	<![CDATA[
+	
 	select * from (
-				select rownum rnum, notice_no, user_id, 
+				select ROWNUM RNUM, notice_no, user_id, 
 				notice_title, notice_date, notice_content, original_filepath, rename_filepath 
 				from (select * from tb_notice 
 				order by notice_no asc))
-				where rnum >= #{startRow} and rnum <= #{endRow} 
-	]]>
+				where RNUM between #{startRow} and #{endRow} 
+	
 	</select>
 	
+	<!-- 공지사항 전체(페이징) -->
+	<select id="nGetListCount" resultType="_int">
+	
+	select count(*) from tb_notice
+	
+	</select>
+		
+	<!-- 공지사항 전체(리스트) -->
+	<select id="nAllSelectList" parameterType="java.util.Map" resultMap="resultList">
+	
+	select * from (
+				select ROWNUM RNUM, notice_no, user_id, notice_title, notice_date, 
+				notice_content, original_filepath, rename_filepath
+				from (select * from tb_notice
+				order by notice_no))
+				where RNUM between #{startRow} and #{endRow}
+	
+	</select>
+	
+
 	<!-- 페이징검색뷰 -->
 	<select id="nGetSelectListCount" resultType="_int" parameterType="string">
+	select count(*) from tb_notice
 	<choose>
+	<when test="filter == 'all'">
+	where notice_no like '%'||#{searchTF}||'%' 
+	or notice_title like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'no'">
+	where notice_no like '%'||#{searchTF}||'%'
+	</when>
 	<when test="filter == 'ntitle'">
-	select count(*) from tb_notice where notice_title like '%'||#{searchTF}||'%'
+	where notice_title like '%'||#{searchTF}||'%'
 	</when>
 	</choose> 
 	</select>
@@ -94,18 +122,26 @@
 	
 	<!-- 공지 검색(리스트) -->
 	<select id="nSelectList" parameterType="java.util.Map" resultMap="resultList">
-	<![CDATA[
-	select * from (select rownum rnum, notice_no, notice_title, original_filepath, 
- 	notice_date from (select * from tb_notice))
-	]]>
-	<choose>
+	
+	select * from (select ROWNUM RNUM, notice_no, user_id, notice_title, notice_date, notice_content, original_filepath, 
+ 	rename_filepath from (select * from tb_notice
+	
+	<choose>	
+	<when test="filter == 'all'">
+	where notice_no like '%'||#{searchTF}||'%' 
+	or notice_title like '%'||#{searchTF}||'%' ))
+
+	</when>
+	<when test="filter == 'no'">
+	where notice_no like '%'||#{searchTF}||'%' ))
+
+	</when>
 	<when test="filter == 'ntitle'">
-	<![CDATA[
-	where notice_title like '%'||#{searchTF}||'%' 
-	and rnum >= #{startRow} and rnum <= #{endRow}
-	]]>
+	where notice_title like '%'||#{searchTF}||'%' ))
+
 	</when>
 	</choose>
+	where RNUM between #{startRow} and #{endRow}
 	</select> 
 
 </mapper>

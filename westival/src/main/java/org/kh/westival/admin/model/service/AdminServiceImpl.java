@@ -33,11 +33,37 @@ public class AdminServiceImpl implements AdminService{
 		System.out.println("ticketselectList 페이징뷰");
 		return adminDao.ticketselectList(currentPage, limit);
 	}
+	//예매관리 페이징
+	@Override
+	public int tGetListCount() {
+		System.out.println("tGetListCount");
+		return adminDao.tGetListCount();
+	}
+	//예매관리 리스트
+	@Override
+	public ArrayList<Admin> tAllSelectList(int currentPage, int limit) {
+		System.out.println("tAllSelectList");
+		return adminDao.tAllSelectList(currentPage, limit);
+	}
+	
 	//검색(예매)
 	@Override
 	public ArrayList<Admin> searchList(String filter, String searchTF) {
 		System.out.println("searhList serviceImpl");
 		return adminDao.searchList(filter, searchTF);
+	}
+	//예매관리(검색)(페이징)
+	@Override
+	public int tGetSelectListCount(HashMap map) {
+		System.out.println("tGetSelectListCount serviceImpl");
+		return adminDao.tGetSelectListCount(map);
+	}
+	//예매관리(검색)(리스트)
+	@Override
+	public ArrayList<Admin> tSelectList(int currentPage, int limit, String filter, String searchTF) {
+		System.out.println("tSelectList serviceImpl");
+		return adminDao.testivalSelectList(currentPage, limit, filter, searchTF);
+		
 	}
 	//-------------------------------------------------------
 	//축제관리
@@ -68,6 +94,25 @@ public class AdminServiceImpl implements AdminService{
 	//----------------------------------------------------------
 	//회원관리
 	
+	
+	//회원리스트
+	/*@Override
+	public Object adminMemberView() {
+		System.out.println("adminMemberView serviceImpl");
+		return adminDao.adminMemberView();
+	}*/
+	@Override
+	public int getListCount() {
+		System.out.println("getListCOunt serviceImpl");
+		return adminDao.getListCount();
+	}
+	@Override
+	public ArrayList<Member> selectList(int currentPage, int limit) {
+		System.out.println("selectList serviceImpl");
+		return adminDao.selectList(currentPage, limit);
+	}
+	
+	
 	//회원관리(페이징 및 리스트)
 	@Override
 	public int mGetListCount() {
@@ -91,6 +136,15 @@ public class AdminServiceImpl implements AdminService{
 		System.out.println("mSelectList serviceImpl");
 		return adminDao.mSelectList(currentPage, limit, filter, searchTF);
 	}
+	
+	//회원삭제
+	@Override
+	public Object amdelete(String mid) {
+		System.out.println("amdelete serviceImpl");
+		return adminDao.amdelete(mid);
+	}
+	
+	
 	
 	 
 	
