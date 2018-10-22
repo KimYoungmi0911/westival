@@ -56,7 +56,7 @@
 	}
 	
 	function myList() {
-		location.href = "selectMyList.do";
+		location.href = "myList.do";
 	}
 </script>
 <body>
@@ -66,7 +66,7 @@
 	     <button class="nav-item nav-link" onClick="memberInfo();" role="tab" data-toggle="tab">회원정보 관리</button>
 	     <button class="nav-item nav-link" onClick="recommendList();" role="tab" data-toggle="tab">예매내역</button>
 	     <button class="nav-item nav-link" onClick="likeFesta();" role="tab" data-toggle="tab">관심축제</button>
-	     <button class="nav-item nav-link" onClick="myList();" role="tab" data-toggle="tab">내 게시물</button>
+	     <button class="nav-item nav-link" onClick="myList();" role="tab" data-toggle="tab">등록한 축제</button>
 	</div>
 </nav>
 

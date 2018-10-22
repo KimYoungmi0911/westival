@@ -34,30 +34,108 @@ public class MemberDao {
 	}
 
 	// 충섭
-	public Member selectMemberInfo(String user_id) {
-		return (Member) sqlSession.selectOne("memberMapper.selectMemberInfo", user_id);
-	}
-
+	// 회원정보 수정
 	public int updateMemberInfo(Member member) {
 		return sqlSession.update("memberMapper.updateMemberInfo", member);
 	}
 
+	// 회원정보 삭제
 	public int deleteMemberInfo(String user_id) {
 		return sqlSession.delete("memberMapper.deleteMemberInfo", user_id);
 	}
 
-	public ArrayList<Festival> selectMyList(Member member) {
-		return (ArrayList<Festival>) sqlSession.selectList("memberMapper.selectMemberTicketInfo", member);
+	// 내 게시글 페스티벌 삭제여부 'Y'로 전환
+	public int updateMyList(ArrayList<Integer> list) {
+		Map<String, ArrayList<Integer>> param = new HashMap<String, ArrayList<Integer>>();
+		param.put("list", list);
+		return (int) sqlSession.update("memberMapper.updateMyList", param);
+	}
+	
+	// 내 게시글 페스티벌 전체 조회
+	public ArrayList<Festival> MyTotalList(String user_id) {
+		if(user_id != null)
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myTotalList", user_id);
+		else
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myTotalListNonLogin");
+	}
+	
+	// 내 게시글 페스티벌 날짜 조회
+	public ArrayList<Festival> myListSearch(String start_date, String end_date, Member member) {
+		Map<Object, Object> param = new HashMap<Object, Object>();
+		param.put("start_date", start_date);
+		param.put("end_date", end_date);
+		String user_id = member.getUser_id();
+		if(user_id != null) {
+			param.put("user_id", user_id);
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myListSearch", param);
+		} else
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myListSearchNonLogin", param);
 	}
 
-	public int deleteMyList(Member member) {
-		return sqlSession.delete("memberMapper.deleteMyList", member);
+	// 내 게시글 페스티벌 날짜 조회(1,3,6개월)
+	public ArrayList<Festival> myListSearchMonth(int month, Member member) {
+		Map<Object, Object> param = new HashMap<Object, Object>();
+		param.put("month", month * (-1));
+		String user_id = member.getUser_id();
+		if(user_id != null) {
+			param.put("user_id", user_id);
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myListSearchMonth", param);
+		} else
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myListSearchMonthNonLogin", param);
+	}
+	
+	// 관심축제 스크랩 삭제
+	public int deleteMyFesta(ArrayList<Integer> list) {
+		Map<String, ArrayList<Integer>> param = new HashMap<String, ArrayList<Integer>>();
+		param.put("list", list);
+		return (int) sqlSession.delete("memberMapper.deleteMyFesta", param);
+	}
+	
+	// 관심축제 페스티벌 전체 조회
+	public ArrayList<Festival> MyLikeFestaList(String user_id) {
+		if(user_id != null)
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myLikeFestaList", user_id);
+		else
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myLikeFestaListNonLogin");
+	}
+
+	// 관심축제 페스티벌 날짜 조회
+	public ArrayList<Festival> myLikeFestaSearch(String start_date, String end_date, Member member) {
+		Map<Object, Object> param = new HashMap<Object, Object>();
+		param.put("start_date", start_date);
+		param.put("end_date", end_date);
+		String user_id = member.getUser_id();
+		if(user_id != null) {
+			param.put("user_id", user_id);
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myLikeFestaSearch", param);
+		} else
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myLikeFestaSearchNonLogin", param);
+	}
+
+	// 관심축제 페스티벌 날짜 조회(1,3,6개월)
+	public ArrayList<Festival> myLikeFestaSearchMonth(int month, Member member) {
+		Map<Object, Object> param = new HashMap<Object, Object>();
+		param.put("month", month * (-1));
+		String user_id = member.getUser_id();
+		if(user_id != null) {
+			param.put("user_id", user_id);
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myLikeFestaSearchMonth", param);
+		} else
+			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myLikeFestaSearchMonthNonLogin", param);
+	}
+	
+	// 내 예매내역 환불할 티켓 정보 조회
+	public Ticket myCurrentTicket(String ticket_no) {
+		return (Ticket)sqlSession.selectOne("memberMapper.myCurrentTicket", ticket_no);
 	}
 
 	// 경호
 	// 내 티켓 조회
 	public List<Ticket> recommendList(String user_id) {
-		return (List<Ticket>) sqlSession.selectList("ticketMapper.recommendList", user_id);
+		if(user_id != null)
+			return (List<Ticket>) sqlSession.selectList("ticketMapper.recommendList", user_id);
+		else
+			return (List<Ticket>) sqlSession.selectList("ticketMapper.recommendListNonLogin");
 	}
 
 	// 축제명 갖고오기
@@ -70,16 +148,23 @@ public class MemberDao {
 		Map<Object, Object> param = new HashMap<Object, Object>();
 		param.put("start_date", start_date);
 		param.put("end_date", end_date);
-		param.put("user_id", member.getUser_id());
-		return (List<Ticket>) sqlSession.selectList("ticketMapper.myTicketSearch", param);
+		String user_id = member.getUser_id();
+		if(user_id != null) {
+			param.put("user_id", user_id);
+			return (List<Ticket>) sqlSession.selectList("ticketMapper.myTicketSearch", param);
+		} else
+			return (List<Ticket>) sqlSession.selectList("ticketMapper.myTicketSearchNonLogin", param);
 	}
 
 	// 내 예매내역 티켓 날짜조회 (1,3,6개월)
 	public List<Ticket> myTicketSearchMonth(int month, Member member) {
 		Map<Object, Object> param = new HashMap<Object, Object>();
-		param.put("user_id", member.getUser_id());
 		param.put("month", month * (-1));
-		return (List<Ticket>) sqlSession.selectList("ticketMapper.myTicketSearchMonth", param);
+		String user_id = member.getUser_id();
+		if(user_id != null) {
+			param.put("user_id", user_id);
+			return (List<Ticket>) sqlSession.selectList("ticketMapper.myTicketSearchMonth", param);
+		} else
+			return (List<Ticket>) sqlSession.selectList("ticketMapper.myTicketSearchMonthNonLogin", param);
 	}
-
 }

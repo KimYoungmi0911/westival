@@ -1,6 +1,7 @@
 package org.kh.westival.member.model.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.member.model.dao.MemberDao;
@@ -35,31 +36,73 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	// 충섭
-	@Override
-	public Member selectMemberInfo(String user_id) {
-		return memberDao.selectMemberInfo(user_id);
-	}
-
+	// 회원정보 수정
 	@Override
 	public int updateMemberInfo(Member member) {
 		return memberDao.updateMemberInfo(member);
 	}
 
+	// 회원정보 삭제
 	@Override
 	public int deleteMemberInfo(String user_id) {
 		return memberDao.deleteMemberInfo(user_id);
 	}
 
+	// 내 게시글 페스티벌 삭제여부 'Y'로 전환
 	@Override
-	public ArrayList<Festival> selectMyList(Member member) {
-		return memberDao.selectMyList(member);
+	public int updateMyList(ArrayList<Integer> list) {
+		return memberDao.updateMyList(list);
+	}
+	
+	// 내 게시글 페스티벌 전체 조회
+	@Override
+	public List<Festival> myTotalList(String user_id) {
+		return (ArrayList<Festival>) memberDao.MyTotalList(user_id);
+	}
+	
+	// 내 게시글 페스티벌 날짜 검색
+	@Override
+	public List<Festival> myListSearch(String start_date, String end_date, Member member) {
+		return (ArrayList<Festival>) memberDao.myListSearch(start_date, end_date, member);
 	}
 
+	// 내 게시글 페스티벌 날짜 검색(1,3,6개월)
 	@Override
-	public int deleteMyList(Member member) {
-		return memberDao.deleteMyList(member);
+	public List<Festival> myListSearchMonth(int month, Member member) {
+		return (ArrayList<Festival>) memberDao.myListSearchMonth(month, member);
 	}
 
+	// 관심축제 스크랩 삭제
+	@Override
+	public int deleteMyFesta(ArrayList<Integer> list) {
+		return memberDao.deleteMyFesta(list);
+	}
+	
+	// 관심축제 페스티벌 전체 조회
+	@Override
+	public List<Festival> myLikeFestaList(String user_id) {
+		return (ArrayList<Festival>) memberDao.MyLikeFestaList(user_id);
+	}
+
+	// 관심축제 페스티벌 날짜 조회
+	@Override
+	public List<Festival> myLikeFestaSearch(String start_date, String end_date, Member member) {
+		return (ArrayList<Festival>) memberDao.myLikeFestaSearch(start_date, end_date, member);
+	}
+
+	// 관심축제 페스티벌 날짜 조회(1,3,6개월)
+	@Override
+	public List<Festival> myLikeFestaSearchMonth(int month, Member member) {
+		return (ArrayList<Festival>) memberDao.myLikeFestaSearchMonth(month, member);
+	}
+	
+	// 내 예매내역 환불할 티켓 정보 조회
+	@Override
+	public Ticket myCurrentTicket(String ticket_no) {
+		return memberDao.myCurrentTicket(ticket_no);
+	}
+
+	// 경호
 	// 내 티켓 조회
 	@Override
 	public ArrayList<Ticket> recommendList(String user_id) {

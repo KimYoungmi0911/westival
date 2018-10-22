@@ -252,7 +252,7 @@
 			<c:param name="user_id" value="${sessionScope.member.user_id }" />
 		</c:url>
 		<div class="contact_form_container">
-			<c:if test="${sessionScope.member != null }">
+			<c:if test="${sessionScope.member.user_id != null }">
 			<form action="updateMemberInfo.do" id="contact_form" class="contact_form text-center" method="post">
 				<div>
 					<h5>아이디</h5>
@@ -264,7 +264,7 @@
 				</div>
 				<div>
 					<h5>이메일</h5>
-					<p>${sessionScope.member.user_email }</p>
+					<input type="text" id="contact_form_email" name="user_email" class="contact_form_email input_field" placeholder="비밀번호" required="required" data-error="Email is required." value="${sessionScope.member.user_email }">
 				</div>
 				<div>
 					<h5>이름</h5>
@@ -301,9 +301,9 @@
 				}
 			</script>	
 			</c:if>
-			<c:if test="${sessionScope.member == null }">
+			<c:if test="${sessionScope.member.user_id == null }">
 				<div align="center" style="margin-top: 5%;"><img src="resources/images/logo1.PNG" alt="logo" width="20%" height="10%"></div>
-				<h3 style="text-align: center; margin-top: 5%;">로그인이 필요한 서비스 입니다.</h3>	
+				<h3 style="text-align: center; margin-top: 5%; margin-bottom: 5%;">로그인이 필요한 서비스 입니다.</h3>	
 			</c:if>
 		</div>
 	</div>
@@ -314,8 +314,8 @@
 <c:import url="/WEB-INF/views/footer.jsp" />
 
 <script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
-<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
-<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<!-- <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script> -->
 <script src="/westival/resources/plugins/parallax-js-master/parallax.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA"></script>
 <script src="/westival/resources/js/contact_custom.js"></script>
