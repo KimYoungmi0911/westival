@@ -29,7 +29,7 @@
 
 <script type="text/javascript">
 	
-	function locationSearch(){
+	function locationSearch(page){
 		
 		if($("#address").val()==0 || $("#start_date").val().length==0 
 				|| $("#end_date").val().length==0 || $(":checkbox[name='theme']:checked").length==0){
@@ -53,20 +53,26 @@
 		var address = $("#address").val();
 		var startDate = $("#start_date").val();
 		var endDate = $("#end_date").val();
+		var page = page;
 		
 		$.ajax({
 			url : "locationSearch.do",
-			data : { address : address, start_date : startDate, end_date : endDate, theme : theme },
+			data : { address : address, start_date : startDate, end_date : endDate, theme : theme, page : page },
 			type : "post",
 			dataType : "json",
 			success : function(result){	
 				// 1. 리턴된 객체를 문자열로 바꿈
 				var objStr = JSON.stringify(result);
 				// 2. 문자열을 json 객체로 바꿈
-				var jsonObj = JSON.parse(objStr);					
+				var jsonObj = JSON.parse(objStr);		
 				
-				var resultList="";
-				var scrap='';
+				var resultList='';
+				var scrap='';				
+				var paging = '';
+				var maxPage = jsonObj.maxPage;
+				var startPage = jsonObj.startPage;
+				var endPage = jsonObj.endPage;
+				var currentPage = jsonObj.currentPage;
 				
 				if(jsonObj.list.length==0){
 					$("#searchList").html("검색 결과가 없습니다.");
@@ -96,8 +102,45 @@
 								", 이미지 : " + jsonObj.list[i].new_img_name + ", 주소 : " + jsonObj.list[i].address +
 								", 시작날짜 : " + jsonObj.list[i].start_date + ", 종료날짜 : " + jsonObj.list[i].end_date +
 								", 테마 : " + jsonObj.list[i].theme + ", 태그 : " + jsonObj.list[i].tag + ", 추천수 : " + jsonObj.list[i].recommend); */
-					}			
-					$("#searchList").html(resultList);					
+					}
+					
+					if(currentPage <= 1){
+						paging += "[맨처음]&nbsp";
+					} else {
+						paging += "<a href='javascript:locationSearch(1);'>[맨처음]</a>";
+					}
+					
+					if( (currentPage-10 < startPage) && ((currentPage-10) > 1) ){
+						var page = startPage-10;
+						console.log("Page : " + page);
+						paging += "<a href='javascript:locationSearch(" + page + ");'>[이전]</a>";
+					} else{
+						paging += "[이전]&nbsp";
+					}
+					
+					for(var i=startPage ; i<=endPage ; i++){
+						if(i==currentPage){
+							paging += "<font color='red'>[" + i + "]</font>";
+						} else{
+							paging += "<a href='javascript:locationSearch(" + i + ");'>[" + i +"]</a>";
+						}
+					}
+					
+					if( ((currentPage+10) > endPage) && (currentPage+10) < maxPage ){
+						var page = endPage+10;
+						paging += "<a href='javascript:locationSearch(" + page + ");'>[다음]</a>";
+					} else{
+						paging += "[다음]&nbsp";
+					}
+					
+					if( currentPage >= maxPage){
+						paging += "[맨끝]&nbsp";
+					} else{
+						var page = maxPage;
+						paging += "<a href='javascript:locationSearch(" + page + ");'>[맨끝]</a>";
+					}
+
+					$("#searchList").html("<div class='offers_grid'>" + resultList + "<div align='center'>" + paging + "</div></div>");					
 				}
 			},
 			error : function(request, status, errorData){
@@ -108,7 +151,7 @@
 		
 	}
 
-	function tagSearch(){
+	function tagSearch(page){
 		
 		if($("#tag").val().length==0){
 			console.log("태그를 반드시 입력해주세요.");
@@ -116,14 +159,14 @@
 		} else{
 			
 			var tag = $("#tag").val();
+			var page = page;
 			
 			$.ajax({
 				url : "tagSearch.do",
-				data : { tag : tag },
+				data : { tag : tag, page : page },
 				type : "post",
 				dataType : "json",
 				success : function(result){	
-					console.log("ok");
 					// 1. 리턴된 객체를 문자열로 바꿈
 					var objStr = JSON.stringify(result);
 					// 2. 문자열을 json 객체로 바꿈
@@ -131,6 +174,11 @@
 					
 					var resultList="";
 					var scrap='';
+					var paging = '';
+					var maxPage = jsonObj.maxPage;
+					var startPage = jsonObj.startPage;
+					var endPage = jsonObj.endPage;
+					var currentPage = jsonObj.currentPage;
 
 					if(jsonObj.list.length==0){
 						$("#searchList").html("검색 결과가 없습니다.");
@@ -161,7 +209,43 @@
 									", 시작날짜 : " + jsonObj.list[i].start_date + ", 종료날짜 : " + jsonObj.list[i].end_date +
 									", 테마 : " + jsonObj.list[i].theme + ", 태그 : " + jsonObj.list[i].tag + ", 추천수 : " + jsonObj.list[i].recommend); */
 						}			
-						$("#searchList").html("<div class='offers_grid'>" + resultList + "</div>");					
+						if(currentPage <= 1){
+							paging += "[맨처음]&nbsp";
+						} else {
+							paging += "<a href='javascript:tagSearch(1);'>[맨처음]</a>";
+						}
+						
+						if( (currentPage-10 < startPage) && ((currentPage-10) > 1) ){
+							var page = startPage-10;
+							console.log("Page : " + page);
+							paging += "<a href='javascript:tagSearch(" + page + ");'>[이전]</a>";
+						} else{
+							paging += "[이전]&nbsp";
+						}
+						
+						for(var i=startPage ; i<=endPage ; i++){
+							if(i==currentPage){
+								paging += "<font color='red'>[" + i + "]</font>";
+							} else{
+								paging += "<a href='javascript:tagSearch(" + i + ");'>[" + i +"]</a>";
+							}
+						}
+						
+						if( ((currentPage+10) > endPage) && (currentPage+10) < maxPage ){
+							var page = endPage+10;
+							paging += "<a href='javascript:tagSearch(" + page + ");'>[다음]</a>";
+						} else{
+							paging += "[다음]&nbsp";
+						}
+						
+						if( currentPage >= maxPage){
+							paging += "[맨끝]&nbsp";
+						} else{
+							var page = maxPage;
+							paging += "<a href='javascript:tagSearch(" + page + ");'>[맨끝]</a>";
+						}
+
+						$("#searchList").html("<div class='offers_grid'>" + resultList + "<div align='center'>" + paging + "</div></div>");						
 					}
 				},
 				error : function(request, status, errorData){
@@ -196,11 +280,11 @@
 
 <body>
 
+<%-- <c:import url="/WEB-INF/views/header.jsp" /> --%>
 
 <div class="super_container">
 
-	<!-- Header -->
-	<%-- <c:import url="/WEB-INF/views/header.jsp" /> --%>
+
 	
 	<!-- Home -->
 	<div class="home">
@@ -212,7 +296,7 @@
 
 	<!-- Offers -->
 
-	<div class="offers" style="height:100vh;" >
+	<div class="offers" style="height:1500px;" >
 
 		<!-- Search -->
 
@@ -241,7 +325,7 @@
 									<div class="search_item">
 										<div>* 지역명</div>
 										<select name="address" id="address" class="destination search_input">
-										    <option value="">지역 선택</option>
+										    <option value="">지역을 선택해주세요.</option>
 										    <option value="강원">강원도</option>
 										    <option value="경기">경기도</option>
 										    <option value="경남">경상남도</option>
@@ -298,7 +382,7 @@
 											</li>
 										</ul>
 									</div>
-									<input type="submit" class="button search_button" value="검색하기" onclick="locationSearch(); return false;" >
+									<input type="submit" class="button search_button" value="검색하기" onclick="locationSearch(1); return false;" >
 								</form>
 							</div>
 
@@ -310,7 +394,7 @@
 										<div>* 태그</div>
 										<input type="text" id="tag" name="tag" class="destination search_input" >
 									</div>
-									<input type="submit" class="button search_button" value="검색하기" onclick="tagSearch(); return false;" >
+									<input type="submit" class="button search_button" value="검색하기" onclick="tagSearch(1); return false;" >
 								</form>
 							</div>
 
@@ -332,7 +416,7 @@
 					<div class="offers_grid" id="searchList" >
 					
 						
-					</div>
+					</div>					
 				</div>
 
 			</div>

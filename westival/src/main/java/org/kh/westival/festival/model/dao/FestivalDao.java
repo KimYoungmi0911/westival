@@ -34,9 +34,15 @@ public class FestivalDao {
 		return result;
 	}
 
-	public List<Festival> locationSearch(Festival festival) {
+	// 10/18수정
+	public List<Festival> locationSearch(Festival festival, int currentPage, int limit) {
+		int startRow = (currentPage - 1) * limit + 1;
+		int endRow = startRow + limit - 1;
+		
 		Map<Object, Object> param = new HashMap<Object, Object>();
 		
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
 		param.put("address", festival.getAddress());
 		param.put("start_date", festival.getStart_date());
 		param.put("end_date", festival.getEnd_date());
@@ -53,12 +59,16 @@ public class FestivalDao {
 		return (List) sqlSession.selectList("festivalMapper.locationSearch", param);
 	}
 
-	public List<Festival> tagSearch(Festival festival) {
-		return (List) sqlSession.selectList("festivalMapper.tagSearch", festival);
-	}
-
-	public List<Festival> todayFestivalSearch(Date currentDate) {
-		return (List) sqlSession.selectList("festivalMapper.todayFestivalSearch", currentDate);
+	public List<Festival> tagSearch(Festival festival, int currentPage, int limit) {
+		int startRow = (currentPage - 1) * limit + 1;
+		int endRow = startRow + limit - 1;
+		
+		Map<Object, Object> param = new HashMap<Object, Object>();
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
+		param.put("tag", festival.getTag());
+		
+		return (List) sqlSession.selectList("festivalMapper.tagSearch", param);
 	}
 
 	public List<Festival> top3FestivalSearch() {
@@ -144,6 +154,50 @@ public class FestivalDao {
 
 	public int deleteReply(int reply_no) {
 		return (int) sqlSession.delete("festivalMapper.deleteReply", reply_no);
+	}
+	
+	
+	/* 최경호 : 10/18 통합 이후 추가 */
+
+	// 메인 이달의 축제 페이징처리 
+	public int todayFestivalCount(Date currentDate) {
+		return (int) sqlSession.selectOne("festivalMapper.todayFestivalCount", currentDate);
+	}
+	// 메인 이달의 축제 페이지
+	public List<Festival> todayFestivalSearch(Date currentDate, int currentPage, int limit) {
+		int startRow = (currentPage - 1) * limit + 1;
+		int endRow = startRow + limit - 1;
+		
+		Map<Object, Object> param = new HashMap<Object, Object>();		
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
+		param.put("currentDate", currentDate);
+		
+		return (List) sqlSession.selectList("festivalMapper.todayFestivalSearch", param);
+	}
+	
+	// 위치 검색 페이징 처리
+	public int locationSearchCount(Festival festival) {
+		Map<Object, Object> param = new HashMap<Object, Object>();
+		
+		param.put("address", festival.getAddress());
+		param.put("start_date", festival.getStart_date());
+		param.put("end_date", festival.getEnd_date());
+		
+		String[] list = festival.getTheme().split(",");
+		
+		List<String> themeList = new ArrayList<String>();
+				
+		for(int i=0; i<list.length; i++){
+			themeList.add(list[i]);
+		}
+		param.put("theme_list", themeList);
+		
+		return (int) sqlSession.selectOne("festivalMapper.locationSearchCount", param);
+	}
+	// 태그 검색 페이징 처리
+	public int tagSearchCount(Festival festival) {
+		return (int) sqlSession.selectOne("festivalMapper.tagSearchCount", festival);
 	}
 
 
