@@ -22,14 +22,14 @@
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/responsive.css">
 
 <script type="text/javascript">
-	
-	$(function(){ 		
+
+	$(function(){
 		// 오늘의 축제
 		$.ajax({
 			url : "todayFestival.do",
-			type : "post",
+			type : "get",
 			dataType : "json",
-			success : function(result){					
+			success : function(result){
 				var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈				
 				var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈	
 				
@@ -37,22 +37,64 @@
 					console.log("검색 결과가 없습니다.");
 				
 				var todayFestival = '';
+				var paging = '';
 				
+				var maxPage = jsonObj.maxPage;
+				var startPage = jsonObj.startPage;
+				var endPage = jsonObj.endPage;
+				var currentPage = jsonObj.currentPage;
+				
+				// 페이징 정보
+				console.log("maxPage : " + maxPage + ", startPage : " + startPage + ", endPage : " + endPage + ", currentPage : " + currentPage);
+
 				for(var i in jsonObj.list){ 					
 					todayFestival += "<div class='col-lg-6 offers_col'><div class='offers_item'><div class='row'><div class='col-lg-6'><div class='offers_image_container'>"
 						+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name 
 						+ "); width:250px; height:280px;'></div></div></div><div class='col-lg-6'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name
-						+ "<span><br><br>" + jsonObj.list[i].end_date + "일 까지</span></div><p class='offers_text' style='width:200px; height:150px;'>"
-						+ "테마 : " + jsonObj.list[i].theme + "<br>태그 : " + jsonObj.list[i].tag + "<br></p><div class='offers_link'><a href='#'>자세히 보기</a></div>"
+						+ "<span><br><br>" + jsonObj.list[i].end_date + "일 까지</span></div><p class='offers_text' style='width:200px; height:50px;'>" + "테마 : " + jsonObj.list[i].theme 
+						+ "<br>태그 : " + jsonObj.list[i].tag + "<br></p><div class='offers_link'>" + "<a href='Info.do?no=" + jsonObj.list[i].no + "'>자세히 보기</a></div>"
 						+ "</div></div></div></div></div>";
-							
-					console.log("축제번호 : " + jsonObj.list[i].no + ", 축제명 : " + jsonObj.list[i].name +
-							", 이미지 : " + jsonObj.list[i].new_img_name + ", 주소 : " + jsonObj.list[i].address +
-							", 시작날짜 : " + jsonObj.list[i].start_date + ", 종료날짜 : " + jsonObj.list[i].end_date +
-							", 테마 : " + jsonObj.list[i].theme + ", 태그 : " + jsonObj.list[i].tag);
-				}	
+				}
 				
-				$("#todayFestival").html(todayFestival);				
+				if(currentPage <= 1){
+					paging += "[맨처음]&nbsp";
+				} else {
+					paging += "<a href='javascript:todayPaging(1);'>[맨처음]</a>";
+				}
+				
+				if( (currentPage-10 < startPage) && ((currentPage-10) > 1) ){
+					var page = startPage-10;
+					console.log("Page : " + page);
+					paging += "<a href='javascript:todayPaging(" + page + ");'>[이전]</a>";
+				} else{
+					paging += "[이전]&nbsp";
+				}
+				
+				for(var i=startPage ; i<=endPage ; i++){
+					if(i==currentPage){
+						paging += "<font color='red'>[" + i + "]</font>";
+					} else{
+						paging += "<a href='javascript:todayPaging(" + i + ");'>[" + i +"]</a>";
+					}
+				}
+				
+				if( ((currentPage+10) > endPage) && (currentPage+10) < maxPage ){
+					var page = endPage+10;
+					paging += "<a href='javascript:todayPaging(" + page + ");'>[다음]</a>";
+				} else{
+					paging += "[다음]&nbsp";
+				}
+				
+				if( currentPage >= maxPage){
+					paging += "[맨끝]&nbsp";
+				} else{
+					var page = maxPage;
+					paging += "<a href='javascript:todayPaging(" + page + ");'>[맨끝]</a>";
+				}
+				
+				$("#todayFestival").html(todayFestival);	
+				$("#todayFestivalPaging").html(paging);	
+				
 			},
 			error : function(request, status, errorData){
 				alert("error code : " + request.status + "\n" + "message : " + request.responseText 
@@ -81,12 +123,8 @@
 						+ "<div class='intro_item_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" 
 						+ jsonObj.list[i].new_img_name + ")'></div><div class='intro_item_content d-flex flex-column align-items-center justify-content-center'>"
 						+ "<div class='intro_date'>" + jsonObj.list[i].start_date + " ~ " + jsonObj.list[i].end_date + "</div><div class='button intro_button'>"
-						+ "<div class='button_bcg'></div><a href='#'>더보기</a></div><div class='intro_center text-center'><h1>" + jsonObj.list[i].name
-						+ "</h1><div class='intro_price'>" + jsonObj.list[i].address + "</div></div></div></div></div>"; 
-					/* console.log("축제번호 : " + jsonObj.list[i].no + ", 축제명 : " + jsonObj.list[i].name +
-							", 이미지 : " + jsonObj.list[i].new_img_name + ", 주소 : " + jsonObj.list[i].address +
-							", 시작날짜 : " + jsonObj.list[i].start_date + ", 종료날짜 : " + jsonObj.list[i].end_date +
-							", 테마 : " + jsonObj.list[i].theme + ", 태그 : " + jsonObj.list[i].tag); */
+						+ "<div class='button_bcg'></div><a href='Info.do?no=" + jsonObj.list[i].no + "'>더보기</a></div><div class='intro_center text-center'><h1>" 
+						+ jsonObj.list[i].name + "</h1><div class='intro_price'>" + jsonObj.list[i].address + "</div></div></div></div></div>"; 
 				}
 				$("#top3").html(top3);
 			},
@@ -97,6 +135,89 @@
 		});
   
 	});
+	
+	function todayPaging(page){
+		var page = page;
+		console.log(page);
+		$.ajax({
+			url : "todayFestival.do",
+			type : "get",
+			data : {page : page},
+			dataType : "json",
+			success : function(result){
+				var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈				
+				var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈	
+				
+				if(jsonObj.list.length==0)
+					console.log("검색 결과가 없습니다.");
+				
+				var todayFestival = '';
+				var paging = '';
+				
+				var maxPage = jsonObj.maxPage;
+				var startPage = jsonObj.startPage;
+				var endPage = jsonObj.endPage;
+				var currentPage = jsonObj.currentPage;
+				
+				// 페이징 정보
+				console.log("maxPage : " + maxPage + ", startPage : " + startPage + ", endPage : " + endPage + ", currentPage : " + currentPage);
+
+				for(var i in jsonObj.list){ 					
+					todayFestival += "<div class='col-lg-6 offers_col'><div class='offers_item'><div class='row'><div class='col-lg-6'><div class='offers_image_container'>"
+						+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name 
+						+ "); width:250px; height:280px;'></div></div></div><div class='col-lg-6'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name
+						+ "<span><br><br>" + jsonObj.list[i].end_date + "일 까지</span></div><p class='offers_text' style='width:200px; height:50px;'>" + "테마 : " + jsonObj.list[i].theme 
+						+ "<br>태그 : " + jsonObj.list[i].tag + "<br></p><div class='offers_link'>" + "<a href='Info.do?no=" + jsonObj.list[i].no + "'>자세히 보기</a></div>"
+						+ "</div></div></div></div></div>";
+				}
+				
+				if(currentPage <= 1){
+					paging += "[맨처음]&nbsp";
+				} else {
+					paging += "<a href='javascript:todayPaging(1);'>[맨처음]</a>";
+				}
+				
+				if( (currentPage-10 < startPage) && ((currentPage-10) > 1) ){
+					var page = startPage-10;
+					console.log("Page : " + page);
+					paging += "<a href='javascript:todayPaging(" + page + ");'>[이전]</a>";
+				} else{
+					paging += "[이전]&nbsp";
+				}
+				
+				for(var i=startPage ; i<=endPage ; i++){
+					if(i==currentPage){
+						paging += "<font color='red'>[" + i + "]</font>";
+					} else{
+						paging += "<a href='javascript:todayPaging(" + i + ");'>[" + i +"]</a>";
+					}
+				}
+				
+				if( ((currentPage+10) > endPage) && (currentPage+10) < maxPage ){
+					var page = endPage+10;
+					paging += "<a href='javascript:todayPaging(" + page + ");'>[다음]</a>";
+				} else{
+					paging += "[다음]&nbsp";
+				}
+				
+				if( currentPage >= maxPage){
+					paging += "[맨끝]&nbsp";
+				} else{
+					var page = maxPage;
+					paging += "<a href='javascript:todayPaging(" + page + ");'>[맨끝]</a>";
+				}
+				
+				$("#todayFestival").html(todayFestival);	
+				$("#todayFestivalPaging").html(paging);	
+				
+			},
+			error : function(request, status, errorData){
+				alert("error code : " + request.status + "\n" + "message : " + request.responseText 
+						+ "\n" + "error : " + errorData);
+			} 
+		});
+	}
+	
 	
 </script>
 
@@ -214,6 +335,7 @@
 				</div>
 			</div>
 			<div class="row offers_items" id="todayFestival"></div>
+			<div align="center" id="todayFestivalPaging"></div>
 		</div>
 	</div>
 

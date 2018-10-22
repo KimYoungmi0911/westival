@@ -111,6 +111,18 @@
 	.home_background {
 		position:relative;
 	}
+	
+	#a_ticket, #a_tag{
+		background-color:#f1f1f1;
+	}
+	
+	/* 스크롤 제거 */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;             
+        margin: 0;         
+    } 
+
 
 </style>
 
@@ -206,7 +218,7 @@
 			} else if($("#m_ticket_quantity").val()< 10 ) {
 				alert("티켓 수량을 확인해주세요.");
 				return false;
-			} else if($("#m_company_no").val() < 999999999) {
+			} else if($("#m_company_no").val() < 999999999 || $("#m_company_no").val() > 10000000000 ) {
 				alert("사업자번호를 확인해주세요.");
 				return false;
 			} else{
@@ -272,7 +284,7 @@
 </head>
 <body>
 
-<c:import url="/WEB-INF/views/header.jsp" /> 
+<c:import url="/WEB-INF/views/header.jsp" />
 
 <div class="super_container">
 	
@@ -325,7 +337,7 @@
 						        	* 주최/주관<input type="text" class="form-1" id="manage" name="manage" required><br>
 						        	티켓 등록
 						        	<div class="form-inline form group" align="left">
-						        		<a id="a_ticket" data-toggle="modal" data-target="#ticketModal" class="center-block">티켓 등록</a>
+						        		<a id="a_ticket" data-toggle="modal" data-target="#ticketModal" class="center-block btn">티켓 등록</a>
 						        		&nbsp;&nbsp;
 						        		<div id="ticketDiv" style="font-family:'Open Sans', sans-serif;">티켓이 등록되지 않았습니다.</div>
 							    	</div>
@@ -335,7 +347,7 @@
 							    	 태그
 							    	 <div class="form-inline form group" align="left">
 							    	 	<div class="tag_area" id="tag_area" style="width:80%;"></div>&nbsp;
-						        		<a id="a_tag" data-toggle="modal" data-target="#tagModal" class="center-block">태그 등록</a>
+						        		<a id="a_tag" data-toggle="modal" data-target="#tagModal" class="center-block btn">태그 등록</a>
 						        		<input type="hidden" id="tag" name="tag" value="">
 							    	 </div>
 								</div>

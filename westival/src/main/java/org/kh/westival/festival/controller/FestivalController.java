@@ -185,8 +185,8 @@ public class FestivalController {
 		mv.setViewName("festival/searchFestival");
 		return mv;
 	}
-
-	// 지역 별 축제 검색
+	
+	// 지역 별 축제 검색 (10/18이후 수정)
 	@RequestMapping(value = "locationSearch.do", method = RequestMethod.POST)
 	public void locationSearchMethod(HttpServletResponse response, HttpServletRequest request, Festival festival)
 			throws IOException {
@@ -194,8 +194,24 @@ public class FestivalController {
 		String user_id = null;
 		if ((request.getSession().getAttribute("member")) != null)
 			user_id = ((Member) request.getSession().getAttribute("member")).getUser_id();
-
-		List<Festival> list = festivalService.locationSearch(festival);
+		
+		int currentPage = Integer.parseInt(request.getParameter("page")); // 보이는 페이지
+		int limit = 4; // 한 페이지당 최대 4개
+		
+		int listCount = festivalService.locationSearchCount(festival); // 총 출력 갯수
+		System.out.println("locationSearchCount : " + listCount);		
+		
+		int maxPage =(int)((double)listCount / limit + 0.9); // 총 페이지수 계산
+		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1; // 시작 페이지 수 (1, 11, 21...);
+		int endPage = startPage + ((listCount-1) / limit) ; // 끝 페이지 수 (10, 20, 30....);
+		
+		if(maxPage < endPage)
+			endPage = maxPage;	
+		
+		System.out.println("현재 페이지 : " + currentPage + ", 총 출력갯수 : " + listCount + ", 총 페이지수 : " + maxPage 
+				+", 시작페이지 : " + startPage +", 끝 페이지 : " + endPage);
+		
+		List<Festival> list = festivalService.locationSearch(festival, currentPage, limit); // 페이지에 출력 될 리스트
 
 		JSONArray jarr = new JSONArray(); // json 배열 객체 생성
 		for (Festival fest : list) {
@@ -205,9 +221,6 @@ public class FestivalController {
 			job.put("new_img_name", fest.getNew_img_name()); // 축제사진
 			job.put("address", fest.getAddress()); // 장소
 			job.put("start_date", fest.getStart_date().toString()); // date 형
-																	// 받아올 때
-																	// toString
-																	// 해줌
 			job.put("end_date", fest.getEnd_date().toString());
 			job.put("theme", fest.getTheme());
 			job.put("tag", fest.getTag());
@@ -228,6 +241,10 @@ public class FestivalController {
 
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
+		sendJson.put("currentPage", currentPage);
 
 		// 직접 요청자에게 내보내기
 		response.setContentType("application/json; charset=UTF-8");
@@ -236,7 +253,6 @@ public class FestivalController {
 		out.flush();
 		out.close();
 	}
-
 	// 태그 별 축제 검색
 	@RequestMapping(value = "tagSearch.do", method = RequestMethod.POST)
 	public void tagSearchMethod(HttpServletResponse response, HttpServletRequest request, Festival festival)
@@ -245,8 +261,24 @@ public class FestivalController {
 		String user_id = null;
 		if ((request.getSession().getAttribute("member")) != null)
 			user_id = ((Member) request.getSession().getAttribute("member")).getUser_id();
-
-		List<Festival> list = festivalService.tagSearch(festival);
+		
+		int currentPage = Integer.parseInt(request.getParameter("page")); // 보이는 페이지
+		int limit = 4; // 한 페이지당 최대 4개
+		int listCount = festivalService.tagSearchCount(festival); // 총 출력 갯수
+		System.out.println("tagSearchCount : " + listCount);		
+		
+		int maxPage =(int)((double)listCount / limit + 0.9); // 총 페이지수 계산
+		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1; // 시작 페이지 수 (1, 11, 21...);
+		int endPage = startPage + ((listCount-1) / limit) ; // 끝 페이지 수 (10, 20, 30....);
+		
+		if(maxPage < endPage)
+			endPage = maxPage;	
+		
+		System.out.println("현재 페이지 : " + currentPage + ", 총 출력갯수 : " + listCount + ", 총 페이지수 : " + maxPage 
+				+", 시작페이지 : " + startPage +", 끝 페이지 : " + endPage);
+		
+		List<Festival> list = festivalService.tagSearch(festival, currentPage, limit); // 페이지에 출력될 리스트
+		System.out.println(list.size());
 
 		JSONArray jarr = new JSONArray(); // json 배열 객체 생성
 		for (Festival fest : list) {
@@ -255,10 +287,7 @@ public class FestivalController {
 			job.put("name", fest.getName()); // 축제명
 			job.put("new_img_name", fest.getNew_img_name()); // 축제사진
 			job.put("address", fest.getAddress()); // 장소
-			job.put("start_date", fest.getStart_date().toString()); // date 형
-																	// 받아올 때
-																	// toString
-																	// 해줌
+			job.put("start_date", fest.getStart_date().toString()); 
 			job.put("end_date", fest.getEnd_date().toString());
 			job.put("theme", fest.getTheme());
 			job.put("tag", fest.getTag());
@@ -280,6 +309,10 @@ public class FestivalController {
 
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
+		sendJson.put("currentPage", currentPage);
 
 		// 직접 요청자에게 내보내기
 		response.setContentType("application/json; charset=UTF-8");
@@ -290,14 +323,34 @@ public class FestivalController {
 	}
 
 	// 이달의 축제 (메인)
-	@RequestMapping(value = "todayFestival.do", method = RequestMethod.POST)
-	public void todayFestivalMethod(HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "todayFestival.do")
+	public void todayFestivalMethod(HttpServletResponse response, HttpServletRequest request) throws IOException {
 
 		Date date = new Date();
 		java.sql.Date currentDate = new java.sql.Date(date.getTime());
-
-		List<Festival> list = festivalService.todayFestivalSearch(currentDate);
-
+		
+		int currentPage = 1; // 1페이지 보이게
+		int limit = 4; // 한 페이지당 최대 4개
+		
+		if(request.getParameter("page") != null){ // 현재 페이지 설정
+			currentPage = Integer.parseInt(request.getParameter("page")); 
+		}
+	
+		int listCount = festivalService.todayFestivalCount(currentDate); // 총 출력 갯수
+		
+		int maxPage =(int)((double)listCount / limit + 0.9); // 총 페이지수 계산
+		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1; // 시작 페이지 수 (1, 11, 21...);
+		int endPage = startPage + ((listCount-1) / limit) ; // 끝 페이지 수 (10, 20, 30....);
+		
+		if(maxPage < endPage)
+			endPage = maxPage;	
+		
+		System.out.println("현재 페이지 : " + currentPage + ", 총 출력갯수 : " + listCount + ", 총 페이지수 : " + maxPage 
+				+", 시작페이지 : " + startPage +", 끝 페이지 : " + endPage);
+		
+		List<Festival> list = festivalService.todayFestivalSearch(currentDate, currentPage, limit); // 해당 페이지에 보여질 목록
+		System.out.println(list);
+		
 		JSONArray jarr = new JSONArray(); // json 배열 객체 생성
 		for (Festival fest : list) {
 			JSONObject job = new JSONObject();
@@ -305,10 +358,7 @@ public class FestivalController {
 			job.put("name", fest.getName()); // 축제명
 			job.put("new_img_name", fest.getNew_img_name()); // 축제사진
 			job.put("address", fest.getAddress()); // 장소
-			job.put("start_date", fest.getStart_date().toString()); // date 형
-																	// 받아올 때
-																	// toString
-																	// 해줌
+			job.put("start_date", fest.getStart_date().toString()); // date 형 받아올 때 toString
 			job.put("end_date", fest.getEnd_date().toString());
 			job.put("theme", fest.getTheme());
 			job.put("tag", fest.getTag());
@@ -318,6 +368,10 @@ public class FestivalController {
 
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
+		sendJson.put("currentPage", currentPage);
 
 		// 직접 요청자에게 내보내기
 		response.setContentType("application/json; charset=UTF-8");
@@ -590,4 +644,5 @@ public class FestivalController {
 		out.flush();
 		out.close();
 	}
+
 }
