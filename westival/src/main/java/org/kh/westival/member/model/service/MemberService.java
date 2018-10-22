@@ -17,15 +17,38 @@ public interface MemberService {
 	Member checkId(Member member);
 
 	// 충섭
-	Member selectMemberInfo(String user_id);
-
+	// 회원정보 수정
 	int updateMemberInfo(Member member);
 
+	// 회원정보 삭제
 	int deleteMemberInfo(String user_id);
 
-	ArrayList<Festival> selectMyList(Member member);
+	// 내 게시글 페스티벌 삭제여부 'Y'로 전환
+	int updateMyList(ArrayList<Integer> list);
+	
+	// 내 게시글 페스티벌 전체 조회
+	List<Festival> myTotalList(String user_id);
+	
+	// 내 게시글 페스티벌 날짜조회
+	List<Festival> myListSearch(String start_date, String end_date, Member member);
 
-	int deleteMyList(Member member);
+	// 내 게시글 페스티벌 날짜조회 (1,3,6개월)
+	List<Festival> myListSearchMonth(int month, Member member);
+
+	// 관심축제 스크랩 삭제
+	int deleteMyFesta(ArrayList<Integer> list);
+	
+	// 관심축제 전체 조회
+	List<Festival> myLikeFestaList(String user_id);
+	
+	// 관심축제 페스티벌 날짜조회
+	List<Festival> myLikeFestaSearch(String start_date, String end_date, Member member);
+
+	// 관심축제 페스티벌 날짜조회(1,3,6개월)
+	List<Festival> myLikeFestaSearchMonth(int month, Member member);
+	
+	// 내 예매내역 환불할 티켓 정보 조회
+	Ticket myCurrentTicket(String ticket_no);
 
 	// 경호
 	// 마이페이지 내 예매내역
@@ -40,4 +63,6 @@ public interface MemberService {
 	// 내 예매내역 티켓 날짜조회 (1,3,6개월)
 	List<Ticket> myTicketSearchMonth(int month, Member member);
 
+	/*// 
+	int refundCurrentTicket(String param);*/
 }

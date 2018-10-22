@@ -16,6 +16,26 @@
 		<result property="user_gender" column="user_gender" />
 		<result property="user_confirm_check" column="user_confirm_check" />
 	</resultMap>
+	
+	<resultMap type="Festival" id="resultFestival">
+		<id property="no" column="no" />
+		<result property="reg_user" column="reg_user" />
+		<result property="name" column="name" />
+		<result property="address" column="address" />
+		<result property="original_img_name" column="original_img_name" />
+		<result property="new_img_name" column="new_img_name" />
+		<result property="content" column="content" />
+		<result property="start_date" column="start_date" />
+		<result property="end_date" column="end_date" />
+		<result property="theme" column="theme" />
+		<result property="telephone" column="telephone" />
+		<result property="manage" column="manage" />
+		<result property="ticket" column="ticket" />
+		<result property="file_name" column="file_name" />
+		<result property="tag" column="tag" />
+		<result property="read_count" column="read_count" />
+		<result property="recommend" column="recommend" />
+	</resultMap>
 
 	<select id="loginCheck" parameterType="Member" resultMap="resultMember">
 		<![CDATA[
@@ -38,36 +58,146 @@
 	</select>
 	
 	<!-- 충섭 -->	
-	<select id="selectMemberInfo" parameterType="string" resultType="Member">
-		select * from tb_user where user_id = #{user_id}
-	</select>
-	
+	<!-- 회원정보 수정 -->
 	<update id="updateMemberInfo" parameterType="Member">
 		update tb_user
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="user_pwd != null">user_pwd = #{user_pwd},</if>
 			<if test="user_phone != null">user_phone = #{user_phone},</if>
-			<if test="user_address != null">user_address = #{user_address}</if>
+			<if test="user_address != null">user_address = #{user_address},</if>
+			<if test="user_email != null">user_email = #{user_email}</if>
 		</trim>
 		where user_id = #{user_id}
 	</update>
 		
+	<!-- 회원정보 삭제 -->	
 	<delete id="deleteMemberInfo" parameterType="string">
 		delete from tb_user where user_id = #{user_id}
 	</delete>
 	
-	<select id="selectMemberTicketInfo" parameterType="Member" resultType="Festival">
-		select new_img_name, no, name, address, content, start_date, end_date, manage from tb_festival
-		<if test="user_id != null">where reg_user = #{user_id}</if>
-	</select>
-	
- 	<delete id="deleteMemberTicketInfo" parameterType="Member">
-		delete from tb_festival where reg_user = #{user_id}
-	</delete>
+	<!-- 내 게시글 페스티벌 삭제여부 'Y'로 전환 -->
+ 	<update id="updateMyList" parameterType="java.util.Map" flushCache="true" statementType="PREPARED">
+		update tb_festival set delete_check = 'Y'
+		<if test="list != null">
+			where no = 
+			<foreach collection="list" item="item" separator=" or no=">
+				#{item}
+			</foreach>
+		</if>
+	</update>
 	
 	<!-- 마이페이지 예매 내역 -->
-	<select id="recommendList" resultType="Member" parameterType="string">
+	<select id="recommendList" resultType="Member" parameterType="list">
 		select * from tb_ticket where user_id = #{user_id}
 	</select>
-
+	
+	<!-- 내 게시글 페스티벌 전체 조회 -->
+	<select id="myTotalList" parameterType="string" resultMap="resultFestival">
+		select * from tb_festival where reg_user = #{user_id} and delete_check = 'N'
+	</select>
+	
+	<select id="myTotalListNonLogin" resultMap="resultFestival">
+		select * from tb_festival where delete_check = 'N'
+	</select>
+	
+	<!-- 내 게시글 페스티벌 날짜 조회 -->
+	<select id="myListSearch" parameterType="java.util.HashMap" resultMap="resultFestival">
+		<![CDATA[
+		select * from tb_festival
+		where reg_user = #{user_id}
+		and start_date >= #{start_date} and end_date <= #{end_date}
+		]]>
+	</select>
+	
+	<select id="myListSearchNonLogin" parameterType="java.util.HashMap" resultMap="resultFestival">
+		<![CDATA[
+		select * from tb_festival
+		and start_date >= #{start_date} and end_date <= #{end_date}
+		]]>
+	</select>
+	
+	<!-- 내 게시글 페스티벌 날짜 조회(1,3,6개월) -->
+	<select id="myListSearchMonth" parameterType="java.util.HashMap" resultMap="resultFestival">
+		<![CDATA[
+		select * from tb_festival
+		where reg_user = #{user_id}
+		and start_date >= add_months(sysdate, #{month}) and end_date <= sysdate
+		]]>
+	</select>
+	
+	<select id="myListSearchMonthNonLogin" parameterType="java.util.HashMap" resultMap="resultFestival">
+		<![CDATA[
+		select * from tb_festival
+		where start_date >= add_months(sysdate, #{month}) and end_date <= sysdate
+		]]>
+	</select>
+	
+	<!-- 관심축제 스크랩 삭제 -->
+	<delete id="deleteMyFesta" parameterType="java.util.Map" flushCache="true" statementType="PREPARED">
+		delete from tb_scrap
+		<if test="list != null">
+			where no = 
+			<foreach collection="list" item="item" separator=" or no=">
+				#{item}
+			</foreach>
+		</if>
+	</delete>
+	
+	<!-- 관심축제 페스티벌 전체 조회 -->
+	<select id="myLikeFestaList" parameterType="string" resultMap="resultFestival">
+		select no, name, address, new_img_name, start_date, end_date, manage, content, delete_check
+		from tb_festival
+		join tb_scrap using (no)
+		where user_id = #{user_id} and delete_check = 'N'
+	</select>
+	
+	<select id="myLikeFestaListNonLogin" resultMap="resultFestival">
+		select no, name, address, new_img_name, start_date, end_date, manage, content, delete_check
+		from tb_festival
+		join tb_scrap using (no)
+		where delete_check = 'N'
+	</select>
+	
+	<!-- 관심축제 페스티벌 날짜 조회 -->
+	<select id="myLikeFestaSearch" parameterType="java.util.HashMap" resultMap="resultFestival">
+		<![CDATA[
+		select no, name, address, new_img_name, start_date, end_date, manage, content, delete_check
+		from tb_festival
+		join tb_scrap using (no)
+		where user_id = 'user01' and delete_check = 'N'
+		and start_date >= #{start_date} and end_date <= #{end_date}
+		]]>
+	</select>
+	
+	<select id="myLikeFestaSearchNonLogin" parameterType="java.util.HashMap" resultMap="resultFestival">
+		<![CDATA[
+		select no, name, address, new_img_name, start_date, end_date, manage, content, delete_check
+		from tb_festival
+		join tb_scrap using (no)
+		where delete_check = 'N' and start_date >= #{start_date} and end_date <= #{end_date}
+		]]>
+	</select>
+	
+	<!-- 관심축제 페스티벌 날짜 조회(1,3,6개월) -->
+	<select id="myLikeFestaSearchMonth" parameterType="java.util.HashMap" resultMap="resultFestival">
+		<![CDATA[
+		select no, name, address, new_img_name, start_date, end_date, manage, content, delete_check
+		from tb_festival join tb_scrap using (no)
+		where user_id = #{user_id} and delete_check = 'N' 
+		and start_date >= add_months(sysdate, #{month}) and end_date <= sysdate
+		]]>
+	</select>
+	
+	<select id="myLikeFestaSearchMonthNonLogin" parameterType="java.util.HashMap" resultMap="resultFestival">
+		<![CDATA[
+		select no, name, address, new_img_name, start_date, end_date, manage, content, delete_check
+		from tb_festival join tb_scrap using (no)
+		where delete_check = 'N' and start_date >= add_months(sysdate, #{month}) and end_date <= sysdate
+		]]>
+	</select>
+	
+	<!-- 내 예매내역 환불할 티켓 정보 조회 -->
+	<select id="myCurrentTicket" parameterType="string" resultType="Ticket">
+		select * from tb_ticket where ticket_no = #{ticket_no}
+	</select>
 </mapper>
