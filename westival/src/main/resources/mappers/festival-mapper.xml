@@ -224,16 +224,33 @@
 		flushCache="true" statementType="PREPARED">
 		<![CDATA[delete from tb_recommend where user_id = #{user_id} and no = #{no}]]>
 	</delete>
+	
+	<select id="selectTotalValueFes" parameterType="_int" resultType="_int">
+		select NVL(count(b.user_gender), 0) from tb_recommend a
+		join tb_user b
+		on a.user_id = b.user_id
+		where a.no = #{no}
+	</select>
+	
+	<select id="selectMaleValueFes" parameterType="_int" resultType="_int">
+		select NVL(count(b.user_gender), 0) from tb_recommend a
+		join tb_user b
+		on a.user_id = b.user_id
+		where a.no = #{no} and b.user_gender = 'M'
+	</select>
+	
+	<select id="selectFemaleValueFes" parameterType="_int" resultType="_int">
+		select NVL(count(b.user_gender), 0) from tb_recommend a
+		join tb_user b
+		on a.user_id = b.user_id
+		where a.no = #{no} and b.user_gender = 'F'
+	</select>
 
 	<!-- 경호 -->
 	<select id="selectFestivalName" parameterType="_int" resultType="string">
 		select name from tb_festival where no = #{no}
 	</select>
-	
-	
-	
-	
-	
+
 	<!-- 최경호 10/18 이후 추가 -->
 
 	<!-- 오늘의 축제 페이징 -->
