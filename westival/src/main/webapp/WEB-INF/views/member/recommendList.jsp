@@ -271,7 +271,6 @@
 <script type="text/javascript">
 	
 	$(function(){
-		
 		$.ajax({
 			url : "myTicketList.do",
 			type : "post",
@@ -279,32 +278,99 @@
 			success : function(result){					
 				var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈				
 				var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈	
+				var myTicketList = '';
+				var idx = -1;
+				
+				if(jsonObj.list.length==0) {
+					console.log("검색 결과가 없습니다.");
+					myTicketList += "<div align='center' style='margin-top: 5%;'><img src='resources/images/logo1.PNG' alt='logo' width='20%' height='10%'></div>"
+						+ "<h3 style='text-align: center; margin-top: 5%; margin-bottom: 5%;'>검색 결과가 없습니다.</h3>";	
+				} else {
+					for(var i in jsonObj.list){
+						idx += 1;
+						myTicketList += "<div class='tbody_tr'><div class='recommend_no'><p>" + jsonObj.list[i].ticket_no + "</p></div><div class='recommend_date'><p>" 
+							+ jsonObj.list[i].ticket_date + "</p></div><div class='recommend_name'><p>" + jsonObj.list[i].festival_name
+							+ "</p></div><div class='recommend_count'><p>" + jsonObj.list[i].ticket_count + "</p></div><div class='recommend_credit'><p>"
+							+ jsonObj.list[i].price + "</p></div><div class='recommend_refund'>";
+						if(jsonObj.list[i].state == "환불완료")
+							myTicketList += "<button class='btn' data-toggle='modal' data-target='#myModal' style='background-color: #350a4e;' disabled>환불완료</button></div></div>";
+						else
+							myTicketList += "<button class='btn refundBtn' data-toggle='modal' data-target='#myModal' onclick='javascript:refundFn(" + idx + ");'>환불요청</button></div></div>";
+					}
+				}
+				$("#myTicket").html(myTicketList);
+			},
+			error : function(request, status, errorData){
+				alert("error code : " + request.status + "\n" + "message : " + request.responseText 
+						+ "\n" + "error : " + errorData);
+			}
+		});
+		
+		$("#confirm_check").on("click", function() {
+			if($("#confirm_check").is(":checked"))
+				$("#refund_submit_btn").attr("disabled", false);
+			else
+				$("#refund_submit_btn").attr("disabled", true);
+		});
+	});
+	
+	function refundFn(idx) { 
+		var ticketNo = $(".tbody_tr").eq(idx).children(":first").children().text();
+		
+		$.ajax({
+			url : "myCurrentTicket.do",
+			type : "post",
+			data : {ticket_no : ticketNo},
+			dataType : "json",
+			success : function(result){
+				var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈				
+				var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈	
 			
 				if(jsonObj.list.length==0)
 					console.log("검색 결과가 없습니다.");
 				
-				var myTicketList = '';
+				var myCurrentTicket = '';
 				
-				for(var i in jsonObj.list){
-					myTicketList += "<div class='tbody_tr'><div class='recommend_no'><p>" + jsonObj.list[i].ticket_no + "</p></div><div class='recommend_date'><p>" 
-						+ jsonObj.list[i].ticket_date + "</p></div><div class='recommend_name'><p>" + jsonObj.list[i].festival_name
-						+ "</p></div><div class='recommend_count'><p>" + jsonObj.list[i].ticket_count + "</p></div><div class='recommend_credit'><p>"
-						+ jsonObj.list[i].price + "</p></div><div class='recommend_refund'>"
-						+ "<button class='btn' data-toggle='modal' data-target='#myModal'>환불요청</button></div></div>";
-					
+				for(var i in jsonObj.list) {
+					myCurrentTicket += "<div class='modal_recommend_no' id='modal_recommend_no'>" + jsonObj.list[i].ticket_no + "</div><div class='modal_recommend_date' id='modal_recommend_date'>"
+						+ jsonObj.list[i].ticket_date + "</div><div class='modal_recommend_name' id='modal_recommend_name'><p>" + jsonObj.list[i].festival_name
+						+ "</p></div><div class='modal_recommend_count' id='modal_recommend_count'>" + jsonObj.list[i].ticket_count + "</div><div class='modal_recommend_credit' id='modal_recommend_credit'>" + jsonObj.list[i].price
+						+ "</div></div>";
 				}	
-				$("#myTicket").html(myTicketList);
+				$(".refund_tbody_tr").html(myCurrentTicket);
 			},
 			error : function(request, status, errorData){
 				alert("error code : " + request.status + "\n" + "message : " + request.responseText 
 						+ "\n" + "error : " + errorData);
 			} 
 		});
-		
-	});
+	}
 	
-	function refund() {
-		alert("test");	
+	function refundSubmit() {
+		var jArray = [
+				{"ticket_no": $("#modal_recommend_no").text()}, {"ticket_date": $("#modal_recommend_date").text()}, {"festival_name": $("#modal_recommend_name").text()},
+				{"ticket_count": $("#modal_recommend_count").text()}, {"price": $("#modal_recommend_credit").text()}, {"refund_why": $("#refund_why").val()} 
+			];
+		
+		$.ajax({
+			url: "refundCurrentTicket.do",
+			type: "post",
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(jArray),
+			success: function(result) {
+				if(result == "success") {
+					if(confirm('해당 티켓을 환불하시겠습니까?') == true) {
+						alert("환불 처리가 완료되었습니다.");
+						location.href="recommendList.do";
+					} else {
+						return;
+					}
+				}
+			},
+			error: function(request, status, errorData){
+				alert("error code : "+ request.status + "\n" + "message : " + request.responseText + "\n" + "error : " + errorData);
+			}
+		});
 	}
 	
 	function myTicketSearch(){
@@ -322,20 +388,26 @@
 				success : function(result){
 					var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈				
 					var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈	
-				
-					if(jsonObj.list.length==0)
-						console.log("검색 결과가 없습니다.");
-					
 					var myTicketList = '';
+					var idx = -1;
 					
-					for(var i in jsonObj.list){
-						myTicketList += "<div class='tbody_tr'><div class='recommend_no'><p>" + jsonObj.list[i].ticket_no + "</p></div><div class='recommend_date'><p>" 
-							+ jsonObj.list[i].ticket_date + "</p></div><div class='recommend_name'><p>" + jsonObj.list[i].festival_name
-							+ "</p></div><div class='recommend_count'><p>" + jsonObj.list[i].ticket_count + "</p></div><div class='recommend_credit'><p>"
-							+ jsonObj.list[i].price + "</p></div><div class='recommend_refund'>"
-							+ "<button class='btn' data-toggle='modal' data-target='#myModal'>환불요청</button></div></div>";
-						
-					}	
+					if(jsonObj.list.length==0) {
+						console.log("검색 결과가 없습니다.");
+						myTicketList += "<div align='center' style='margin-top: 5%;'><img src='resources/images/logo1.PNG' alt='logo' width='20%' height='10%'></div>"
+							+ "<h3 style='text-align: center; margin-top: 5%; margin-bottom: 5%;'>검색 결과가 없습니다.</h3>";	
+					} else {
+						for(var i in jsonObj.list){
+							idx += 1;
+							myTicketList += "<div class='tbody_tr'><div class='recommend_no'><p>" + jsonObj.list[i].ticket_no + "</p></div><div class='recommend_date'><p>" 
+								+ jsonObj.list[i].ticket_date + "</p></div><div class='recommend_name'><p>" + jsonObj.list[i].festival_name
+								+ "</p></div><div class='recommend_count'><p>" + jsonObj.list[i].ticket_count + "</p></div><div class='recommend_credit'><p>"
+								+ jsonObj.list[i].price + "</p></div><div class='recommend_refund'>";
+							if(jsonObj.list[i].state == "환불완료")
+								myTicketList += "<button class='btn' data-toggle='modal' data-target='#myModal' style='background-color: #350a4e;' disabled>환불완료</button></div></div>";
+							else
+								myTicketList += "<button class='btn refundBtn' data-toggle='modal' data-target='#myModal' onclick='javascript:refundFn(" + idx + ");'>환불요청</button></div></div>";
+						}
+					}
 					$("#myTicket").html(myTicketList);
 				},
 				error : function(request, status, errorData){
@@ -355,20 +427,26 @@
 			success : function(result){
 				var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈				
 				var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈	
-			
-				if(jsonObj.list.length==0)
-					console.log("검색 결과가 없습니다.");
-				
 				var myTicketList = '';
+				var idx = -1;
 				
-				for(var i in jsonObj.list){
-					myTicketList += "<div class='tbody_tr'><div class='recommend_no'><p>" + jsonObj.list[i].ticket_no + "</p></div><div class='recommend_date'><p>" 
-						+ jsonObj.list[i].ticket_date + "</p></div><div class='recommend_name'><p>" + jsonObj.list[i].festival_name
-						+ "</p></div><div class='recommend_count'><p>" + jsonObj.list[i].ticket_count + "</p></div><div class='recommend_credit'><p>"
-						+ jsonObj.list[i].price + "</p></div><div class='recommend_refund'>"
-						+ "<button class='btn' data-toggle='modal' data-target='#myModal'>환불요청</button></div></div>";
-					
-				}	
+				if(jsonObj.list.length==0) {
+					console.log("검색 결과가 없습니다.");
+					myTicketList += "<div align='center' style='margin-top: 5%;'><img src='resources/images/logo1.PNG' alt='logo' width='20%' height='10%'></div>"
+						+ "<h3 style='text-align: center; margin-top: 5%; margin-bottom: 5%;'>검색 결과가 없습니다.</h3>";	
+				} else {
+					for(var i in jsonObj.list){
+						idx += 1;
+						myTicketList += "<div class='tbody_tr'><div class='recommend_no'><p>" + jsonObj.list[i].ticket_no + "</p></div><div class='recommend_date'><p>" 
+							+ jsonObj.list[i].ticket_date + "</p></div><div class='recommend_name'><p>" + jsonObj.list[i].festival_name
+							+ "</p></div><div class='recommend_count'><p>" + jsonObj.list[i].ticket_count + "</p></div><div class='recommend_credit'><p>"
+							+ jsonObj.list[i].price + "</p></div><div class='recommend_refund'>";
+						if(jsonObj.list[i].state == "환불완료")
+							myTicketList += "<button class='btn' data-toggle='modal' data-target='#myModal' style='background-color: #350a4e;' disabled>환불완료</button></div></div>";
+						else
+							myTicketList += "<button class='btn refundBtn' data-toggle='modal' data-target='#myModal' onclick='javascript:refundFn(" + idx + ");'>환불요청</button></div></div>";
+					}
+				}
 				$("#myTicket").html(myTicketList);
 			},
 			error : function(request, status, errorData){
@@ -420,9 +498,16 @@
 					<div class="recommend_refund_head"><p>환불</p></div>
 				</div>
 			</div>
-			<div class="tbody" id="myTicket">
-
-			</div>
+			<c:if test="${!empty sessionScope.member.user_id }">
+				<div class="tbody" id="myTicket">
+					<div align="center" style="margin-top: 5%;"><img src="resources/images/loading.gif" alt="loading" width="7%" height="7%"></div>
+					<h3 style="text-align: center; margin-top: 5%; margin-bottom: 5%;">Loading...</h3>
+				</div>
+			</c:if>
+			<c:if test="${empty sessionScope.member.user_id }">
+				<div align="center" style="margin-top: 5%;"><img src="resources/images/logo1.PNG" alt="logo" width="20%" height="10%"></div>
+				<h3 style="text-align: center; margin-top: 5%; margin-bottom: 5%;">로그인이 필요한 서비스 입니다.</h3>	
+			</c:if>
 		</div>
 	</div>
 </div>
@@ -435,14 +520,13 @@
       <div class="modal-content" style="font-size: 15px;">
         <div class="modal-header" style="background-color: #350a4e;">
         	<h2 class="modal-title" style="color: #ffffff;">환불</h2>
-<!--           	<button type="button" class="close" data-dismiss="modal" style="color: #ffffff;">&times;</button> -->
         </div>
         <div class="modal-body">
         	<div style="padding: 5px;">
 	       		<h4 style="border-bottom: 1.5px solid #350a4e; margin-top: 3%;">예매내역</h4>
 	        	<div style="width: 100%; font-size: 13px;">
-	        		<div>
-	        			<div style="border-bottom: 1.5px solid #350a4e;">
+	        		<div class="refund_thead">
+	        			<div class="refund_thead_tr" style="border-bottom: 1.5px solid #350a4e;">
 	        				<div class="modal_recommend_no">예매번호</div>
 	        				<div class="modal_recommend_date">예매날짜</div>
 	        				<div class="modal_recommend_name">축제명</div>
@@ -450,19 +534,16 @@
 	        				<div class="modal_recommend_credit">금액</div>
 	        			</div>
 	        		</div>
-	        		<div>
-	        			<div>
-	        				<div class="modal_recommend_no">A000001</div>
-	        				<div class="modal_recommend_date">2018-10-21</div>
-	        				<div class="modal_recommend_name" id="modal_recommend_name"><p>축제명!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1</p></div>
-	        				<div class="modal_recommend_count">100</div>
-	        				<div class="modal_recommend_credit">5000000</div></div>
+	        		<div class="refund_tbody">
+	        			<div class="refund_tbody_tr">
+	        				<div align="center" style="margin-top: 5%;"><img src="resources/images/loading.gif" alt="loading" width="7%" height="7%"></div>
+							<h3 style="text-align: center; margin-top: 5%; margin-bottom: 5%;">Loading...</h3>
 	        			</div>
 	        		</div>	
 	        	</div>
 	        	<div style="padding: 5px;">
 		        	<h4 style="border-bottom: 1.5px solid #350a4e; margin-top: 3%;">환불사유</h4>
-		        	<textarea rows="3" style="width: 100%;"></textarea>
+		        	<textarea id="refund_why" rows="3" style="width: 100%;"></textarea>
 		        </div>
 		        <div style="padding: 5px;">
 		        	<h4 style="border-bottom: 1.5px solid #350a4e; margin-top: 3%;">환불규정</h4>
@@ -476,15 +557,14 @@
 							<p style="font-size: 13px; color: #000;">3. 입장 시간이 지나 다시 판매하기 곤란할 정도로 티켓의 가치가 뚜렷하게 떨어진 경우</p>
 							<p style="font-size: 13px; color: #000;">4. 티켓을 무단으로 복제한 경우</p>
 						</div>
-					<div align="center"><input type="checkbox"> 위의 약관의 동의합니다.</div>
+					<div align="center"><input type="checkbox" id="confirm_check"> 위의 약관에 동의합니다.</div>
 		        </div>
-	        </div>
-	       <div class="modal-footer" style="background-color: #350a4e;">
-	         <button type="button" class="btn btn-primary" style="border-radius: 10px;" disabled>환불</button>
-	         <button type="button" class="btn btn-default" data-dismiss="modal" style="border-radius: 10px;">취소</button>
-	       </div>
-      </div>
-      
+    		</div>
+      	</div>
+       	<div class="modal-footer" style="background-color: #350a4e;">
+         <button type="button" class="btn btn-primary" id="refund_submit_btn" style="border-radius: 10px;" onclick="refundSubmit();" disabled>환불</button>
+         <button type="button" class="btn btn-default" data-dismiss="modal" style="border-radius: 10px;">취소</button>
+       </div>
     </div>
   </div>
 </div>
@@ -492,8 +572,8 @@
 <!-- Footer -->
 <c:import url="/WEB-INF/views/footer.jsp" />
 
-<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
-<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<!-- <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script> -->
 <script src="/westival/resources/plugins/parallax-js-master/parallax.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA"></script>
 <script src="/westival/resources/js/contact_custom.js"></script>
