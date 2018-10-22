@@ -35,6 +35,23 @@ public class AdminDao {
 		System.out.println("ticketselectList 페이징뷰 dao");
 		return (ArrayList<Ticket>) sqlSession.selectList("adminMapper.ticketSelectList", new AdminTicketPageServiceImpl().adminTicketPage(currentPage, limit));
 	}
+	//예매관리(페이징)
+	public int tGetListCount() {
+		System.out.println("tGetListCOunt dao)");
+		return (int) sqlSession.selectOne("adminMapper.tGetListCount");
+	}
+	//예매관리(리스트)
+	public ArrayList<Admin> tAllSelectList(int currentPage, int limit) {
+		System.out.println("tAllSelectList");
+		HashMap map = new HashMap();
+		int startRow = (currentPage - 1) * limit +1;
+		int endRow = startRow + limit -1;
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		return (ArrayList<Admin>) sqlSession.selectList("adminMapper.tAllSelectList", map);
+	}
+
+	
 	//검색(예매)
 	public ArrayList<Admin> searchList(String filter, String searchTF) {
 		System.out.println("searchList dao");
@@ -42,6 +59,23 @@ public class AdminDao {
 		map.put("filter", filter);
 		map.put("searchTF", searchTF);
 		return (ArrayList<Admin>) sqlSession.selectList("adminMapper.searchList", map);
+	}
+	//예매관리(검색)(페이징)
+	public int tGetSelectListCount(HashMap map) {
+		System.out.println("tGetSelectListCount dao");
+		
+		return (int) sqlSession.selectOne("adminMapper.tGetSelectListCount", map);
+	}
+	//예매관리(검색)(리스트)
+	public ArrayList<Admin> testivalSelectList(int currentPage, int limit, String filter, String searchTF) {
+		int startRow = (currentPage - 1) * limit + 1;
+		int endRow = startRow + limit - 1;
+		HashMap map = new HashMap();
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		map.put("filter", filter);
+		map.put("searchTF", searchTF);
+		return  (ArrayList<Admin>) sqlSession.selectList("adminMapper.tSelectList", map);
 	}
 	
 //-------------------------------------------------
@@ -84,6 +118,27 @@ public class AdminDao {
 	//-------------------------------------------------------------------
 	//회원관리
 	
+	//회원리스트
+	/*public Object adminMemberView() {
+		System.out.println("adminMemberView dao");
+		return sqlSession.selectList("adminMapper.adminMemberView");
+	}*/
+	public int getListCount() {
+		System.out.println("getListCount dao");
+		return (int) sqlSession.selectOne("adminMapper.getListCount");
+	}
+
+	public ArrayList<Member> selectList(int currentPage, int limit) {
+		System.out.println("selectList dao");
+		
+		HashMap map = new HashMap();
+		int startRow = (currentPage - 1) * limit +1;
+		int endRow = startRow + limit -1;
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		return (ArrayList<Member>) sqlSession.selectList("adminMapper.selectList", map);
+	}
+	
 	//회원관리뷰(페이징 및 리스트)
 	public int mGetListCount() {
 		System.out.println("mGetListCount dao");
@@ -119,6 +174,19 @@ public class AdminDao {
 		map.put("searchTF", searchTF);
 		return (ArrayList<Member>) sqlSession.selectList("adminMapper.mSelectList", map);
 	}
+
+	//회원 삭제
+	public Object amdelete(String mid) {
+		System.out.println("amdelete dao");
+		
+		return sqlSession.delete("adminMapper.amdelete", mid);
+	}
+
+	
+
+	
+
+	
 	
 	
 

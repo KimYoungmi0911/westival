@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.kh.westival.admin.model.vo.Admin;
 import org.kh.westival.notice.model.service.NoticeService;
 import org.kh.westival.notice.model.vo.Notice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,23 +32,7 @@ public class NoticeController {
 	@Autowired
 	private NoticeService noticeService;
 	 
-	/*@RequestMapping("noticeview.do")
-	public String noticeView(){
-		return "notice/noticeView";
-	}*/
-	
-	/*@RequestMapping("noticeview.do")
-	public ModelAndView selectList(ModelAndView mv){
-		
-		
-		
-		ArrayList<Notice> list = noticeService.selectList();
-		
-		mv.addObject("list", list);
-		mv.setViewName("notice/noticeView");
-		System.out.println("dao갔다옴");
-		return mv;
-	}*/
+
 	@RequestMapping("noticeview.do")
 	public ModelAndView selectList(ModelAndView mv, HttpServletRequest request){
 		int currentPage = 1;
@@ -83,10 +68,11 @@ public class NoticeController {
 	}*/
 	
 	@RequestMapping("ndetail.do")
-	public ModelAndView noticeDetail(ModelAndView mv, @RequestParam(value="no") int notice_no){
+	public ModelAndView noticeDetail(ModelAndView mv, @RequestParam(value="no") int notice_no, @RequestParam(value="page") int currentPage){
 		System.out.println("noticeDetail controller");
 		System.out.println("들어온 notice_no 값 : " + notice_no);
 		mv.addObject("noticedetail", noticeService.noticeDetail(notice_no));
+		mv.addObject("currentPage", currentPage);
 		mv.setViewName("notice/noticeDetail");
 		return mv;
 	}
@@ -224,10 +210,7 @@ public class NoticeController {
 		return mv;
 	}
 	
-	/*@RequestMapping(value="noticeupdate.do")
-	public String noticeRewrite(){
-		return "notice/noticeUpdate";
-	}*/
+	
 	
 	@RequestMapping(value="noticeupdate.do")
 	public ModelAndView noticeUpdate(ModelAndView mv, @RequestParam(value="no1") int notice_no){
@@ -370,7 +353,9 @@ public class NoticeController {
 			
 			job.put("nno", n.getNotice_no());
 			job.put("ntitle", URLEncoder.encode(n.getNotice_title(), "UTF-8"));
+			if(n.getOriginal_filepath() != null){
 			job.put("nof", URLEncoder.encode(n.getOriginal_filepath(), "UTF-8"));
+			}
 			job.put("ndate", URLEncoder.encode(strdate, "UTF-8"));
 			
 			jarr.add(job);
@@ -388,8 +373,55 @@ public class NoticeController {
 		out.flush();
 		out.close();
 	}
-	
-	
+	@RequestMapping(value="npage.do", method=RequestMethod.POST)
+	public void nAllSelectBtn(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		JSONObject json = null;
+		
+		int currentPage = Integer.parseInt(request.getParameter("page"));
+		int limit = 10;
+		if(request.getParameter("page") != null){
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+		int listCount = noticeService.nGetListCount();
+		ArrayList<Notice> list = noticeService.nAllSelectList(currentPage, limit);
+		
+		int maxPage = (int) Math.ceil(((double)listCount/limit));
+		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit - 1;
+		if(maxPage < endPage){
+			endPage = maxPage;
+		}
+		json = new JSONObject();
+		JSONArray jarr = new JSONArray();
+		
+		for(Notice n : list){
+			JSONObject job = new JSONObject();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String strdate = sdf.format(n.getNotice_date());
+			
+			job.put("nno", n.getNotice_no());
+			job.put("ntitle", URLEncoder.encode(n.getNotice_title(), "UTF-8"));
+			if(n.getOriginal_filepath() != null){
+				job.put("nof", URLEncoder.encode(n.getOriginal_filepath(), "UTF-8"));
+				}
+			job.put("ndate", URLEncoder.encode(strdate, "UTF-8"));
+			
+			jarr.add(job);
+		}
+		
+		json.put("list", jarr);
+		json.put("currentPage", currentPage);
+		json.put("maxPage", maxPage);
+		json.put("startPage", startPage);
+		json.put("endPage", endPage);
+		
+		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		out.print(json.toJSONString());
+		out.flush();
+		out.close();
+	}
 	
 	
 	

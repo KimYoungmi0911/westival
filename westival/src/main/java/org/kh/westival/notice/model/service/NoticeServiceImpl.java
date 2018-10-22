@@ -2,6 +2,7 @@ package org.kh.westival.notice.model.service;
 
 import java.util.ArrayList;
 
+import org.kh.westival.admin.model.vo.Admin;
 import org.kh.westival.notice.model.dao.NoticeDao;
 import org.kh.westival.notice.model.vo.Notice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,21 @@ public class NoticeServiceImpl implements NoticeService{
 		System.out.println("selectList 페이징뷰");
 		return noticeDao.selectList(currentPage, limit);
 	}
+	
+	//공지전체 페이징 및 리스트
+		@Override
+		public int nGetListCount() {
+			System.out.println("nGetListCount serviceImpl");
+			return noticeDao.nGetListCount();
+		}
+
+		@Override
+		public ArrayList<Notice> nAllSelectList(int currentPage, int limit) {
+			System.out.println("nAllSelectList serviceImpl");
+			return noticeDao.nAllSelectList(currentPage, limit);
+		}
+	
+	
 
 	//공지 검색 페이징 및 뷰
 	@Override
@@ -89,6 +105,8 @@ public class NoticeServiceImpl implements NoticeService{
 		System.out.println("nSelectList serviceImpl");
 		return noticeDao.nSelectList(currentPage, limit, filter, searchTF);
 	}
+	
+	
 
 	
 

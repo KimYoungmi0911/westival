@@ -11,7 +11,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css"> -->
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
@@ -25,13 +25,234 @@
 		display: block;
 	}
 	 
-	.home_background {
-		position: relative;
-	}
+.home_background {
+	position: relative;
+}
+#domain {  
+    text-align:center;  
+}  
+#domain li {  
+    display:inline;  
+    vertical-align:middle;  
+}  
+#domain li a {  
+    display:-moz-inline-stack;  /*FF2*/  
+    display:inline-block;  
+    vertical-align:top;  
+    padding:4px;  
+    margin-right:3px;  
+    width:30px !important;  
+    color:#000;  
+    font:bold 12px tahoma;  
+    border:1px solid #eee;  
+    text-align:center;  
+    text-decoration:none;  
+    width /**/:30px;    /*IE 5.5*/  
+}  
+#domain li a.now {  
+    color:#fff;  
+    background-color:#f40;  
+    border:1px solid #f40;  
+}  
+#domain li a:hover, ul li a:focus {  
+    color:#fff;  
+    border:1px solid #f40;  
+    background-color:#f40;  
+}  
 </style>
 <script type="text/javascript" src="/westival/resources/js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
+
+function paging(page){
+	 var currentPage;
+	 var maxPage;
+	 var startPage;
+	 var endPage;
 	
+	 $.ajax({
+		 url: "tpage.do",
+		 type: "post",
+		 data: {"page" :page},
+		 dataType: "json",
+		 success: function(data){
+			 var jsonStr = JSON.stringify(data);
+			 var json = JSON.parse(jsonStr);
+			 
+			 
+					currentPage = json.currentPage;
+					maxPage = json.maxPage;
+					startPage = json.startPage;
+					endPage = json.endPage;
+					
+					var values = "";
+					for(var i in json.list){
+						
+						for(var j = 0; j < json.list[i].tname.length; j++){
+							json.list[i].tname = json.list[i].tname.replace("+", " ");		
+						}
+						for(var j = 0; j < json.list[i].tstate.length; j++){
+							json.list[i].tstate = json.list[i].tstate.replace("+", " ");		
+						}
+						for(var j = 0; j < json.list[i].tptype.length; j++){
+							json.list[i].tptype = json.list[i].tptype.replace("+", " ");		
+						}
+						
+						values += "<tr align='center'><td>" + decodeURIComponent(json.list[i].tusername) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].tid) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].tname) + "</td>" 
+						+ "<td>" + decodeURIComponent(json.list[i].tno) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].tdate) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].tcount) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].tprice) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].tptype) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].tstate) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].tano) + "</td></tr>";
+					}//for
+					$("#tb1").html(values);
+					
+					//페이징
+					$("#domain").html("");
+					if(currentPage <= 1){
+					}else{
+						$("#domain").append("<li><a href='#' onclick='paging(1)'><<</a></li>");
+					}
+					
+					if(currentPage == 1) {
+					} else {
+						$("#domain").append("<li><a href='#' onclick='paging(" + currentPage + " - 1)'><</a></li>");
+					}
+					
+					for (var p = startPage; p <= endPage; p++) { 
+						if (p == currentPage) {
+							$("#domain").append("<li><a href='#'><font color='red'>" + p + "</font></a></li>");
+						} else {
+							$("#domain").append("<li><a href='#' onclick='paging(" + p + ")'>" + p + "</a></li>");
+						}
+					}
+					
+					if (currentPage == maxPage) {
+					} else {
+						$("#domain").append("<li><a href='#' onclick='paging(" + currentPage + " + 1)'> > </a></li>");
+					}
+					
+					if (currentPage >= maxPage) {
+					} else {
+						$("#domain").append("<li><a href='#' onclick='paging(" + maxPage + ")'> >> </a></li>");
+					}
+					
+					
+					
+					
+				},//success
+				error: function(jqXHR, textstatus, errorThrown){
+					console.log("error : " + jqXHR + ", " + textstatus + ", " + errorThrown);
+					
+
+				
+				}//error
+			});
+		}
+
+
+
+
+
+
+//검색함수
+function selectBtnClick(page){
+	 var filter = $("#filter").val();
+	 var searchTF = $("#searchTF").val();
+	 
+	 console.log(filter + ", " + searchTF);
+	 var currentPage;
+	 var maxPage;
+	 var startPage;
+	 var endPage;
+	 
+	
+	
+
+	
+$.ajax({
+	url: "tselectbtn.do",
+	type: "post",
+	data: {"filter" : filter, "searchTF" : searchTF, "page" : page},
+	dataType: "json",
+	success : function(data){
+		
+		var jsonStr = JSON.stringify(data);
+		var json = JSON.parse(jsonStr);
+		
+		currentPage = json.currentPage;
+		maxPage = json.maxPage;
+		startPage = json.startPage;
+		endPage = json.endPage;
+		
+		var values = "";
+		for(var i in json.list){
+			
+			for(var j = 0; j < json.list[i].tname.length; j++){
+				json.list[i].tname = json.list[i].tname.replace("+", " ");		
+			}
+			for(var j = 0; j < json.list[i].tstate.length; j++){
+				json.list[i].tstate = json.list[i].tstate.replace("+", " ");		
+			}
+			for(var j = 0; j < json.list[i].tptype.length; j++){
+				json.list[i].tptype = json.list[i].tptype.replace("+", " ");		
+			}
+			
+			values += "<tr align='center'><td>" + decodeURIComponent(json.list[i].tusername) + "</td>"
+			+ "<td>" + decodeURIComponent(json.list[i].tid) + "</td>"
+			+ "<td>" + decodeURIComponent(json.list[i].tname) + "</td>" 
+			+ "<td>" + decodeURIComponent(json.list[i].tno) + "</td>"
+			+ "<td>" + decodeURIComponent(json.list[i].tdate) + "</td>"
+			+ "<td>" + decodeURIComponent(json.list[i].tcount) + "</td>"
+			+ "<td>" + decodeURIComponent(json.list[i].tprice) + "</td>"
+			+ "<td>" + decodeURIComponent(json.list[i].tptype) + "</td>"
+			+ "<td>" + decodeURIComponent(json.list[i].tstate) + "</td>"
+			+ "<td>" + decodeURIComponent(json.list[i].tano) + "</td></tr>";
+		}//for
+		$("#tb1").html(values);  
+		
+		$("#domain").html("");
+		if(currentPage <= 1) {	
+		} else {
+			$("#domain").append("<li><a href='#' onclick='selectBtnClick(1)'> << </a></li>");
+		}
+		
+		if(currentPage == 1) {
+		} else {
+			$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " - 1)'> < </a></li>");
+		}
+		
+		for (var p = startPage; p <= endPage; p++) { 
+			if (p == currentPage) {
+				$("#domain").append("<li><a href='#'><font color='red'>" + p + "</font></a></li>");
+			} else {
+				$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + p + ")'>" + p + "</a></li>");
+			}
+		}
+		
+		if (currentPage == maxPage) {
+		} else {
+			$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + currentPage + " + 1)'> > </a></li>");
+		}
+		
+		if (currentPage == maxPage) {
+		} else {
+			$("#domain").append("<li><a href='#' onclick='selectBtnClick(" + maxPage + " )'> >> </a></li>");
+		}
+		
+		
+	},//success
+	error: function(jqXHR, textstatus, errorThrown){
+		console.log("error : " + jqXHR + ", " + textstatus + ", " + errorThrown);
+		
+
+	
+	}//error
+});
+}
 </script>
 <body>
 
@@ -55,9 +276,9 @@
 	<div style="background:#f6f9fb;">
 					<div class="container" data-wow-delay="0.8s" >
 						
-                            <form action="search.do" class=" form-inline" method="post" style="margin-top : 0.5%; "> 
+                             <form action="#" class=" form-inline" method="post" style="margin-top : 0.5%;"> 
 
-                                <div class="form-group" style="margin-left : 34%;">                                   
+                                <div class="form-group" style="margin-left : 30%;">                                   
                                     <select class="btn dropdown-toggle btn-sm" id="filter" name="filter">
                                 
 										<option value="all">통합검색</option>
@@ -68,10 +289,7 @@
                                         <option value="price">금액</option>
                                         <option value="ptype">결제방식</option>
                                         <option value="state">상태</option>
-                                         <option value="account">계좌번호</option>
-                                        
-                                         	
-                               
+                                        <option value="account">계좌번호</option>
 
                                     </select>
                                 </div>
@@ -79,9 +297,9 @@
                                  <div class="form-group" >
                                     <input type="text" class="form-control" placeholder="검색어를 입력해주세요." name="searchTF" id="searchTF" style="margin-left:1%; ">
                                 </div>
-                                <button class="btn search-btn" type="submit" style="margin-left:0.5%;"><i class="fa fa-search" ></i></button>
-                              
-								
+                               <button class="btn search-btn" type="button" style="margin-left:0.5%; cursor:pointer;" id="selectBtn" name="selectBtn" onclick="selectBtnClick(1);"><i class="fa fa-search" ></i></button>
+								  <button class="btn search-btn" type="button" style="margin-left:0.5%; cursor:pointer;" id="listBtn" name="listBtn" onclick="paging(1);"><i class="fa fa-search" >전체조회</i></button>
+								  
                             </form>
                         </div>
   </div>
@@ -142,91 +360,33 @@
 					  
 					   
 					</table>
-						
-<div style="text-align: center">
-<%-- <% if(currentPage <= 1){ %>
-	[맨처음]&nbsp;
-<% }else{ %>
-	<a href="/second/blist?page=1">[맨처음]</a>
-<% } %> --%>
-<c:if test="${currentPage <= 1 }">
-[맨처음]&nbsp;
-</c:if>
-<c:if test="${currentPage > 1 }">
-<c:url var="mi13" value="adminticket.do">
-	<c:param name="page" value="1"/>
-</c:url>
-<a href="${mi13 }">[맨처음]</a>
-</c:if>
-<%-- <% if((currentPage - 10) < startPage && 
-		(currentPage - 10) > 1){ %>
-	<a href="/second/blist?page=<%= startPage - 10 %>">[이전]</a>
-<% }else{ %>
-	[이전]&nbsp;
-<% } %> --%>
-<c:if test="${(currentPage-10) <  startPage && (currentPage-10) > 1 }">
-	<c:url var="mi14" value="adminticket.do">
-		<c:param name="page" value="${startPage -10 }" />
-	</c:url>
-	<a href="${mi14 }">[이전]</a>
-</c:if>
-<c:if test="${(currentPage-10) >=  startPage || (currentPage-10) <= 1  }">
-[이전]&nbsp;
-</c:if>
-<c:forEach var="cnt" begin="${startPage }" end="${endPage }">
-<c:if test="${cnt == currentPage }">
-	<font color="red" size="4">[${cnt }]</font>
-</c:if>
-<c:if test="${cnt != currentPage }">
-	<c:url var="mid15" value="adminticket.do">
-		<c:param name="page" value="${cnt }" />
-	</c:url>
-	<a href="${mid15 }">${cnt }</a>
-</c:if>
-</c:forEach>
-<c:if test="${(currentPage + 10) > endPage && (currentPage+10) < maxPage }">
-	<c:url var="mid16" value="adminticket.do">
-		<c:param name="page" value="${endPage + 10 }" />
-	</c:url>
-	<a href="${mid16 }">[다음]</a>
-</c:if>
-<c:if test="${!((currentPage + 10) > endPage && (currentPage+10) < maxPage) }">
-	[다음]&nbsp;
-</c:if>
-<c:if test="${currentPage >= maxPage }">
-	[맨끝]&nbsp;
-</c:if>
-<c:if test="${!(currentPage >= maxPage) }">
-<c:url var="mid17" value="adminticket.do">
-	<c:param name="page" value="${maxPage }" />
-</c:url> 
-<a href="${mid17 }">[맨끝]</a>
-</c:if>
-<%-- startPage ~ endPage 출력 --%>
 
-<%-- <% for(int p = startPage; p <= endPage; p++){ 
-		if(p == currentPage){ 
-%>
-	<font color="red" size="4">[<%= p %>]</font>
-<%      }else{ %>
-	<a href="/second/blist?page=<%= p %>"><%= p %></a>
-<% }} %>
-----------------
-<% if((currentPage + 10) > endPage && 
-		(currentPage + 10) < maxPage){ %>
-	<a href="/second/blist?page=<%= endPage + 10 %>">[다음]</a>
-<% }else{ %>
-	[다음]&nbsp;
-<% } %>
-
-<% if(currentPage >= maxPage){ %>
-	[맨끝]&nbsp;
-<% }else{ %>
-	<a href="/second/blist?page=<%= maxPage %>">
-	[맨끝]</a>
-<% } %> --%>
-
-</div>
+		 <!-- 페이지 -->
+							<div class="paginate">
+									<ul class="pagination" style="justify-content: center;" id="domain">
+									<c:if test="${currentPage >= 2 }">
+										<li class="page-item"><a class="page-link" href="adminticket.do?page=1">&laquo;</a></li>
+										</c:if>
+										<c:if test="${currentPage >= 2 }">
+										<li class="page-item"><a class="page-link" href="adminticket.do?page=${currentPage - 1 }" >&lsaquo;</a></li>
+										</c:if>
+										<c:forEach var="p" begin="${ startPage }" end="${ endPage }">
+										<c:if test="${ p == currentPage }">
+											<li class="page-item"><a class="page-link" href="adminticket.do?page=${ p }">${ p }</a></li>
+										</c:if>
+										<c:if test="${ p != currentPage }">
+											<li class="page-item"><a class="page-link" href="adminticket.do?page=${ p }" >${ p }</a></li>
+										</c:if>
+									</c:forEach>	
+										<c:if test="${currentPage != maxPage }">
+										<li class="page-item"><a class="page-link" href="adminticket.do?page=${currentPage + 1 }" >&rsaquo;</a></li>
+										</c:if>
+										<c:if test="${currentPage != maxPage }">
+										<li class="page-item"><a class="page-link" href="adminticket.do?page=${maxPage }" >&raquo;</a></li>
+										</c:if>
+									</ul>
+							</div>
+					<!-- 페이지 끝 -->
 
 
 							
@@ -388,8 +548,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 </div>
 
 <script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
-<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
-<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<!-- <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script> -->
 <script src="/westival/resources/plugins/greensock/TweenMax.min.js"></script>
 <script src="/westival/resources/plugins/greensock/TimelineMax.min.js"></script>
 <script src="/westival/resources/plugins/scrollmagic/ScrollMagic.min.js"></script>

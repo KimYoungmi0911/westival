@@ -51,7 +51,7 @@
 		<result property="user_phone" column="user_phone" />
 		<result property="user_email" column="user_email" />
 		<result property="user_gender" column="user_gender" />
-		<result property="user_confirm_check" column="user_confirm_check" />
+		
 		
 										
 	
@@ -60,22 +60,41 @@
 	
 	<!-- 예매관리 (페이징) -->
 	<select id="ticketgetListCount" resultType="_int">
-	<![CDATA[
+	
 	select count(*) from v_festival_ticket_user
-		]]>
+		
 	</select>
 	
 	<!-- 예매관리 (리스트) -->
 	<select id="ticketSelectList" parameterType="AdminTicketPage" resultMap="resultList">
-	<![CDATA[
+	
 	select * from (
-				select rownum rnum, user_id, name, ticket_no, ticket_date, 
+				select ROWNUM RNUM, user_id, name, ticket_no, ticket_date, 
 				ticket_count, price, pay_type, state, account_no, user_name 
 				from (select * from v_festival_ticket_user 
 				order by ticket_date asc))
-				where rnum >= #{startRow} and rnum <= #{endRow}
-	]]>
+				where RNUM between #{startRow} and #{endRow}
+	
 	</select>
+	
+	<!-- 예매관리(페이징) -->
+	<select id="tGetListCount" resultType="_int">
+	
+	select count(*) from v_festival_ticket_user
+	
+	</select>
+	<!-- 예매관리(리스트) -->
+	<select id="tAllSelectList" parameterType="java.util.Map" resultMap="resultList">
+	
+	select * from (
+				select ROWNUM RNUM, user_id, name, ticket_no, ticket_date, 
+				ticket_count, price, pay_type, state, account_no, user_name 
+				from (select * from v_festival_ticket_user 
+				order by ticket_date asc))
+				where RNUM between #{startRow} and #{endRow}
+	
+	</select>
+	
 	
 	<!-- 예매 검색 -->
 	<select id="searchList" parameterType="string" resultMap="resultList">
@@ -119,22 +138,113 @@
 	</choose>
 	</select>
 	
+	<!-- 예매관리(검색)(페이징) -->
+	
+	<select id="tGetSelectListCount" resultType="_int" >
+	select count(*) from v_festival_ticket_user
+	<choose>
+	<when test="filter == 'all'">
+	where user_id like '%'||#{searchTF}||'%' 
+	or name like '%'||#{searchTF}||'%' 
+	or ticket_no like '%'||#{searchTF}||'%' 
+	or user_name like '%'||#{searchTF}||'%' 
+	or ticket_no like '%'||#{searchTF}||'%' 
+	or price like '%'||#{searchTF}||'%' 
+	or pay_type like '%'||#{searchTF}||'%' 
+	or state like '%'||#{searchTF}||'%' 
+	or account_no like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'name'">
+	where user_name like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'id'">
+	where user_id like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'fname'">
+	where name like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter =='tno'">
+	where ticket_no like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'price'">
+	where price like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'ptype'">
+	where pay_type like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'state'">
+	where state like '%'||#{searchTF}||'%'
+	</when>
+	<when test="filter == 'account'">
+	where account_no like '%'||#{searchTF}||'%'
+	</when>
+	</choose>
+	</select>
+	
+	<!-- 예매 검색(리스트) -->
+	<select id="tSelectList" parameterType="java.util.Map" resultMap="resultList">
+	 select * from (
+	select ROWNUM RNUM, user_id, name, ticket_no, 
+    ticket_date, ticket_count, price, pay_type, state, account_no, user_name 
+    from (select * from v_festival_ticket_user
+	<choose>
+	<when test="filter == 'all'">
+	where user_id like '%'||#{searchTF}||'%' 
+	or name like '%'||#{searchTF}||'%' 
+	or ticket_no like '%'||#{searchTF}||'%' 
+	or user_name like '%'||#{searchTF}||'%' 
+	or ticket_no like '%'||#{searchTF}||'%' 
+	or price like '%'||#{searchTF}||'%' 
+	or pay_type like '%'||#{searchTF}||'%' 
+	or state like '%'||#{searchTF}||'%' 
+	or account_no like '%'||#{searchTF}||'%'))
+	
+	</when>
+	<when test="filter == 'name'">
+	where user_name like '%'||#{searchTF}||'%'))
+	</when>
+	<when test="filter == 'id'">
+	where user_id like '%'||#{searchTF}||'%'))
+	</when>
+	<when test="filter == 'fname'">
+	where name like '%'||#{searchTF}||'%'))
+	</when>
+	<when test="filter =='tno'">
+	where ticket_no like '%'||#{searchTF}||'%'))
+	</when>
+	<when test="filter == 'price'">
+	where price like '%'||#{searchTF}||'%'))
+	</when>
+	<when test="filter == 'ptype'">
+	where pay_type like '%'||#{searchTF}||'%'))
+	</when>
+	<when test="filter == 'state'">
+	where state like '%'||#{searchTF}||'%'))
+	</when>
+	<when test="filter == 'account'">
+	where account_no like '%'||#{searchTF}||'%'))
+	</when>
+	</choose>
+	where RNUM between  #{startRow} and #{endRow}
+	</select> 
+	
+	
 	<!-- 축제관리뷰(페이징) -->
 	<select id="festivalgetListCount" resultType="_int">
-	<![CDATA[
+	
 	select count(*) from tb_festival
-		]]>
+	
 	</select>
 	<!-- 축제관리뷰(리스트) -->
 	<select id="festivalSelectList" parameterType="AdminFestivalPage" resultMap="festivalList">
-	<![CDATA[
+	
 	select * from (
-        select rownum rnum, name, address, start_date, telephone, 
+        select ROWNUM RNUM, name, address, start_date, telephone, 
         manage, read_count, recommend, ticket 
         from (select * from tb_festival 
         order by start_date asc))
-        where rnum >= #{startRow} and rnum <= #{endRow}
-	]]>
+        where RNUM between #{startRow} and #{endRow}
+	
 	</select>
 	
 	<!-- 축제검색페이징 -->
@@ -165,69 +275,94 @@
 	
 	<!-- 축제 검색(리스트) -->
 	<select id="fsearchList" parameterType="java.util.Map" resultMap="festivalList">
-	<![CDATA[
-	select * from (select rownum rnum, name, address, start_date, telephone, 
-	manage, read_count, recommend, ticket from (select * from tb_festival))
-	]]>
+	
+	select * from (select ROWNUM RNUM, name, address, start_date, telephone, 
+	manage, read_count, recommend, ticket from (select * from tb_festival
+	
 	<choose>
 	<when test="filter == 'all'">
-	<![CDATA[
+	
 	where name like '%'||#{searchTF}||'%' 
 	or address like '%'||#{searchTF}||'%' 
 	or name like '%'||#{searchTF}||'%' 
 	or manage like '%'||#{searchTF}||'%' 
-	or ticket like '%'||#{searchTF}||'%' 
+	or ticket like '%'||#{searchTF}||'%' ))
 	
-	]]>
+	
 	</when>
 	<when test="filter == 'location'">
-	<![CDATA[
-	where address like '%'||#{searchTF}||'%' 
 	
-	]]>
+	where address like '%'||#{searchTF}||'%' ))
+	
+	
 	</when>
 	<when test="filter == 'fname'">
-	<![CDATA[
-	where name like '%'||#{searchTF}||'%' 
 	
-	]]>
+	where name like '%'||#{searchTF}||'%' ))
+	
+
 	</when>
 	<when test="filter == 'manage'">
-	<![CDATA[
-	where manage like '%'||#{searchTF}||'%' 
 	
-	]]>
+	where manage like '%'||#{searchTF}||'%' ))
+	
+	
 	</when>
 	<when test="filter == 'ticket'">
-	<![CDATA[
-	where ticket like '%'||#{searchTF}||'%' 
+	
+	where ticket like '%'||#{searchTF}||'%' ))
 
-	]]>
+
 	</when>
 	</choose>
-	<![CDATA[
-	and rnum >= #{startRow} and rnum <= #{endRow}
-	]]>
+	
+	where RNUM between #{startRow} and #{endRow}
+	
 	</select> 
+	
+	<!-- 회원리스트 -->
+	
+	<!-- <select id="adminMemberView" resultMap="memberList">
+	select * from tb_user
+	</select> -->
+	
+	<!-- 회원리스트 페이징 -->
+	<select id="getListCount" resultType="_int">
+	
+	select count(*) from tb_user
+		
+	</select>
+	<!-- 회원리스트  -->
+	<select id="selectList" parameterType="java.util.Map" resultMap="memberList">
+	
+	select * from (
+        select ROWNUM RNUM, user_id, user_name, user_birth, 
+        user_address, user_phone, user_email, user_gender
+        from (select * from tb_user 
+        order by user_name asc))
+        where RNUM between #{startRow} and #{endRow}
+	
+	</select>
+	
 	
 	<!-- 회원관리 페이징-->
 	<select id="mGetListCount" resultType="_int">
-	<![CDATA[
+	
 	select count(*) from tb_user
-		]]>
+		
 	</select>
 	
 	<!-- 회원관리 리스트 -->
 	
 	<select id="mAllSelectList" parameterType="java.util.Map" resultMap="memberList">
-	<![CDATA[
+	
 	select * from (
-        select rownum rnum, user_id, user_name, user_birth, 
-        user_address, user_phone, user_email, user_gender, user_confirm_check  
+        select ROWNUM RNUM, user_id, user_name, user_birth, 
+        user_address, user_phone, user_email, user_gender 
         from (select * from tb_user 
         order by user_name asc))
-        where rnum >= #{startRow} and rnum <= #{endRow}
-	]]>
+        where RNUM between #{startRow} and #{endRow}
+	
 	</select>
 	
 	
@@ -235,7 +370,7 @@
 	<select id="mGetSelectListCount" resultType="_int">
 	select count(*) from tb_user
 	<choose>
-	<!-- <when test="filter == 'all'">
+	<when test="filter == 'all'">
 	where user_id like '%'||#{searchTF}||'%' 
 	or user_name like '%'||#{searchTF}||'%' 
 	or user_birth like '%'||#{searchTF}||'%' 
@@ -243,8 +378,8 @@
 	or user_phone like '%'||#{searchTF}||'%'
 	or user_email like '%'||#{searchTF}||'%'
 	or user_gender like '%'||#{searchTF}||'%'
-	or user_confirm_check like '%'||#{searchTF}||'%'
-	</when> --> 
+	
+	</when> 
 	<when test="filter == 'mid'">
 	where user_id like '%'||#{searchTF}||'%'
 	</when> 
@@ -263,61 +398,64 @@
 	<when test="filter == 'mgender'">
 	where user_gender like '%'||#{searchTF}||'%'
 	</when>
-	<when test="filter == 'mconfirm'">
-	where user_confirm_check like '%'||#{searchTF}||'%'
-	</when>
+	
 	</choose>
 	</select>
 	
 	<!-- 회원 검색(리스트) -->
 	<select id="mSelectList" parameterType="java.util.Map" resultMap="memberList">
-	select * from (
+	 select * from (
 	select ROWNUM RNUM, user_id, user_name, user_birth, 
-    user_phone, user_address, user_email, user_gender, user_confirm_check 
-    from (select * from tb_user))
+    user_phone, user_address, user_email, user_gender
+    from (select * from tb_user
 	<choose>
-	<!-- <when test="filter == 'all'">
+	<when test="filter == 'all'">
 	where user_id like '%'||#{searchTF}||'%' 
 	or user_name like '%'||#{searchTF}||'%' 
 	or user_address like '%'||#{searchTF}||'%' 
 	or user_phone like '%'||#{searchTF}||'%' 
 	or user_email like '%'||#{searchTF}||'%' 
-	or user_gender like '%'||#{searchTF}||'%' 
-	or user_confirm_check like '%'||#{searchTF}||'%' 
-	and RNUM between #{startRow} and #{endRow}
-	</when> -->
+	or user_gender like '%'||#{searchTF}||'%' ))
+	
+	
+	</when>
 	<when test="filter == 'mid'">
-	where user_id like '%'||#{searchTF}||'%' 
-	and RNUM between #{startRow} and #{endRow}
+	where user_id like '%'||#{searchTF}||'%'))
+	
 	</when>
 	<when test="filter == 'mname'">
-	where user_name like '%'||#{searchTF}||'%' 
-	and RNUM between #{startRow} and #{endRow}
+	where user_name like '%'||#{searchTF}||'%' ))
+	
 	</when>
 	<when test="filter == 'maddress'">
-	where user_address like '%'||#{searchTF}||'%' 
-	and RNUM between #{startRow} and #{endRow}
+	where user_address like '%'||#{searchTF}||'%')) 
+	
 	</when>
 	<when test="filter == 'mtelephone'">
-	where user_phone like '%'||#{searchTF}||'%' 
-	and RNUM between #{startRow} and #{endRow}
+	where user_phone like '%'||#{searchTF}||'%' ))
+	
 	</when>
 	<when test="filter == 'memail'">
-	where user_email like '%'||#{searchTF}||'%' 
-	and RNUM between #{startRow} and #{endRow}
+	where user_email like '%'||#{searchTF}||'%' ))
+	
 	</when>
 	<when test="filter == 'mgender'">
-	where user_gender like '%'||#{searchTF}||'%' 
-	and RNUM between #{startRow} and #{endRow}
-	</when>
-	<when test="filter == 'mconfirm'">
-	where user_confirm_check like '%'||#{searchTF}||'%' 
-	and RNUM between #{startRow} and #{endRow}
+	where user_gender like '%'||#{searchTF}||'%')) 
+	
 	</when>
 	</choose>
 
-	
+	where RNUM between  #{startRow} and #{endRow}
 	</select> 
+
+	<!-- 회원삭제 -->
+	<delete id="amdelete" parameterType="string" flushCache="true"
+		statementType="PREPARED">
+		
+		delete from tb_user where user_id = #{user_id}
+		
+	</delete>
+	
 	
 
 </mapper>

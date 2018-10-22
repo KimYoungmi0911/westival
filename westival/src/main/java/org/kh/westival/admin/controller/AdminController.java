@@ -2,6 +2,7 @@ package org.kh.westival.admin.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class AdminController {
 	@RequestMapping("adminticket.do")
 	public ModelAndView selectList(ModelAndView mv, HttpServletRequest request){
 		int currentPage = 1;
-		int limit = 9;
+		int limit = 10;
 		if(request.getParameter("page") != null){
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
@@ -61,21 +62,133 @@ public class AdminController {
 	
 	
 	}
-	
-	@RequestMapping(name="search.do", method=RequestMethod.POST)
-	public ModelAndView search(ModelAndView mv, @RequestParam("filter") String filter, @RequestParam("searchTF") String searchTF){
+	@RequestMapping(value="tpage.do", method=RequestMethod.POST)
+	public void ticketList(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		JSONObject json = null;
 		
-		ArrayList<Admin> list =  adminService.searchList(filter, searchTF);
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("list", list);
+		int currentPage = Integer.parseInt(request.getParameter("page"));
+		int limit = 10;
+		if(request.getParameter("page") != null){
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+		int listCount = adminService.tGetListCount();
+		ArrayList<Admin> list = adminService.tAllSelectList(currentPage, limit);
+		
+		int maxPage = (int) Math.ceil(((double)listCount/limit));
+		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit - 1;
+		if(maxPage < endPage){
+			endPage = maxPage;
+		}
+		json = new JSONObject();
+		JSONArray jarr = new JSONArray();
+		
+		for(Admin a : list){
+			JSONObject job = new JSONObject();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String strdate = sdf.format(a.getTicket_date());
+			
+			job.put("tusername", URLEncoder.encode(a.getUser_name(), "UTF-8"));
+			job.put("tid", URLEncoder.encode(a.getUser_id(), "UTF-8"));
+			job.put("tname", URLEncoder.encode(a.getName(), "UTF-8"));
+			job.put("tno", URLEncoder.encode(a.getTicket_no(), "UTF-8"));
+			job.put("tdate", URLEncoder.encode(strdate, "UTF-8"));
+			job.put("tprice", a.getPrice());
+			job.put("tcount", a.getTicket_count());
+			job.put("tptype", URLEncoder.encode(a.getPay_type(), "UTF-8"));
+			job.put("tstate", URLEncoder.encode(a.getState(), "UTF-8"));
+			job.put("tano", URLEncoder.encode(a.getAccount_no(), "UTF-8"));
+			
+			jarr.add(job);
+		}
+		
+		json.put("list", jarr);
+		json.put("currentPage", currentPage);
+		json.put("maxPage", maxPage);
+		json.put("startPage", startPage);
+		json.put("endPage", endPage);
+		
+		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		out.print(json.toJSONString());
+		out.flush();
+		out.close();
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	@RequestMapping(value="tselectbtn.do", method=RequestMethod.POST)
+	public void tSelectBtn(HttpServletResponse response, HttpServletRequest request,
+			@RequestParam("filter") String filter, 
+			@RequestParam("searchTF") String searchTF) throws IOException{
+		
+		System.out.println("mSelectBtn 컨트롤러");
+		HashMap map = new HashMap();
 		map.put("filter", filter);
 		map.put("searchTF", searchTF);
-		mv.addObject("map", map);
-		mv.setViewName("admin/searchTicket");
 		
+		int listCount = adminService.tGetSelectListCount(map);
+		int currentPage = 1;
+		int limit = 10;
+		System.out.println("listCount: " + listCount);
+		if(request.getParameter("page") != null){
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
 		
-		return mv;
+		int maxPage = (int)Math.ceil((double)listCount / limit + 0.9);
+		System.out.println("maxPage : " + maxPage);
+		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1;
 		
+		int endPage = startPage + limit - 1;
+		
+		if(maxPage < endPage) {
+			endPage = maxPage;
+		}
+		
+		ArrayList<Admin> list = adminService.tSelectList(currentPage, limit, filter, searchTF);
+		JSONArray jarr = new JSONArray();
+		for(Admin a : list){
+			JSONObject job = new JSONObject();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String strdate = sdf.format(a.getTicket_date());
+			
+			job.put("tusername", URLEncoder.encode(a.getUser_name(), "UTF-8"));
+			job.put("tid", URLEncoder.encode(a.getUser_id(), "UTF-8"));
+			job.put("tname", URLEncoder.encode(a.getName(), "UTF-8"));
+			job.put("tno", URLEncoder.encode(a.getTicket_no(), "UTF-8"));
+			job.put("tdate", URLEncoder.encode(strdate, "UTF-8"));
+			job.put("tprice", a.getPrice());
+			job.put("tcount", a.getTicket_count());
+			job.put("tptype", URLEncoder.encode(a.getPay_type(), "UTF-8"));
+			job.put("tstate", URLEncoder.encode(a.getState(), "UTF-8"));
+			job.put("tano", URLEncoder.encode(a.getAccount_no(), "UTF-8"));
+			
+			jarr.add(job);
+	}
+		JSONObject json = new JSONObject();
+		json.put("list", jarr);
+		json.put("currentPage", currentPage);
+		json.put("maxPage", maxPage);
+		json.put("startPage", startPage);
+		json.put("endPage", endPage);
+		json.put("filter", filter);
+		json.put("searchTF", searchTF);
+		json.put("listCount", listCount);
+		
+		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		out.print(json.toJSONString());
+		System.out.println(json);
+		out.flush();
+		out.close();
 	}
 	//------------------------------------------------------------------------------
 	//축제관리페이지
@@ -211,6 +324,31 @@ public class AdminController {
 	public String adminMemberView(){
 		return "admin/memberView";
 	}
+	/*@RequestMapping("adminmember.do")
+	public ModelAndView adminMemberView(ModelAndView mv, HttpServletRequest request){
+		int currentPage = 1;
+		int limit=10;
+		if(request.getParameter("page") != null){
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+		int listCount = adminService.getListCount();
+		ArrayList<Member> list = adminService.selectList(currentPage, limit);
+		int maxPage = (int) Math.ceil(((double)listCount / limit));
+		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit -1;
+		if(maxPage < endPage)	
+			endPage = maxPage;
+		mv.addObject("list", list);
+		mv.addObject("currentPage", currentPage);
+		mv.addObject("maxPage", maxPage);
+		mv.addObject("startPage", startPage);
+		mv.addObject("endPage", endPage);
+		mv.addObject("listCount", listCount);
+		mv.setViewName("admin/memberView");
+		System.out.println("adminMemverView 컨트롤러");
+		
+		return mv;
+	}*/
 	
 	@RequestMapping("mpage.do")
 	public void memberList(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -246,7 +384,7 @@ public class AdminController {
 			job.put("mphone", URLEncoder.encode(m.getUser_phone(), "UTF-8"));
 			job.put("memail", URLEncoder.encode(m.getUser_email(), "UTF-8"));
 			job.put("mgender", URLEncoder.encode(m.getUser_gender(), "UTF-8"));
-			job.put("mconfirm", URLEncoder.encode(m.getUser_confirm_check(), "UTF-8"));
+		
 			
 			jarr.add(job);
 		}
@@ -312,7 +450,7 @@ public class AdminController {
 			job.put("mphone", URLEncoder.encode(m.getUser_phone(), "UTF-8"));
 			job.put("memail", URLEncoder.encode(m.getUser_email(), "UTF-8"));
 			job.put("mgender", URLEncoder.encode(m.getUser_gender(), "UTF-8"));
-			job.put("mconfirm", URLEncoder.encode(m.getUser_confirm_check(), "UTF-8"));
+			
 			
 			jarr.add(job);
 		}
@@ -336,7 +474,39 @@ public class AdminController {
 		
 	}
 	
+	/*@RequestMapping(value="amdelete.do", method=RequestMethod.POST)
+	public void amDelete(HttpServletResponse response, HttpServletRequest request, String mid) throws IOException{
+		Member member = (Member) adminService.amdelete(mid);
+		JSONArray jarr = new JSONArray();
+		JSONObject job = new JSONObject();
+		
+		job.put("mid", member.getUser_id());
+		job.put("mname", member.getUser_name());
+		job.put("mbirth", new SimpleDateFormat("yyyy-MM-dd").format(member.getUser_birth()));
+		job.put("maddress", member.getUser_address());
+		job.put("mphone", member.getUser_phone());
+		job.put("memail", member.getUser_email());
+		job.put("mgender", member.getUser_gender());
+		
+		
+		jarr.add(job);
+		JSONObject sendJson = new JSONObject(); // 전송용 객체
+		sendJson.put("list", jarr); // 전송용 객체에 저장
+		response.setContentType("application/json; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println(sendJson.toJSONString());
+		out.flush();
+		out.close();
+	}*/
+	@RequestMapping(value="amdelete.do", method=RequestMethod.POST)
+	public String amDelete(HttpServletResponse response, HttpServletRequest request, String mid, ModelAndView mv) throws IOException{
+		
+		mv.addObject(adminService.amdelete(mid));
 	
+		System.out.println("amDelete 컨트롤러");
+		return "redirect:/adminmember.do";
+	
+	}
 	
 	
 	

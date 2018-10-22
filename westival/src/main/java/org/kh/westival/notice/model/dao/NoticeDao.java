@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.kh.westival.admin.model.vo.Admin;
 import org.kh.westival.notice.model.service.NoticePageServiceImpl;
 import org.kh.westival.notice.model.vo.Notice;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -88,6 +89,24 @@ public class NoticeDao {
 		return (ArrayList<Notice>) sqlSession.selectList("noticeMapper.selectListPage", new NoticePageServiceImpl().noticePage(currentPage, limit));
 		
 	}
+	
+	//공지전체 페이징
+		public int nGetListCount() {
+			System.out.println("nGetListCount dao");
+			return (int) sqlSession.selectOne("noticeMapper.nGetListCount");
+		}
+		//공지전체 리스트
+		public ArrayList<Notice> nAllSelectList(int currentPage, int limit) {
+			System.out.println("nAllSelectList dao");
+			int startRow = (currentPage - 1) * limit + 1;
+			int endRow = startRow + limit - 1;
+			HashMap map = new HashMap();
+			map.put("startRow", startRow);
+			map.put("endRow", endRow);
+			
+			return (ArrayList<Notice>) sqlSession.selectList("noticeMapper.nAllSelectList", map);
+		}
+	
 
 	//공지 검색 페이징
 	public int nGetSelectListCount(String filter, String searchTF) {
@@ -111,6 +130,8 @@ public class NoticeDao {
 		
 		return (ArrayList<Notice>) sqlSession.selectList("noticeMapper.nSelectList", map);
 	}
+	
+	
 
 	
 

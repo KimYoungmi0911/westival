@@ -63,6 +63,9 @@
 </style>
 <script type="text/javascript" src="/westival/resources/js/jquery-3.2.1.min.js"></script>
  <script type="text/javascript">
+
+ 
+ 
  function paging(page){
 	 var currentPage;
 	 var maxPage;
@@ -77,6 +80,7 @@
 		 success: function(data){
 			 var jsonStr = JSON.stringify(data);
 			 var json = JSON.parse(jsonStr);
+			 var idx = -1;
 			 
 			 
 					currentPage = json.currentPage;
@@ -89,15 +93,15 @@
 						for(var j = 0; j < json.list[i].maddress.length; j++){
 							json.list[i].maddress = json.list[i].maddress.replace("+", " ");		
 						}
-						
-						values += "<tr align='center'><td>" + decodeURIComponent(json.list[i].mid) + "</td>"
+						idx += 1;
+						values += "<tr align='center' class='tbtr'><td id='mid' name='mid'>" + decodeURIComponent(json.list[i].mid) + "</td>"  
 						+ "<td>" + decodeURIComponent(json.list[i].mname) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].mbirth) + "</td>" 
 						+ "<td>" + decodeURIComponent(json.list[i].maddress) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].mphone) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].memail) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].mgender) + "</td>"
-						+ "<td>" + decodeURIComponent(json.list[i].mconfirm) + "</td></tr>";
+						+ "<td><input type='button' value='탈퇴' class='btn btn-secondary btn-sm' onclick='javascript:memberdelete("+ idx +")'>" + "</td></tr>"; 
 					}//for
 					$("#tb1").html(values);
 					
@@ -143,6 +147,8 @@
 				}//error
 			});
 		}
+ 
+ 
  	
   //검색함수
 	  function selectBtnClick(page){
@@ -154,7 +160,7 @@
 		 var maxPage;
 		 var startPage;
 		 var endPage;
-		 
+		 var idx = -1;
 		
 		
 	 
@@ -181,14 +187,16 @@
 					json.list[i].maddress = json.list[i].maddress.replace("+", " ");		
 				}
 				
-				values += "<tr align='center'><td>" + decodeURIComponent(json.list[i].mid) + "</td>"
+				idx += 1;
+				values += "<tr align='center' class='tbtr'><td id='mid' name='mid'>" + decodeURIComponent(json.list[i].mid) + "</td>"  
 				+ "<td>" + decodeURIComponent(json.list[i].mname) + "</td>"
 				+ "<td>" + decodeURIComponent(json.list[i].mbirth) + "</td>" 
 				+ "<td>" + decodeURIComponent(json.list[i].maddress) + "</td>"
 				+ "<td>" + decodeURIComponent(json.list[i].mphone) + "</td>"
 				+ "<td>" + decodeURIComponent(json.list[i].memail) + "</td>"
 				+ "<td>" + decodeURIComponent(json.list[i].mgender) + "</td>"
-				+ "<td>" + decodeURIComponent(json.list[i].mconfirm) + "</td></tr>";
+				+ "<td><input type='button' value='탈퇴' class='btn btn-secondary btn-sm' onclick='javascript:memberdelete("+ idx +")'>" + "</td></tr>";
+				
 			}//for
 			$("#tb1").html(values);  
 			
@@ -232,78 +240,43 @@
 	  });
 	  }
   
+  function memberdelete(idx){
+	  if(confirm('회원정보를 삭제하시겠습니까?') == true){
+		var mid = $(".tbtr").eq(idx).children(":first").text();
+		console.log("mid : " + mid);
+		 $.ajax({
+			url: "amdelete.do",
+			type:"post",
+			data: {"mid" : mid},
+			success: function(result){
+				var objStr = JSON.stringify(result);
+				var jsonObj = JSON.parse(objStr);
+				
+				var values = "";
+				for(var i in jsonObj.list){
+					values += "<tr align='center' class='tbtr'><td id='mid' name='mid'>" + decodeURIComponent(json.list[i].mid) + "</td>"  
+					+ "<td>" + decodeURIComponent(json.list[i].mname) + "</td>"
+					+ "<td>" + decodeURIComponent(json.list[i].mbirth) + "</td>" 
+					+ "<td>" + decodeURIComponent(json.list[i].maddress) + "</td>"
+					+ "<td>" + decodeURIComponent(json.list[i].mphone) + "</td>"
+					+ "<td>" + decodeURIComponent(json.list[i].memail) + "</td>"
+					+ "<td>" + decodeURIComponent(json.list[i].mgender) + "</td></tr>";
+					
+				}
+				$("#tb1").html();
+			},
+			error: function(request, status, errorData){
+				alert("error code : " + request.status + "\n" + "message : " + request.responseText 
+						+ "\n" + "error : " + errorData);
+			} 
+		}); 
+		 alert("정상적으로 탈퇴되었습니다.");
+		 location.href="adminmember.do";
+	  }else
+		  return;
+  }
   
-  /* var searchTFValue = $("#searchTF").val();
-	var filterValue = $("#filter").val();
- 	//검색함수
- 	function paging(searchTF, filter, Page){
- 		$.ajax({
- 			url: "mselectbtn.do",
- 			data: {"searchTF": searchTFValue, "filter":filterValue, "page":Page},
- 			type:"post",
- 			dataType:"json",
- 			success: function(obj){
- 				var objStr = JSON.stringify(obj);
-	            var jsonObj = JSON.parse(objStr);
-	               
-	            var outValues= '';
-	   
-	            
-	            if(obj.totalCount == 0){
-	            	 outValues += '<td colspan="8">검색 결과가 존재하지 않습니다.</td>';
-	            }else{
-	            	for(var i in jsonObj.list){
-	            		outValues += '<tr><td>' + obj.list[i].mid + '</td>';
-	            		outValues += '<td>' + obj.list[i].mname + '</td>';
-	            		outValues += '<td>' + obj.list[i].mbirth + '</td>';
-	            		outValues += '<td>' + obj.list[i].maddress + '</td>';
-	            		outValues += '<td>' + obj.list[i].mphone + '</td>';
-	            		outValues += '<td>' + obj.list[i].memail + '</td>';
-	            		outValues += '<td>' + obj.list[i].mgender + '</td>';
-	            		outValues += '<td>' + obj.list[i].mconfirm + '</td></tr>';
-	            	}
-	            }
-	            $("#tb1").html(outValues);
-	          //페이징
-				$("#domain").html("");
-				if(currentPage <= 1){
-				}else{
-					$("#domain").append("<li><a href='#' onclick='paging(searchTF, filter, 1)'><<</a></li>");
-				}
-				
-				if(currentPage == 1) {
-				} else {
-					$("#domain").append("<li><a href='#' onclick='paging(searchTF, filter, " + currentPage + " - 1)'><</a></li>");
-				}
-				
-				for (var p = startPage; p <= endPage; p++) { 
-					if (p == currentPage) {
-						$("#domain").append("<li><a href='#'><font color='red'>" + p + "</font></a></li>");
-					} else {
-						$("#domain").append("<li><a href='#' onclick='paging(searchTF, filter, " + p + ")'>" + p + "</a></li>");
-					}
-				}
-				
-				if (currentPage == maxPage) {
-				} else {
-					$("#domain").append("<li><a href='#' onclick='paging(searchTF, filter, " + currentPage + " + 1)'> > </a></li>");
-				}
-				
-				if (currentPage >= maxPage) {
-				} else {
-					$("#domain").append("<li><a href='#' onclick='paging(searchTF, filter, " + maxPage + ")'> >> </a></li>");
-				}
-	            
-
-	            
- 			},//success
- 			error: function(request, status, errorData){
-	               alert("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
-	                     + "error : " + errorData);
-	        }//error
- 		});
- 	} */
- 
+	 
  
 	</script>
  
@@ -334,14 +307,14 @@
                                 <div class="form-group" style="margin-left : 34%;">                                   
                                     <select class="btn dropdown-toggle btn-sm" id="filter" name="filter">
                                 
-										<!-- <option value="all">통합검색</option> -->
+										<option value="all">통합검색</option>
                                         <option value="mid">아이디</option>
                                         <option value="mname">이름</option>
                                         <option value="maddress">주소</option>
                                         <option value="mtelephone">전화번호</option>
                                         <option value="memail">이메일</option>
                                         <option value="mgender">성별</option>	
-                                        <option value="mconfirm">위치동의</option>
+                                        
 
                                     </select>
                                 </div>
@@ -369,6 +342,7 @@
 			<button type="button" class="btn btn-outline-primary" style="margin-left:90%; margin-bottom:0.5%; cursor:pointer;"  
 			data-toggle="modal" data-target="#register">회원 등록</button>
 			
+			
 <!-- 모달 -->
 <!-- Modal-register -->
 <div class="modal fade" id="register" tabindex="-1"
@@ -388,13 +362,16 @@
 				</div>
 			</div>
 		</div>
+		
+
+  				
 						
 <!-- 테이블 -->
 						<div class="intro_content">
 					<table class="table" width="100%;" style="border-bottom : solid 0.1px;"> 
 					  <thead>
 					    <tr align="center">
-					      
+					     
 					      <th scope="col" width="">아이디</th>
 					      <th scope="col" width="">이름</th>
 					      <th scope="col" width="">생일</th>
@@ -402,31 +379,58 @@
 					      <th scope="col" width="">연락처</th>
 					      <th scope="col" width="">이메일</th>
 					      <th scope="col" width="">성별</th>
-					      <th scope="col" width="">위치정보동의여부</th>
+					       <th scope="col" width=""></th>
 					     
 					    </tr>
 					  </thead>
 					  
 					  <tbody id="tb1">
+					 <%--  <c:forEach items="${list }" var="m">
+					  <tr>
+					  	<td align="center">${m.user_id }</td>
+					  	<td align="center">${m.user_name }</td>
+					  	<td align="center">${m.user_birth }</td>
+					  	<td align="center">${m.user_address }</td>
+					  	<td align="center">${m.user_phone }</td>
+					  	<td align="center">${m.user_email }</td>
+					  	<td align="center">${m.user_gender }</td>
+					  	<td align="center">${m.user_confirm_check }</td>
+					  		
+					  	<td align="center">
+					  	<input type="button" class="btn btn-secondary btn-sm" value="탈퇴" ></td>
+					  
+					  </tr>
+					  </c:forEach> --%>
 					  </tbody>
 					  
 					  </table>
 					</div>
 					
 					
- 				 <!-- 페이지 -->
+					
+ 			<!-- 페이지 -->
 							<div class="paginate">
 									<ul class="pagination" style="justify-content: center;" id="domain">
-										<li class="page-item"><a class="page-link" href="#" style="color: rgba(53, 10, 78, 0.6);">&laquo;</a></li>
+									<c:if test="${currentPage >= 2 }">
+										<li class="page-item"><a class="page-link" href="adminmember.do?page=1" style="color: rgba(53, 10, 78, 0.6);">&laquo;</a></li>
+										</c:if>
+										<c:if test="${currentPage >= 2 }">
+										<li class="page-item"><a class="page-link" href="adminmember.do?page=${currentPage - 1 }" style="color: rgba(53, 10, 78, 0.6);">&lsaquo;</a></li>
+										</c:if>
 										<c:forEach var="p" begin="${ startPage }" end="${ endPage }">
 										<c:if test="${ p == currentPage }">
-											<li class="page-item"><a class="page-link" href="mpage.do?page=${ p }" style="background: rgba(53, 10, 78, 0.6);color: white;">${ p }</a></li>
+											<li class="page-item"><a class="page-link" href="adminmember.do?page=${ p }" style="background: rgba(53, 10, 78, 0.6);color: white;">${ p }</a></li>
 										</c:if>
 										<c:if test="${ p != currentPage }">
-											<li class="page-item"><a class="page-link" href="mpage.do?page=${ p }" style="color: rgba(53, 10, 78, 0.6);">${ p }</a></li>
+											<li class="page-item"><a class="page-link" href="adminmember.do?page=${ p }" style="color: rgba(53, 10, 78, 0.6);">${ p }</a></li>
 										</c:if>
-									</c:forEach>
-										<li class="page-item"><a class="page-link" href="#" style="color: rgba(53, 10, 78, 0.6);">&raquo;</a></li>
+									</c:forEach>	
+										<c:if test="${currentPage != maxPage }">
+										<li class="page-item"><a class="page-link" href="adminmember.do?page=${currentPage + 1 }" style="color: rgba(53, 10, 78, 0.6);">&rsaquo;</a></li>
+										</c:if>
+										<c:if test="${currentPage != maxPage }">
+										<li class="page-item"><a class="page-link" href="adminmember.do?page=${maxPage }" style="color: rgba(53, 10, 78, 0.6);">&raquo;</a></li>
+										</c:if>
 									</ul>
 							</div>
 					<!-- 페이지 끝 -->
