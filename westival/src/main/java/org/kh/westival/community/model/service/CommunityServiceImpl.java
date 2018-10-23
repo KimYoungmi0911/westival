@@ -97,8 +97,26 @@ public class CommunityServiceImpl implements CommunityService{
 		return communityDao.deleteCommunity(community_no);
 	}
 
-	@Override
+	/*@Override
 	public int deleteCommunityReply(int community_no) {
 		return communityDao.deleteCommunityReply(community_no);
+	}*/
+
+	//게시글 수정
+	@Override
+	public int updateCommunity(Community community) {
+		return communityDao.updateCommunity(community);
+	}
+
+	//댓글삭제
+	@Override
+	public int deleteCommunityReply(int comment_no) {
+		return communityDao.deleteCommunityReply(comment_no);
+	}
+
+	//댓글수정
+	@Override
+	public int updateCommunityReply(CommunityReply reply) {
+		return communityDao.updateCommunityReply(reply);
 	}
 }

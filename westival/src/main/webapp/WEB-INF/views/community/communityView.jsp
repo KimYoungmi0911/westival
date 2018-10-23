@@ -290,5 +290,5 @@
 <script src="/westival/resources/js/custom.js"></script>
 
 </body>
-
+<c:import url="/WEB-INF/views/footer.jsp" />
 </html>

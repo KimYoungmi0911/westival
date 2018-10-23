@@ -66,6 +66,7 @@
     }
 </style>
 <script>
+	var festivalName;
 	
 	function categoryChange(){
 		if($("#category option:selected").val() == "동행"){
@@ -79,42 +80,58 @@
 		
 	}
 	
-	/* $(function(){
-		//게시글 수정시 필드 값 초기화  
-		if('{community.community_no}' != null){
-	    	  
-	    }
-	}); */
-	/*jquery*/
-	/* $(function(){
-		$('#summernote').summernote({
-	    height : 250, // set editor height
-	    minHeight : 100, // set minimum height of editor
-	    maxHeight : null, // set maximum height of editor
-	    lang : 'ko-KR' // default: 'en-US'
-	});
-
-	});	//jquery
-	
-	function formCheck(){
+	$(function(){
+		$("#category").val("일반").prop("selected", true);
 		
-		console.log($("#active").val());
+		//게시글 수정시 필드 값 초기화  
+		if('${community.community_no}' != 0){
+			$("#category").val('${community.category}').prop("selected", true);
+			if("${community.category}" == "동행"){
+				$(".festivalSelect").prop("style", "display:inline");
+				$("#festival").val("${community.no}").prop("selected", true);
+				$(".festivalSelect").append("<input type='hidden' name='no' value='${festival.no}'>");
+				$("#user_count").val("${community.user_count}").prop("selected", true);
+			}
+			$("#commuInsert").append("<input type='hidden' name='community_no' value='${community.community_no}'>");
+			$("#title").val("${community.title}");
+			$("#content").val("${community.content}");
+	    	
+			$("#insertBtn").prop("style", "display:none");
+			$("#updateBtn").prop("style", "display:inline");
+	    }
+	}); 
 	
-		if( $("#subject").val() == "" ){
+	//게시글 수정
+	function updataBtnClick(){
+		var formData = $("#commuInsert").serialize();
+		$.ajax({
+			url : "commuupdate.do",
+			type : "post",
+			data : formData,
+			success : function(data){
+				if(data > 0){
+					alert("수정이 완료되었습니다.");
+					location.href="commuDetail.do?community_no=${community.community_no}";
+				}else{
+					alert("게시글 수정 실패");
+				}
+			}
+		});
+	}
+	
+	function formCheck(){	
+		if( $("#title").val() == "" ){
 			alert("제목을 입력하세요.");
 			return false;
-		}else if( $("#summernote").val() == "" ){
+		}else if( $("#content").val() == "" ){
 			alert("내용을 입력하세요.");
 			return false;
+		}else{
+			$("#commuInsert").submit();
 		}
-		
-		if( $("#file_name").val() == "" ){
-			$("#qnaInsert").removeAttr("enctype");
-			$("#qnaInsert").attr("action", "qnaInsert.do");
-		}
-		
 		return true;
-	} */
+	} 
+	 
 </script>
 </head>
 
@@ -148,23 +165,20 @@
 								</td>								
 								<td>
 									<div class="festivalSelect" style="display:none;">	
-									<select class="form-control" id="festival" name=no>
+									<select class="form-control" id="festival" name="no">
 										<c:forEach items="${list }" var="festival">
 											<option value="${festival.no }">${festival.name }</option>
 										</c:forEach>
 									</select>
 									</div>
 								</td>
-								
 								<td>
 									<div class="festivalSelect" style="display:none;">
-									
-									<select class="form-control" name="user_count">
+									<select class="form-control" id="user_count" name="user_count">
 										<c:forEach var="i" begin="1" end="10">
 											<option value="${i }">${i }</option>
 										</c:forEach>
 									</select>
-									<!-- <input class="form-control" type="number" id="user_count" name="user_count" style="display:none;" value="0"> -->
 									</div>								
 								</td>
 														
@@ -173,10 +187,6 @@
 								<th>제목</th>
 								<td colspan="2"><input type="text" class="form-control" name="title" id="title"></td>
 							</tr>
-							<!-- <tr>
-								<th>파일첨부</th>
-								<td colspan="2"><input type="file" name="file_name" id="file_name"></td>
-							</tr> -->
 							<tr>
 								<th>내용</th>
 								<td colspan="2" style="height:500px;"><textarea style="width:100%;height:100%;" id="content" name="content"></textarea></td>
@@ -186,7 +196,8 @@
 				<br>
 			<div class="qnaWirteForm__btn">
 				<button class="btn btn-light" type="button" id="cancel" onclick="location.href='commuPage.do';">취소</button>
-				<button class="btn btn-light" type="submit">등록</button>
+				<button class="btn btn-light" type="button" id="updateBtn" onclick="updataBtnClick();" style="display:none;">수정완료</button>
+				<button class="btn btn-light" type="button" id="insertBtn" style="display:inline;" onclick="formCheck();">등록</button>
 			</div>
 			</form>
 				</div>
@@ -202,12 +213,6 @@
 <script src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
 <script src="/westival/resources/plugins/easing/easing.js"></script>
 <script src="/westival/resources/js/custom.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
-
-
-
-
-
 </body>
-
+<c:import url="/WEB-INF/views/footer.jsp" />
 </html>

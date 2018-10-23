@@ -217,9 +217,34 @@
 	
 	<delete id="deleteCommunityReply" parameterType="_int" flushCache="true"
 		statementType="PREPARED">
-		<![CDATA[delete from tb_community_reply where community_no = #{community_no}]]>
+		<![CDATA[delete from tb_community_reply where comment_no = #{comment_no}]]>
 	</delete> 
- 
+ 	
+ 	<update id="updateCommunity" parameterType="Community" flushCache="true"
+		statementType="PREPARED">
+		update tb_community set category = #{category}, title = #{title}, content = #{content} 
+		<if test="no != null">
+		, no = #{no}, user_count = #{user_count} 
+		</if>
+		where community_no = #{community_no}
+	</update>
+	
+	<update id="updateCommunityReply" parameterType="CommunityReply" flushCache="true"
+		statementType="PREPARED">
+		update tb_community_reply set comment_content = #{comment_content}, comment_date = sysdate 
+		where comment_no = #{comment_no}
+	</update>
+	
+	
+	<!-- community.setCommunity_no(Integer.parseInt((String)request.getParameter("community_no")));
+		community.setCategory(request.getParameter("category"));
+		community.setTitle(request.getParameter("title"));
+		community.setContent(request.getParameter("content"));
+		
+		if(community.getCategory() == "동행"){
+			community.setUser_count(Integer.parseInt((String)request.getParameter("user_count")));
+			community.setNo(Integer.parseInt((String)request.getParameter("no")));
+		} -->
  
 	<!-- 
 

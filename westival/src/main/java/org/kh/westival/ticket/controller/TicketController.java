@@ -28,14 +28,12 @@ public class TicketController {
 	// 예매하기 호출시
 	@RequestMapping(value = "ticketing.do")
 	public ModelAndView ticketing(ModelAndView mv, Ticket ticket, 
-			@RequestParam(value = "user_id") String user_id,
 			@RequestParam(value = "no") int no) {
 		
 		System.out.println("no : " + no);
-		mv.addObject("member", tService.selectMember(user_id));
+		
 		mv.addObject("festival", tService.selectFestival(no));
-		//mv.addObject("ticketOption", tService.selectTicketOption(no));
-
+		mv.addObject("ticketOption", tService.selectTicketOption(no));
 		mv.setViewName("ticket/ticketView");
 		
 		return mv;
@@ -53,24 +51,8 @@ public class TicketController {
 			@RequestParam(value="price") int price,
 			@RequestParam(value="state") String state, 
 			@RequestParam(value="import_uid") String import_uid
-			//@ModelAttribute //,
-			//@RequestParam(value="paid_at") Long paid_at	
-			) throws ParseException{
-		
-		
-		// = date.parse(request.getParameter("vbank_date"));
-		/*if(pay_type == "실시간계좌이체"){
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
-			java.util.Date date = new java.util.Date();	
-			date = sdf.parse(request.getParameter("vbank_date"));
-			java.sql.Date sDate = new java.sql.Date(date.getTime());
-			
-			ticket.setVbank_num(request.getParameter("vbank_num"));
-			ticket.setVbank_name(request.getParameter("vbank_name"));
-			ticket.setVbank_holder(request.getParameter("vbank_holder"));
-			ticket.setVbank_date(sDate);
-		}*/
-		
+			){
+	
 		ticket.setNo(no);
 		ticket.setUser_id(user_id);
 		ticket.setTicket_date(ticket_date);
@@ -78,26 +60,14 @@ public class TicketController {
 		ticket.setPay_type(pay_type);
 		ticket.setPrice(price);
 		ticket.setState(state);
-		ticket.setImport_uid(import_uid);		
+		ticket.setImport_uid(import_uid);			
 		
 		System.out.println("ticket : " + ticket);
-		//System.out.println("paid_at : " + paid_at);
-		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");		
-		java.util.Date date = new java.util.Date();
-		//date.setTime(paid_at * 1000);
-		java.sql.Date sDate = new java.sql.Date(date.getTime());
-		ticket.setPay_date(sDate);*/
-		//System.out.println(sdf.parse(sDate));
-		
-		
-		//ticket.setPay_date(sDate);
-		
-		
+	
 		int result = tService.insertTicket(ticket);
 		if(result > 0){
 			ticket = tService.selectTicket(ticket);
 		}
-		
 		mv.addObject("festival", tService.selectFestival(ticket.getNo()));
 		mv.addObject("ticket", ticket);
 		mv.setViewName("ticket/ticketCompleteView");

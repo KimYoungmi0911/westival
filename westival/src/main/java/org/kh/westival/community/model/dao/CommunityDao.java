@@ -81,9 +81,24 @@ public class CommunityDao {
 		return sqlSession.delete("communityMapper.deleteCommunity", community_no);
 	}
 
-	//댓글 전체 삭제
+	/*//댓글 전체 삭제
 	public int deleteCommunityReply(int community_no) {
 		return sqlSession.delete("communityMapper.deleteCommunityReply", community_no);
+	}*/
+
+	//게시글 수정
+	public int updateCommunity(Community community) {
+		return sqlSession.update("communityMapper.updateCommunity", community);
+	}
+
+	//댓글 삭제
+	public int deleteCommunityReply(int comment_no) {
+		return sqlSession.delete("communityMapper.deleteCommunityReply", comment_no);
+	}
+
+	//댓글 수정
+	public int updateCommunityReply(CommunityReply reply) {
+		return sqlSession.update("communityMapper.updateCommunityReply", reply);
 	}
 
 }

@@ -230,11 +230,11 @@
 	                     outValues += '<td><div class="comment_writer">';
 	                     outValues += '<span style="margin-right: 10px; font-weight: bold;">'+decodeURIComponent(obj.list[i].user_id)+'</span> 작성일 : '+obj.list[i].comment_date+'';
 	                     if(userid == obj.list[i].user_id){
-	                        outValues += '&nbsp;&nbsp;&nbsp;&nbsp;<button id="'+obj.list[i].comment_seq+'" type="button" class="btn btn-secondary btn-sm">수정</button>&nbsp;<button id="deleteBtn'+obj.list[i].comment_seq+'" type="button" class="btn btn-secondary btn-sm">삭제</button></div>';   
+	                        outValues += '&nbsp;&nbsp;&nbsp;&nbsp;<button id="editBtn'+obj.list[i].comment_no+'" type="button" class="btn btn-secondary btn-sm" value="'+obj.list[i].comment_no+'" onclick="updateReplyClick('+obj.list[i].comment_no+')">수정</button>&nbsp;<button id="deleteBtn'+obj.list[i].comment_no+'" type="button" class="btn btn-secondary btn-sm" onclick="deleteReply('+obj.list[i].comment_no+')">삭제</button></div>';   
 	                     }
-	                     outValues += '<div class="comment_content">'+decodeURIComponent(obj.list[i].comment_content)+'</div>';
+	                     outValues += '<div class="comment_content" id="comment_content'+obj.list[i].comment_no+'">'+decodeURIComponent(obj.list[i].comment_content)+'</div>';
 	                     outValues += '<div class="modify_content" style="display:none;margin-top:10px;"><textarea style="height:85px;width:700px">'+decodeURIComponent(obj.list[i].comment_content)+'</textarea></div>';
-	                     outValues += '<div class="modify_contentBtn" style="display:none;margin-top:10px;"><button id="'+obj.list[i].comment_seq+'Btn" type="button" class="btn btn-secondary btn-sm">수정하기</button>&nbsp;<button id="cancelBtn'+obj.list[i].comment_seq+'" type="button" class="btn btn-secondary btn-sm">취소</button></div>';
+	                     outValues += '<div class="modify_contentBtn" id="Btn'+obj.list[i].comment_no+'" style="display:none;margin-top:10px;"><button type="button" class="btn btn-secondary btn-sm" onclick="updateReply('+obj.list[i].comment_no+')">수정하기</button>&nbsp;<button id="cancelBtn'+obj.list[i].comment_seq+'" type="button" class="btn btn-secondary btn-sm" onclick="cancleBtn()">취소</button></div>';
 	                     outValues += '<div id="'+obj.list[i].comment_no+'" style="display:none;"></div></td></tr>';
 	                  }
 	               }
@@ -247,13 +247,91 @@
 	            }
 	         });
 	      });
+	      return false;
 	   }
-	
-	function updateClick (){
-		$("#commuForm").prop("action", "commuupdate.do");
-		$("#commuForm").submit();
+	//댓글 수정버튼 클릭시
+	function updateReplyClick(num){
+		var comment_content = $("#comment_content"+num).text();
+		$("#comment_content"+num).html("<textarea id='thisContent' style='width:100%;height:100%;'>"+comment_content+"</textarea>");
+		$("#Btn"+num).prop("style", "display:inline;");
+		$("#editBtn"+num).prop("style", "display:none;")
+		$("#deleteBtn"+num).prop("style", "display:none;");
+		return false;
 	}
 	
+	//댓글 취소버튼 클릭시
+	function cancleBtn(){
+		callReplyList($("#community_no").val());
+		return false;
+	}
+	
+	
+	//댓글 수정완료 클릭시
+	function updateReply(number){
+		if(confirm("확인을 누르면 수정이 완료됩니다.") == true){
+			$.ajax({
+				url : "replyupdate.do",
+				type : "post",
+				data : {"number" : number,
+					"Replyconetent" : $("#thisContent").val()},
+				success : function(data){
+					if(data > 0){
+						alert("댓글이 수정 되었습니다.");
+						callReplyList($("#community_no").val());
+					}else{
+						alert("댓글 수정 실패");
+					}
+				},
+				error: function(request, status, errorData){
+		               console.log("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
+		                     + "error : " + errorData);
+		        }
+			});
+		}else{
+			alert("수정을 취소합니다.");
+			
+		}
+		return false;
+	}
+	
+	//댓글 삭제 클릭시
+	function deleteReply(number){
+		if(confirm("정말 삭제하시겠습니까?") == true){
+			$.ajax({
+				url : "replydelete.do",
+				type : "post",
+				data : {"number" : number},
+				success : function(data){
+					if(data > 0){
+						alert("댓글이 삭제되었습니다.");
+						callReplyList($("#community_no").val());
+					}else{
+						alert("댓글 삭제 실패");
+					}
+				},
+				error: function(request, status, errorData){
+		               console.log("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
+		                     + "error : " + errorData);
+		        }
+			});
+		}else{
+			aler("삭제가 취소되었습니다.");
+		}
+		return false;
+	}
+	
+	//수정버튼 클릭시
+	function updateClick(){
+		if(confirm("확인을 누르시면 수정페이지로 이동합니다.")){
+			$("#commuForm").prop("action", "commuWriteForm.do");
+			$("#commuForm").submit();
+		}else{
+			alert("수정을 취소합니다.");
+		}
+		return false;
+	}
+	
+	//삭제 버튼 클릭시
 	function deleteClick (){
 		
 		if(confirm("해당 게시글을 정말 삭제하시겠습니까?")){
@@ -268,7 +346,6 @@
 					}else{
 						alert("게시글 삭제 실패");
 					}
-					
 				},
 				error : function(jqXHR, textstatus, errorThrown){
 					console.log("error : " + jqXHR + ", " + textstatus + ", " + errorThrown);
@@ -306,10 +383,12 @@
 				<div class="col">
 					<form id="commuForm" action="" method="post">
 						<table class="board">
-							<tr><td colspan="5"><strong>${ community.title }</strong></td>
+							<tr><td colspan="5"><strong>${ community.title }</strong>
+									<input type="hidden" name="title" value="${community.title }">
+								</td>
 								<c:if test="${member.user_id == community.user_id }">
 								<td align="right">
-									<input type="button" class="btn btn-dark" value="수정" onclick="updataCilick()">
+									<input type="button" class="btn btn-dark" value="수정" onclick="updateClick()">
 									<input type="button" class="btn btn-dark" value="삭제" onclick="deleteClick()">
 								</td>
 								</c:if>
@@ -320,16 +399,27 @@
 								<th>조회수</th><td>${ community.read_count }</td>
 							</tr>
 							<tr>
-								<th>분류</th><td>${ community.category }</td>
+								<th>분류</th><td>${ community.category }
+												<input type="hidden" name="category" value="${community.category }">
+											</td>
 								<c:if test="${not empty community.no }">
-								<th>축제</th><td>${ festival.name }</td>
-								<th>인원</th><td>${ community.user_count }</td>
+								<th>축제</th><td>${ festival.name }
+												<input type="hidden" name="no" value="${community.no }">
+											</td>
+								<th>인원</th><td>${ community.user_count }
+												<input type="hidden" name="user_count" value="${community.user_count }">
+											</td>
 								</c:if>
 							</tr>
-							<tr><td colspan="6" id="content"> ${ community.content } </td></tr>
+							<tr><td colspan="6" id="content"> ${ community.content }
+								<div style="float:right;">
+							  		<a href="Info.do?no=${community.no }"><img style="width:300px;height:300px;" src="/westival/resources/images/2561914_image2_1.jpg" alt=""></a>
+								</div> 
+								<input type="hidden" name="content" value="${community.content }">
+								<input type="hidden" id="community_no" name="community_no" value="${ community.community_no }">
+							</td></tr>
 						</table>
 					</form>
-					<!-- 댓글 입력 -->
 					<div class="comment_frame">
 	                  <form id="commentInsert" action="commuReplyInsert.do" method="post">
 	                     <div class="comment_box">
@@ -386,5 +476,5 @@
 <script src="/westival/resources/js/custom.js"></script>
 
 </body>
-
+<c:import url="/WEB-INF/views/footer.jsp" />
 </html>

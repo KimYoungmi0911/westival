@@ -32,7 +32,7 @@ public class TicketDao {
 
 	// 결제시 사용할 티켓정보
 	public TicketOption selectTicketOption(int no) {
-		return (TicketOption) sqlSession.selectOne("ticketMapper.selectTicketOption", no);
+		return (TicketOption) sqlSession.selectOne("ticketMapper.selectTicketOption1", no);
 	}
 
 	// 결제완료시 사용할 예매정보

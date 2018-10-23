@@ -139,10 +139,7 @@ public class CommunityController {
 		job.put("startPage", communityPaging.getStartPage());
 		job.put("endPage", communityPaging.getEndPage());
 		job.put("list", jarr);
-		//job.put("paging", communityPaging);
-		
-		System.out.println("list : " + job.toString());
-		
+				
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.print(job.toJSONString());
@@ -152,9 +149,28 @@ public class CommunityController {
 	
 	//글쓰기 페이지 이동
 	@RequestMapping("commuWriteForm.do")
-	public ModelAndView communityWriteFormMethod(ModelAndView mv, ArrayList<Festival> list){
+	public ModelAndView communityWriteFormMethod(ModelAndView mv, ArrayList<Festival> list,
+			HttpServletRequest request){
 		list = communityService.selectFestivalNameList();
+		Festival festival = new Festival();
+		Community community = new Community();
+		System.out.println("updateForm community");
 		
+		if(request.getParameter("community_no") != null){			
+			community.setCommunity_no(Integer.parseInt((String)request.getParameter("community_no")));
+			community.setCategory(request.getParameter("category"));
+			community.setTitle(request.getParameter("title"));
+			community.setContent(request.getParameter("content"));
+
+			if(request.getParameter("no") != null){
+				community.setNo(Integer.parseInt((String)request.getParameter("no")));
+				community.setUser_count(Integer.parseInt((String)request.getParameter("user_count")));
+			}
+			
+		}
+		System.out.println("updateForm community :" + community );
+		mv.addObject("community", community);
+		mv.addObject("festival", communityService.selectFestivalImage(community.getNo()));
 		mv.addObject("list", list);
 		mv.setViewName("community/communityWriteView");
 		
@@ -178,9 +194,7 @@ public class CommunityController {
 		community.setCategory(request.getParameter("category"));
 		community.setTitle(request.getParameter("title"));
 		community.setContent(request.getParameter("content"));
-		
-		System.out.println("community : " + community);
-		
+				
 		if(communityService.insertCommunity(community) > 0){
 			System.out.println("성공");
 			result = "redirect:/commuPage.do";
@@ -197,21 +211,22 @@ public class CommunityController {
 	public ModelAndView CommunityDetail(
 			@RequestParam(value="community_no") int community_no, ModelAndView mv,
 			HttpServletRequest request){
-
+		int result = 0;
+		
 		if(request.getParameter("category") != null)
 			mv.addObject("category", request.getParameter("category"));
 		if(request.getParameter("search") != null)
-		mv.addObject("search", request.getParameter("search"));
+			mv.addObject("search", request.getParameter("search"));
 		if(request.getParameter("keyword") != null)
-		mv.addObject("keyword", request.getParameter("keyword"));
+			mv.addObject("keyword", request.getParameter("keyword"));
 		if(request.getParameter("page") != null)
-		mv.addObject("page", request.getParameter("page"));
+			mv.addObject("page", request.getParameter("page"));
 		
 		//조회수 증가
 		if(communityService.updateCommunityReadCount(community_no) > 0)
-			System.out.println("조회수 증가 처리 성공");
+			result = 1;
 		else
-			System.out.println("조회수 증가 처리 실패");
+			result = 0;
 		
 		Community community = communityService.selectCommunity(community_no);
 		
@@ -250,10 +265,7 @@ public class CommunityController {
 	//댓글 목록 조회
 	@RequestMapping(value="commuReplySelect.do", method=RequestMethod.POST)
 	public void selectQnaReplyMethod(@RequestParam(value="no") int no, HttpServletResponse response) throws IOException{		
-		ArrayList<CommunityReply> list = communityService.selectCommunityReplyList(no);
-		
-		System.out.println(list);
-		
+		ArrayList<CommunityReply> list = communityService.selectCommunityReplyList(no);		
 		JSONArray jarr = new JSONArray();
 		
 		for(CommunityReply communityReply : list){
@@ -278,35 +290,42 @@ public class CommunityController {
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
-		System.out.println(sendJson);
 		out.flush();
 		out.close();
 	}
 	
-	//게시글 수정페이지로 이동
+	//게시글 수정
 	@RequestMapping(value="commuupdate.do", method=RequestMethod.POST)
-	public ModelAndView updateCommunityMethod(ModelAndView mv, HttpServletRequest request){
+	public void updateCommunityMethod(ModelAndView mv, HttpServletRequest request,
+			HttpServletResponse response) throws IOException{
+		
 		Community community = new Community();
+		int result = 0;
+		
 		community.setCommunity_no(Integer.parseInt((String)request.getParameter("community_no")));
 		community.setCategory(request.getParameter("category"));
 		community.setTitle(request.getParameter("title"));
 		community.setContent(request.getParameter("content"));
-		community.setUser_count(Integer.parseInt((String)request.getParameter("user_count")));
-
-		mv.addObject("community", community);
-		mv.setViewName("community/communityWriteView");
-		return mv;
+		
+		if(request.getParameter("no") != null){
+			community.setUser_count(Integer.parseInt((String)request.getParameter("user_count")));
+			community.setNo(Integer.parseInt((String)request.getParameter("no")));
+		}
+		
+		result = communityService.updateCommunity(community);
+		
+		PrintWriter out = response.getWriter();
+		out.println(result);
+		out.flush();
+		out.close();
+		
 	}
 	
 	//게시글 삭제
 	@RequestMapping(value="commudelete.do", method=RequestMethod.POST)
-	public void deleteCommunityMethod(HttpServletRequest request, HttpServletResponse response,
+	public void deleteCommunityMethod(HttpServletResponse response,
 			@RequestParam(value="community_no") int community_no) throws IOException{
-		System.out.println("delete commu NO : " + community_no);
 		
-		//int result = communityService.deleteCommunityReply(community_no);
-		//if(result > 0)
-		//	result = communityService.deleteCommunity(community_no);
 		int result = communityService.deleteCommunity(community_no);
 
 		PrintWriter out = response.getWriter();
@@ -314,4 +333,36 @@ public class CommunityController {
 		out.flush();
 		out.close();
 	}
+	
+	//댓글수정
+	
+	//댓글삭제
+	@RequestMapping(value="replydelete.do", method=RequestMethod.POST)
+	public void deleteCommunityReplyMethod(HttpServletResponse response,
+			@RequestParam(value="number") int comment_no) throws IOException{
+		System.out.println("comment_no : " + comment_no);
+		
+		int result = communityService.deleteCommunityReply(comment_no);
+		
+		PrintWriter out = response.getWriter();
+		out.print(result);
+		out.flush();
+		out.close();
+	}
+	
+	@RequestMapping(value="replyupdate.do", method=RequestMethod.POST)
+	public void updateReplyMethod(HttpServletResponse response,
+			@RequestParam(value="number") int comment_no,
+			@RequestParam(value="Replyconetent") String comment_content) throws IOException{
+		CommunityReply reply = new CommunityReply();
+		reply.setComment_no(comment_no);
+		reply.setComment_content(comment_content);
+		
+		int result = communityService.updateCommunityReply(reply);
+		PrintWriter out = response.getWriter();
+		out.print(result);
+		out.flush();
+		out.close();
+	}
+	
 }

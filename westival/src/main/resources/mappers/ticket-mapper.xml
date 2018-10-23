@@ -16,11 +16,7 @@
 		<result property="price" column="price" />
 		<result property="state" column="state" />
 		<result property="import_uid" column="import_uid" />
-		<result property="vbank_num" column="vbank_num" />
-		<result property="vbank_name" column="vbank_name" />
-		<result property="vbank_holder" column="vbank_holder" />
-		<result property="vbank_date" column="vbank_date" />
-		<result property="ticket_receipt_date" column="ticket_receipt_date" />
+		<result property="account_no" column="account_no" />
 	</resultMap>
 
 	<resultMap type="Festival" id="resultFestival">
@@ -75,24 +71,23 @@
 
 
 	<!-- insert ticket -->
-	<!-- <insert id="insertTicket" parameterType="Ticket" flushCache="true" 
+	<insert id="insertTicket" parameterType="Ticket" flushCache="true" 
 		statementType="PREPARED" useGeneratedKeys="true"> <![CDATA[ insert into tb_ticket 
 		values (to_char(systimestamp, 'yyyymmddhh24missff3'), #{no}, #{user_id}, 
 		#{ticket_date}, #{ticket_count}, #{pay_type}, sysdate, #{price}, #{state}, 
-		#{import_uid}, #{vbank_num, jdbcType=VARCHAR}, #{vbank_name, jdbcType=VARCHAR}, 
-		#{vbank_holder, jdbcType=VARCHAR}, #{vbank_date, jdbcType=DATE}, sysdate) 
-		]]> </insert> -->
+		#{import_uid},null) 
+		]]> </insert>
 
 	<!-- select ticket -->
 	<!-- <select id="selectTicket" parameterType="Ticket" resultMap="resultTicket"> 
 		<![CDATA[select * from tb_ticket where import_uid = #{import_uid} ]]> </select> -->
 
 	<!-- select ticket -->
-	<!-- <select id="selectTicket" parameterType="Ticket" resultMap="resultTicket"> 
+	<select id="selectTicket" parameterType="Ticket" resultMap="resultTicket"> 
 		<![CDATA[select ticket_no, no, user_id, ticket_date, ticket_count, pay_type, 
-		to_date(to_char(pay_date, 'YYYY-MM-DD hh:mm:ss'), 'YYYY-MM-DD hh:mm:ss'), 
-		price, state, import_uid from tb_ticket where import_uid = #{import_uid} 
-		]]> </select> -->
+		pay_date, price, state, import_uid from tb_ticket where import_uid = #{import_uid} 
+		]]> 
+	</select>
 
 	<!-- select festival -->
 	<select id="selectFestival" resultMap="resultFestival"
@@ -106,9 +101,31 @@
 	</select>
 
 	<!-- select ticket option -->
+	<!-- <select id="selectTicketOption1" parameterType="_int" resultMap="resultTicketOption2">
+		select ticket_no, user_id, no, ticket_name, ticket_price, ticket_quantity,
+		company_name, ceo_name, company_no, phone, bank_name, account_holder_name,
+		account_no, registration_date
+		from tb_ticket_option where no = #{no}
+	</select> -->
+	
 	<select id="selectTicketOption1" parameterType="_int" resultMap="resultTicketOption2">
 		select * from tb_ticket_option where no = #{no}
 	</select>
+	
+	<!--  private String ticket_no; // 티켓 번호
+   private String user_id; // 회원 아이디
+   private int no; // 축제 번호
+   private String ticket_name; // 티켓명
+   private int ticket_price; // 티켓 가격
+   private int ticket_quantity; // 티켓 판매 수량
+   private String company_name; // 회사명
+   private String ceo_name; // 대표자명
+   private int company_no; // 사업자번호
+   private String phone; // 연락처
+   private String bank_name; // 은행명
+   private String account_holder_name; // 예금주명
+   private int account_no; // 계좌번호
+   private Date registration_date; // 등록일 -->
 
 	<!-- 마이페이지 예매내역 조회 -->
 	<select id="recommendList" parameterType="string" resultMap="resultTicket">
