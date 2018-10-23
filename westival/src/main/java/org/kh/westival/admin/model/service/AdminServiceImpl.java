@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.kh.westival.admin.model.dao.AdminDao;
 import org.kh.westival.admin.model.vo.Admin;
 import org.kh.westival.festival.model.vo.Festival;
+import org.kh.westival.festival.model.vo.TicketOption;
 import org.kh.westival.member.model.vo.Member;
 import org.kh.westival.ticket.model.vo.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,24 @@ public class AdminServiceImpl implements AdminService{
 		System.out.println("festivalSelectList serviceImpl ");
 		return adminDao.festivalSelectList(currentPage, limit, filter, searchTF);
 	}
+	
+	//축제 디테일
+	@Override
+	public Festival festivalDetail(int fno) {
+		System.out.println("festivalDetail serviceImpl");
+		return adminDao.festivalDetail(fno);
+	}
+	/*//축제 수정(축제)
+	public int updateFestival(Festival festival) {
+		System.out.println("updateFestival serviceImpl");
+		return adminDao.updateFestival(festival);
+	}
+	//축제 수정(티켓)
+	public int updateTicketOption(TicketOption ticketOption) {
+		System.out.println("updateTicketOption serviceImpl");
+		return adminDao.updateTicketOption(ticketOption);
+	}*/
+	
 	//----------------------------------------------------------
 	//회원관리
 	
@@ -143,6 +162,7 @@ public class AdminServiceImpl implements AdminService{
 		System.out.println("amdelete serviceImpl");
 		return adminDao.amdelete(mid);
 	}
+	
 	
 	
 	
