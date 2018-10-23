@@ -200,4 +200,23 @@
 	<select id="myCurrentTicket" parameterType="string" resultType="Ticket">
 		select * from tb_ticket where ticket_no = #{ticket_no}
 	</select>
+	
+	<!-- 내 예매내역 환불 처리 -->
+	<update id="refundCurrentTicket" parameterType="string" flushCache="true" statementType="PREPARED">
+		update tb_ticket set state = '환불완료' where ticket_no = #{ticket_no}
+	</update>
+	
+	<!-- 내 예매내역 환불 사유 전송 -->
+	<update id="updateRefundWhy" parameterType="java.util.HashMap" flushCache="true" statementType="PREPARED">
+		update tb_refund set refund_content = #{refund_why} where ticket_no = #{ticket_no}
+	</update>
+	
+	<!-- 페스티벌 컬럼 개수 조회 -->
+	<select id="selectFestivalgetListCount" parameterType="string" resultType="_int">
+		select count(*) from tb_festival where reg_user = #{user_id} and delete_check = 'N'
+	</select>
+	
+	<select id="selectFestivalgetListCountNonLogin" parameterType="string" resultType="_int">
+		select count(*) from tb_festival where delete_check = 'N'
+	</select>
 </mapper>

@@ -101,6 +101,24 @@ public class MemberServiceImpl implements MemberService {
 	public Ticket myCurrentTicket(String ticket_no) {
 		return memberDao.myCurrentTicket(ticket_no);
 	}
+	
+	// 내 예매내역 환불 처리
+	@Override
+	public int refundCurrentTicket(String ticket_no) {
+		return memberDao.refundCurrentTicket(ticket_no);
+	}
+	
+	// 내 예매내역 환불 사유 전송
+	@Override
+	public int updateRefundWhy(String ticket_no, String refund_why) {
+		return memberDao.updateRefundWhy(ticket_no, refund_why);
+	}
+	
+	// 페스티벌 컬럼 개수 조회
+	@Override
+	public int FestivalgetListCount(String user_id) {
+		return memberDao.FestivalgetListCount(user_id);
+	}
 
 	// 경호
 	// 내 티켓 조회

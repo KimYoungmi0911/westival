@@ -128,6 +128,27 @@ public class MemberDao {
 	public Ticket myCurrentTicket(String ticket_no) {
 		return (Ticket)sqlSession.selectOne("memberMapper.myCurrentTicket", ticket_no);
 	}
+	
+	// 내 예매내역 환불 처리
+	public int refundCurrentTicket(String ticket_no) {
+		return (int)sqlSession.update("memberMapper.refundCurrentTicket", ticket_no);
+	}
+	
+	// 내 예매내역 환불 사유 전송
+	public int updateRefundWhy(String ticket_no, String refund_why) {
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("ticket_no", ticket_no);
+		param.put("refund_why", refund_why);
+		return (int)sqlSession.update("memberMapper.updateRefundWhy", param);
+	}
+	
+	// 페스티벌 컬럼 개수 조회
+	public int FestivalgetListCount(String user_id) {
+		if(user_id != null)
+			return (int)sqlSession.selectOne("memberMapper.selectFestivalgetListCount", user_id);
+		else
+			return (int)sqlSession.selectOne("memberMapper.selectFestivalgetListCountNonLogin", user_id);
+	}
 
 	// 경호
 	// 내 티켓 조회

@@ -4,24 +4,20 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.member.model.service.MemberService;
 import org.kh.westival.member.model.vo.Member;
 import org.kh.westival.ticket.model.vo.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -159,27 +155,46 @@ public class MemberController {
 
 	// 내 게시글 페스티벌 전체 조회
 	@RequestMapping(value = "myTotalList.do", method = RequestMethod.POST)
-	public void myTotalList(Member member, HttpServletResponse response) throws IOException {
-		List<Festival> list = memberService.myTotalList(member.getUser_id());
-		
+	public void myTotalList(Member member, HttpServletResponse response, HttpServletRequest request, HttpSession session) throws IOException {
 		JSONArray jarr = new JSONArray();
-
-		for (Festival festival : list) {
+		
+		int currentPage = 1;
+        int limit = 10;
+        if(request.getParameter("page") != null){
+           currentPage = Integer.parseInt(request.getParameter("page"));
+        }
+        
+		List<Festival> list = memberService.myTotalList(member.getUser_id());
+        int listCount = memberService.FestivalgetListCount(member.getUser_id());
+        int maxPage = (int) Math.ceil(((double)listCount / limit));
+        int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1;
+        int endPage = startPage + limit -1;
+        if(maxPage < endPage) {
+        	endPage = maxPage;
+        }
+        for(int i=limit*(currentPage-1); i<limit*currentPage; i++) {
 			JSONObject job = new JSONObject();
 
-			job.put("new_img_name", festival.getNew_img_name());
-			job.put("no", new Integer(festival.getNo()).toString());
-			job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getStart_date()));
-			job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getEnd_date()));
-			job.put("name", festival.getName());
-			job.put("manage", festival.getManage());
-			job.put("address", festival.getAddress());
-			job.put("content", festival.getContent());
+			job.put("new_img_name", list.get(i).getNew_img_name());
+			job.put("no", new Integer(list.get(i).getNo()).toString());
+			job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+			job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+			job.put("name", list.get(i).getName());
+			job.put("manage", list.get(i).getManage());
+			job.put("address", list.get(i).getAddress());
+			job.put("content", list.get(i).getContent());
 
 			jarr.add(job);
 		}
+        
+        System.out.println(limit*(currentPage-1)+(listCount%limit));
+		
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("currentPage", currentPage);
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
@@ -396,20 +411,11 @@ public class MemberController {
 			out.close();
 		}
 		
+		// 내 예매내역 환불 처리
 		@RequestMapping(value="refundCurrentTicket.do", method=RequestMethod.POST)
-		public ResponseEntity<String> refundCurrentTicket(ModelAndView mv, @RequestBody String param) throws Exception {
-			System.out.println("param : " + param);
-			
-			JSONParser jparser = new JSONParser();
-			JSONArray jarr = (JSONArray)jparser.parse(param);
-			/*HashMap<String, String> refundTicketInfo = new HashMap<String, String>();
-			
-			for(int i = 0; i < jarr.size(); i++) {
-				refundTicketInfo.put("ticket_no", )
-			}
-			
-			mv.addObject(memberService.refundCurrentTicket(jarr));*/
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+		public void refundCurrentTicket(HttpServletResponse response, String ticket_no, String refund_why) throws Exception {			
+			memberService.refundCurrentTicket(ticket_no);
+			memberService.updateRefundWhy(ticket_no, refund_why);
 		}
 		
 		// 경호
