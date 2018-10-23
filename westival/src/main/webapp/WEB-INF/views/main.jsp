@@ -47,12 +47,38 @@
 				// 페이징 정보
 				console.log("maxPage : " + maxPage + ", startPage : " + startPage + ", endPage : " + endPage + ", currentPage : " + currentPage);
 
-				for(var i in jsonObj.list){ 					
+				for(var i in jsonObj.list){
+					
+					var tagArr = jsonObj.list[i].tag.split('#');
+					var tag = "";
+
+					for(var j=1; j<tagArr.length; j++){
+						tag += "<a href='tagClick.do?tag=" + tagArr[j] + "'>#" + tagArr[j] + "</a>&nbsp;"
+					}
+					
+					var themeArr = jsonObj.list[i].theme.split(',');
+					var theme = "";
+
+					for(var k in themeArr){
+						switch(themeArr[k]){
+						case 'festival' : 
+							theme += '축제 '; 
+							break;
+						case 'party' : 
+							theme += '파티 '; 
+							break;
+						case 'meeting' : 
+							theme += '모임 '; 
+							break;
+						case 'performance' : 
+							theme += '공연 '; 
+						}
+					}
 					todayFestival += "<div class='col-lg-6 offers_col'><div class='offers_item'><div class='row'><div class='col-lg-6'><div class='offers_image_container'>"
 						+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name 
 						+ "); width:250px; height:280px;'></div></div></div><div class='col-lg-6'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name
-						+ "<span><br><br>" + jsonObj.list[i].end_date + "일 까지</span></div><p class='offers_text' style='width:200px; height:50px;'>" + "테마 : " + jsonObj.list[i].theme 
-						+ "<br>태그 : " + jsonObj.list[i].tag + "<br></p><div class='offers_link'>" + "<a href='Info.do?no=" + jsonObj.list[i].no + "'>자세히 보기</a></div>"
+						+ "<span><br><br>" + jsonObj.list[i].end_date + "일 까지</span></div><p class='offers_text' style='width:200px; height:50px;'>" + "테마 : " + theme 
+						+ "<br>태그 : " + tag + "<br></p><div class='offers_link'>" + "<a href='Info.do?no=" + jsonObj.list[i].no + "'>자세히 보기</a></div>"
 						+ "</div></div></div></div></div>";
 				}
 				
@@ -163,12 +189,41 @@
 				console.log("maxPage : " + maxPage + ", startPage : " + startPage + ", endPage : " + endPage + ", currentPage : " + currentPage);
 
 				for(var i in jsonObj.list){ 					
-					todayFestival += "<div class='col-lg-6 offers_col'><div class='offers_item'><div class='row'><div class='col-lg-6'><div class='offers_image_container'>"
-						+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name 
-						+ "); width:250px; height:280px;'></div></div></div><div class='col-lg-6'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name
-						+ "<span><br><br>" + jsonObj.list[i].end_date + "일 까지</span></div><p class='offers_text' style='width:200px; height:50px;'>" + "테마 : " + jsonObj.list[i].theme 
-						+ "<br>태그 : " + jsonObj.list[i].tag + "<br></p><div class='offers_link'>" + "<a href='Info.do?no=" + jsonObj.list[i].no + "'>자세히 보기</a></div>"
-						+ "</div></div></div></div></div>";
+					for(var i in jsonObj.list){
+						
+						var tagArr = jsonObj.list[i].tag.split('#');
+						var tag = "";
+
+						for(var j=1; j<tagArr.length; j++){
+							tag += "<a href='tagClick.do?tag=" + tagArr[j] + "'>#" + tagArr[j] + "</a>&nbsp;"
+						}
+						
+						var themeArr = jsonObj.list[i].theme.split(',');
+						var theme = "";
+
+						for(var k in themeArr){
+							switch(themeArr[k]){
+							case 'festival' : 
+								theme += '축제 '; 
+								break;
+							case 'party' : 
+								theme += '파티 '; 
+								break;
+							case 'meeting' : 
+								theme += '모임 '; 
+								break;
+							case 'performance' : 
+								theme += '공연 '; 
+							}
+						}
+					
+						todayFestival += "<div class='col-lg-6 offers_col'><div class='offers_item'><div class='row'><div class='col-lg-6'><div class='offers_image_container'>"
+							+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name 
+							+ "); width:250px; height:280px;'></div></div></div><div class='col-lg-6'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name
+							+ "<span><br><br>" + jsonObj.list[i].end_date + "일 까지</span></div><p class='offers_text' style='width:200px; height:50px;'>" + "테마 : " + theme 
+							+ "<br>태그 : " + tag + "<br></p><div class='offers_link'>" + "<a href='Info.do?no=" + jsonObj.list[i].no + "'>자세히 보기</a></div>"
+							+ "</div></div></div></div></div>";
+					}
 				}
 				
 				if(currentPage <= 1){

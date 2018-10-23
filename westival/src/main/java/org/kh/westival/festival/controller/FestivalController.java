@@ -219,6 +219,7 @@ public class FestivalController {
 			job.put("no", fest.getNo()); // 축제번호
 			job.put("name", fest.getName()); // 축제명
 			job.put("new_img_name", fest.getNew_img_name()); // 축제사진
+			job.put("content", fest.getContent());
 			job.put("address", fest.getAddress()); // 장소
 			job.put("start_date", fest.getStart_date().toString()); // date 형
 			job.put("end_date", fest.getEnd_date().toString());
@@ -286,6 +287,7 @@ public class FestivalController {
 			job.put("no", fest.getNo()); // 축제번호
 			job.put("name", fest.getName()); // 축제명
 			job.put("new_img_name", fest.getNew_img_name()); // 축제사진
+			job.put("content", fest.getContent());
 			job.put("address", fest.getAddress()); // 장소
 			job.put("start_date", fest.getStart_date().toString()); 
 			job.put("end_date", fest.getEnd_date().toString());
@@ -643,6 +645,53 @@ public class FestivalController {
 
 		out.flush();
 		out.close();
+	}
+	
+	@RequestMapping("tagClick.do")
+	public ModelAndView tagClickMethod(HttpServletRequest request, Festival festival, ModelAndView mv){
+		
+		String user_id = null;
+		if ((request.getSession().getAttribute("member")) != null)
+			user_id = ((Member) request.getSession().getAttribute("member")).getUser_id();
+		
+		int currentPage = 1; // 보이는 페이지
+		int limit = 4; // 한 페이지당 최대 4개
+		int listCount = festivalService.tagSearchCount(festival); // 총 출력 갯수
+		
+		int maxPage =(int)((double)listCount / limit + 0.9); // 총 페이지수 계산
+		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1; // 시작 페이지 수 (1, 11, 21...);
+		int endPage = startPage + ((listCount-1) / limit) ; // 끝 페이지 수 (10, 20, 30....);
+		
+		if(maxPage < endPage)
+			endPage = maxPage;	
+		
+		List<Festival> list = festivalService.tagSearch(festival, currentPage, limit); // 페이지에 출력될 리스트
+		List scrapList = new ArrayList();
+		
+		for(Festival fest : list){
+			if(user_id == null){ // 로그인 안되어있을때
+				scrapList.add(2);
+			} else{
+				Scrap scrap = new Scrap(user_id, fest.getNo());
+				if(festivalService.selectScrap(scrap) == null){ // 스크랩 안되어 있을때
+					scrapList.add(0);
+				} else{
+					scrapList.add(1);
+				}
+			}
+		}
+		
+		mv.addObject("list", list);
+		mv.addObject("scrap", scrapList);
+		mv.addObject("tag", festival.getTag());
+		
+		mv.addObject("maxPage", maxPage);
+		mv.addObject("startPage", startPage);
+		mv.addObject("endPage", endPage);
+		mv.addObject("currentPage", currentPage);
+		
+		mv.setViewName("festival/tagSearch");
+		return mv;
 	}
 
 }

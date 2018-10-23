@@ -20,8 +20,6 @@ public class MemberDao {
 
 	// 병훈
 	public Member loginCheck(Member member) {
-
-		System.out.println(member);
 		return (Member) sqlSession.selectOne("memberMapper.loginCheck", member);
 	}
 
@@ -32,7 +30,12 @@ public class MemberDao {
 	public Member checkId(Member member) {
 		return (Member) sqlSession.selectOne("memberMapper.checkId", member);
 	}
-
+	
+	public int insertMember(Member member) {
+		return sqlSession.insert("memberMapper.insertMember", member);
+	}
+	
+	
 	// 충섭
 	public Member selectMemberInfo(String user_id) {
 		return (Member) sqlSession.selectOne("memberMapper.selectMemberInfo", user_id);
@@ -81,5 +84,7 @@ public class MemberDao {
 		param.put("month", month * (-1));
 		return (List<Ticket>) sqlSession.selectList("ticketMapper.myTicketSearchMonth", param);
 	}
+
+
 
 }

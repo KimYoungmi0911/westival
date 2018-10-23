@@ -37,6 +37,14 @@
 		]]>
 	</select>
 	
+	<!-- 회원가입 10/23 -->	
+	<insert id="insertMember" parameterType="Member" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		insert into tb_user values (#{user_id}, #{user_pwd}, #{user_name}, #{user_birth}, 
+		#{user_address}, #{user_phone}, #{user_email}, #{user_gender})		
+	</insert>
+	
+	
 	<!-- 충섭 -->	
 	<select id="selectMemberInfo" parameterType="string" resultType="Member">
 		select * from tb_user where user_id = #{user_id}
