@@ -239,7 +239,7 @@
 	<select id="festivalSelectList" parameterType="AdminFestivalPage" resultMap="festivalList">
 	
 	select * from (
-        select ROWNUM RNUM, name, address, start_date, telephone, 
+        select ROWNUM RNUM, no, name, address, start_date, telephone, 
         manage, read_count, recommend, ticket 
         from (select * from tb_festival 
         order by start_date asc))
@@ -319,6 +319,48 @@
 	where RNUM between #{startRow} and #{endRow}
 	
 	</select> 
+	
+	<!-- 축제 디테일 -->
+	<select id="festivalDetail" parameterType="_int" resultMap="festivalList">
+	select * from tb_festival where no = #{no}
+	</select>
+	
+	<!-- 축제 수정(축제) -->
+	<update id="updateFestival" parameterType="Festival" flushCache="true"
+		statementType="PREPARED">
+	update tb_festival set  
+	name = #{name}, address = #{address}, 
+	original_img_name = #{original_img_name}, 
+	new_img_name = #{new_img_name}, 
+	content = #{content}, start_date = #{start_date}, 
+	end_date = #{end_date}, theme = #{theme}, 
+	telephone = #{telephone}, manage = #{manage}, 
+	ticket = #{ticket}, tag= #{tag}, 
+	<choose>
+	<when test="file_name == null">
+		file_name = null,
+	</when>
+	<when test="file_name != null">
+		file_name = #{file_name},
+	</when>
+	</choose>
+	  read_count = default, 
+	  recommend = default
+	  where no = #{no}
+	</update>	
+
+	<!-- 축제 수정(티켓) -->
+	<update id="updateTicketOption" parameterType="TicketOption" flushCache="true"
+		statementType="PREPARED">
+	update tb_ticket_option set ticket_name = #{ticket_name}, 
+	ticket_price = #{ticket_price}, ticket_quantity = #{ticket_quantity}, 
+	company_name = #{company_name}, ceo_name = #{ceo_name}, 
+	phone = #{phone}, bank_name = #{bank_name}, 
+	account_holder_name = #{account_holder_name}, 
+	account_no = #{account_no}, 
+	registration_date = #{registration_date} 
+	where ticket_no = #{ticket_no}
+	</update>
 	
 	<!-- 회원리스트 -->
 	

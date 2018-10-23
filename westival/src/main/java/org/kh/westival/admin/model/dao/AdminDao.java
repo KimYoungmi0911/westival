@@ -8,6 +8,7 @@ import org.kh.westival.admin.model.service.AdminFestivalPageServiceImpl;
 import org.kh.westival.admin.model.service.AdminTicketPageServiceImpl;
 import org.kh.westival.admin.model.vo.Admin;
 import org.kh.westival.festival.model.vo.Festival;
+import org.kh.westival.festival.model.vo.TicketOption;
 import org.kh.westival.member.model.vo.Member;
 import org.kh.westival.ticket.model.vo.Ticket;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -115,6 +116,25 @@ public class AdminDao {
 		return (ArrayList<Festival>) sqlSession.selectList("adminMapper.fsearchList", map);
 	}
 
+	//축제 디테일
+	public Festival festivalDetail(int fno) {
+		System.out.println("festivalDetail dao");
+		return (Festival) sqlSession.selectOne("adminMapper.festivalDetail", fno);
+	}
+	
+	/*//축제 수정(축제)
+	public int updateFestival(Festival festival) {
+		System.out.println("updateFestival dao");
+		return sqlSession.update("adminMapper.updateFestival", festival);
+	}
+	//축제 수정(티켓)
+	public int updateTicketOption(TicketOption ticketOption) {
+		System.out.println("updateTicketOption dao");
+		return sqlSession.update("adminMapper.updateTicketOption", ticketOption);
+	}
+	*/
+	
+	
 	//-------------------------------------------------------------------
 	//회원관리
 	
@@ -181,6 +201,10 @@ public class AdminDao {
 		
 		return sqlSession.delete("adminMapper.amdelete", mid);
 	}
+
+	
+
+	
 
 	
 

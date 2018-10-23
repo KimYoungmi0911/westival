@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.kh.westival.admin.model.vo.Admin;
 import org.kh.westival.festival.model.vo.Festival;
+import org.kh.westival.festival.model.vo.TicketOption;
 import org.kh.westival.member.model.vo.Member;
 import org.kh.westival.ticket.model.vo.Ticket;
 
@@ -38,6 +39,17 @@ public interface AdminService {
 	//축제관리뷰(검색)(페이징 및 리스트)
 	int fGetSelectListCount(String filter, String searchTF);
 	ArrayList<Festival> festivalSelectList(int currentPage, int limit, String filter, String searchTF);
+	
+	//축제 디테일
+	Festival festivalDetail(int fno);
+	
+	/*//축제 수정(축제)
+	int updateFestival(Festival festival);
+	
+	//축제 수정(티켓)
+	int updateTicketOption(TicketOption ticketOption);*/
+	
+	
 //------------------------------------------------------------------	
 	//회원관리
 	
@@ -56,6 +68,8 @@ public interface AdminService {
 	
 	//회원 삭제
 	Object amdelete(String mid);
+	
+	
 	
 	
 	
