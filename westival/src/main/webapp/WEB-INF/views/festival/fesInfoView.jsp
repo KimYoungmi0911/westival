@@ -302,9 +302,10 @@
    }
    
    .chart_box {
-   	position: relative;
-    padding: 31px 0 54px;
-    background: url(/westival/resources/images/bg_chart.gif) repeat-x;
+	  position: relative;
+	  padding: 31px 0 54px;
+	  background: url(/westival/resources/images/bg_chart.gif) repeat-x;
+	  text-align: center;
    }
    
    .graph_Wrap {
@@ -367,18 +368,72 @@
 	  background-size: cover;
 	}
 	
-	.Man .graph_num strong {
-	  color: #d82e2e;
-	  font-weight: bold;
-	  font-family: tahoma;
-	  font-size: 13px;
+	.Man .graph_num {
+	 	color: #d82e2e;
+	    top: -22px;
+	    width: 100px;
+	    position: absolute;
+	    left: 0;
+	    text-align: center;
+	    white-space: nowrap;
+	    font-size: 14px;
+	    font-weight: 700;
 	}
 	
-	.Woman .graph_num strong {
-	  color: #d82e2e;
-	  font-weight: bold;
-	  font-family: tahoma;
-	  font-size: 13px;
+	.Woman .graph_num {
+	  	color: #d82e2e;
+	    top: -22px;
+	    width: 100px;
+	    position: absolute;
+	    left: 0;
+	    text-align: center;
+	    white-space: nowrap;
+	    font-size: 14px;
+	    font-weight: 700;
+	}
+	
+	.chart_age {
+		margin-left: 60px;
+	}
+	
+	.chart_age_progress {
+		position: relative;
+	    float: left;
+	    margin-left: 28px;
+	    width: 32px;
+	    height: 130px;
+	}
+	
+	.chart_age_progress_in {
+		position: absolute;
+	    bottom: 0;
+	    left: 0;
+	    right: 0;
+	    background: #d9dee3;
+	}
+	
+	.chart_age_per {
+		color: black;
+		top: -22px;
+    	width: 40px;
+    	margin-left: -5px;
+    	position: absolute;
+	    left: 0;
+	    text-align: center;
+	    white-space: nowrap;
+	    font-size: 14px;
+	    font-weight: 700;
+	}
+	
+	.chart_age_cnt {
+		position: absolute;
+	    left: 0;
+	    text-align: center;
+	    white-space: nowrap;
+	    font-size: 12px;
+	    color: #353535;
+	    bottom: -24px;
+    	width: 100%;
 	}
    
    /*지도 css*/
@@ -495,7 +550,7 @@
                                  <a id="find_gido" target="_blank" href="#">찾아오시는길</a>
                               </div>
                               <div class="button intro_button">
-                                 <a href="ticketing.do?no=${ festival.no }&user_id=${ member.user_id }">티켓구매</a>
+                                 <a href="ticketing.do?no=${ festival.no }">티켓구매</a>
                               </div>
                            </c:if>
                            <c:if test="${ festival.ticket == 'N' }">
@@ -530,7 +585,7 @@
                   </div>
                   
                   <div class="content-box">
-                  ${ festival.content }
+                  	<pre>${ festival.content }</pre>
                   </div>
                   
                </div>   
@@ -582,13 +637,63 @@
 	               <div class="graph_Wrap test">
 						<div class="Man">
 							<span id="GrapMale" class="tgraph" style="height:${ male }%"></span>
-							<span class="graph_num" style="color:black;">남자<br><strong id="PerMale">${ male }%</strong></span>
+							<span class="graph_num">${ male }<em>%</em></span>
+							<span class="chart_age_cnt">
+								<span>남자</span>
+							</span>
+							<%-- <span class="graph_num" style="color:black;">남자<br><strong id="PerMale">${ male }%</strong></span> --%>
 						</div>
 					</div>
 					<div class="graph_Wrap wtest">
 						<div class="Woman">
 							<span id="GrapFemale" class="tgraph" style="height:${ female }%"></span>
-							<span class="graph_num" style="color:black;">여자<br><strong id="PerFemale">${ female }%</strong></span>
+							<span class="graph_num">${ female }<em>%</em></span>
+							<span class="chart_age_cnt">
+								<span>여자</span>
+							</span>
+							<%-- <span class="graph_num" style="color:black;">여자<br><strong id="PerFemale">${ female }%</strong></span> --%>
+						</div>
+					</div>
+					<div class="graph_Wrap chart_age">
+						<div class="chart_age_progress">
+							<span class="chart_age_progress_in" style="height:${ age.age10 }%">
+								<span class="chart_age_per">${ age.age10 }<em>%</em></span>
+							</span>
+							<span class="chart_age_cnt">
+								<span>10대↓</span>
+							</span>
+						</div>
+						<div class="chart_age_progress">
+							<span class="chart_age_progress_in" style="height:${ age.age20 }%">
+								<span class="chart_age_per">${ age.age20 }<em>%</em></span>
+							</span>
+							<span class="chart_age_cnt">
+								<span>20대</span>
+							</span>
+						</div>
+						<div class="chart_age_progress">
+							<span class="chart_age_progress_in" style="height:${ age.age30 }%">
+								<span class="chart_age_per">${ age.age30 }<em>%</em></span>
+							</span>
+							<span class="chart_age_cnt">
+								<span>30대</span>
+							</span>
+						</div>
+						<div class="chart_age_progress">
+							<span class="chart_age_progress_in" style="height:${ age.age40 }%">
+								<span class="chart_age_per">${ age.age40 }<em>%</em></span>
+							</span>
+							<span class="chart_age_cnt">
+								<span>40대</span>
+							</span>
+						</div>
+						<div class="chart_age_progress">
+							<span class="chart_age_progress_in" style="height:${ age.age50 }%">
+								<span class="chart_age_per">${ age.age50 }<em>%</em></span>
+							</span>
+							<span class="chart_age_cnt">
+								<span>50대↑</span>
+							</span>
 						</div>
 					</div>
 				</div>

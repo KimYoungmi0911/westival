@@ -292,5 +292,33 @@
 		where tag like '%'||#{tag}||'%'	
 		]]>
 	</select>
+	
+	<!-- 다혜 추가 -->
+	<resultMap type="Age" id="resultAge">
+		<result property="age10" column="age10" />
+		<result property="age20" column="age20" />
+		<result property="age30" column="age30" />
+		<result property="age40" column="age40" />
+		<result property="age50" column="age50" />
+		<result property="totalAge" column="totalAge" />
+	</resultMap>
+	
+	<select id="selectAge" parameterType="_int" resultMap="resultAge">
+	<![CDATA[
+		select count(case when age < 20 then 1 end) as "age10",
+		count(case when age like '2%' then 1 end) as "age20",
+		count(case when age like '3%' then 1 end) as "age30",
+		count(case when age like '4%' then 1 end) as "age40",
+		count(case when age > 50 then 1 end) as "age50",
+		count(*) as totalAge
+		from (
+		select TRUNC(MONTHS_BETWEEN(sysdate, user_birth)/12)+1 as age
+		from tb_recommend a
+		join tb_user b
+		on a.user_id = b.user_id
+		where a.no = #{no}
+		)
+		]]>
+	</select>
 
 </mapper>
