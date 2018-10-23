@@ -36,10 +36,10 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 
-	// 병훈
+	// 병훈 (10/23수정)
 	@RequestMapping(value = "login.do", method = RequestMethod.POST)
-	public void loginMethod(Member member, @RequestParam(value = "user_id") String user_id,
-			@RequestParam(value = "user_pwd") String user_pwd, HttpServletResponse response) throws Exception {
+	public ModelAndView loginMethod(Member member, @RequestParam(value = "user_id") String user_id,
+			@RequestParam(value = "user_pwd") String user_pwd, HttpServletResponse response, ModelAndView mv) throws Exception {
 
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
@@ -48,7 +48,7 @@ public class MemberController {
 		member.setUser_pwd(user_pwd);
 		member = memberService.loginCheck(member);
 
-		System.out.println(member);
+		System.out.println("확인 : " + member);
 
 		if (member != null) {
 			out.print(1);
@@ -58,7 +58,9 @@ public class MemberController {
 
 		out.flush();
 		out.close();
-
+		
+		mv.addObject("member", member);
+		return mv;
 	}
 
 	@RequestMapping("logout.do")
@@ -100,8 +102,29 @@ public class MemberController {
 
 		out.flush();
 		out.close();
+	}
+	
+	// 10/23 로그인, 회원가입
+	@RequestMapping(value = "loginPage.do")
+	public String loginPage() {
+		return "login";
+	}
+	
+	@RequestMapping(value = "registerPage.do")
+	public String registerPage() {
+		return "register";
+	}
+	
+	@RequestMapping(value = "register.do", method = RequestMethod.POST)
+	public String registerMethod(Member member) {
+		
+		// 예외처리
+
+		int result = memberService.insertMember(member);
+		return "main";
 
 	}
+	
 
 	// 충섭
 	// 페이지 이동처리만 담당

@@ -21,8 +21,8 @@ public class FestivalDao {
 
 	@Autowired
 	private SqlSessionTemplate sqlSession;
-	
-	//경호
+
+	// 경호
 	public int insertFestival(Festival festival) {
 		int result = 0;
 		result = sqlSession.insert("festivalMapper.insertFestival", festival);
@@ -35,31 +35,41 @@ public class FestivalDao {
 		return result;
 	}
 
-	public List<Festival> locationSearch(Festival festival) {
+	// 10/18수정
+	public List<Festival> locationSearch(Festival festival, int currentPage, int limit) {
+		int startRow = (currentPage - 1) * limit + 1;
+		int endRow = startRow + limit - 1;
+
 		Map<Object, Object> param = new HashMap<Object, Object>();
-		
+
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
 		param.put("address", festival.getAddress());
 		param.put("start_date", festival.getStart_date());
 		param.put("end_date", festival.getEnd_date());
-		
+
 		String[] list = festival.getTheme().split(",");
-		
+
 		List<String> themeList = new ArrayList<String>();
-				
-		for(int i=0; i<list.length; i++){
+
+		for (int i = 0; i < list.length; i++) {
 			themeList.add(list[i]);
 		}
 		param.put("theme_list", themeList);
-		
+
 		return (List) sqlSession.selectList("festivalMapper.locationSearch", param);
 	}
 
-	public List<Festival> tagSearch(Festival festival) {
-		return (List) sqlSession.selectList("festivalMapper.tagSearch", festival);
-	}
+	public List<Festival> tagSearch(Festival festival, int currentPage, int limit) {
+		int startRow = (currentPage - 1) * limit + 1;
+		int endRow = startRow + limit - 1;
 
-	public List<Festival> todayFestivalSearch(Date currentDate) {
-		return (List) sqlSession.selectList("festivalMapper.todayFestivalSearch", currentDate);
+		Map<Object, Object> param = new HashMap<Object, Object>();
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
+		param.put("tag", festival.getTag());
+
+		return (List) sqlSession.selectList("festivalMapper.tagSearch", param);
 	}
 
 	public List<Festival> top3FestivalSearch() {
@@ -69,7 +79,7 @@ public class FestivalDao {
 	public Scrap selectScrap(Scrap scrap) {
 		return (Scrap) sqlSession.selectOne("scrapMapper.selectScrap", scrap);
 	}
-	
+
 	public int insertScrap(Scrap scrap) {
 		int result = 0;
 		result = sqlSession.insert("scrapMapper.insertScrap", scrap);
@@ -82,10 +92,10 @@ public class FestivalDao {
 		return result;
 	}
 
-	//다혜
+	// 다혜
 	public Festival selectFestival(int no) {
 		System.out.println("상세페이지 dao");
-		return (Festival)sqlSession.selectOne("festivalMapper.infoFestival", no);
+		return (Festival) sqlSession.selectOne("festivalMapper.infoFestival", no);
 	}
 
 	public int updateCount(int no) {
@@ -93,20 +103,22 @@ public class FestivalDao {
 		return sqlSession.update("festivalMapper.updateCount", no);
 	}
 
-	/*public int insertScrap(Scrap scrap) {
-		return sqlSession.insert("festivalMapper.insertScrap", scrap);
-	}*/
+	/*
+	 * public int insertScrap(Scrap scrap) { return
+	 * sqlSession.insert("festivalMapper.insertScrap", scrap); }
+	 */
 
 	public int scrapCheck(Scrap scrap) {
 		return (int) sqlSession.selectOne("festivalMapper.scrapCheck", scrap);
 	}
 
-	/*public int deleteScrap(Scrap scrap) {
-		return sqlSession.delete("festivalMapper.deleteScrap", scrap);
-	}*/
+	/*
+	 * public int deleteScrap(Scrap scrap) { return
+	 * sqlSession.delete("festivalMapper.deleteScrap", scrap); }
+	 */
 
 	public int recommendCheck(Recommend recommend) {
-		return (int)sqlSession.selectOne("festivalMapper.recommendCheck", recommend);
+		return (int) sqlSession.selectOne("festivalMapper.recommendCheck", recommend);
 	}
 
 	public int insertRecommend(Recommend recommend) {
@@ -119,16 +131,16 @@ public class FestivalDao {
 
 	public ArrayList<FestivalReply> selectFestivalReply(int no, int currentPage, int limit) {
 		System.out.println("댓글 불러오기 dao");
-		
+
 		int startRow = (currentPage - 1) * limit + 1;
 		int endRow = startRow + limit - 1;
-		
+
 		HashMap params = new HashMap();
 		params.put("startRow", startRow);
 		params.put("endRow", endRow);
 		params.put("no", no);
-		
-		return (ArrayList)sqlSession.selectList("festivalMapper.selectReplyList", params);
+
+		return (ArrayList) sqlSession.selectList("festivalMapper.selectReplyList", params);
 	}
 
 	public int selectlistCount(int no) {
@@ -161,15 +173,59 @@ public class FestivalDao {
 
 	public Age selectAge(int no) {
 		Age age = (Age) sqlSession.selectOne("festivalMapper.selectAge", no);
-		
-		age.setAge10(Math.round(age.getAge10()/age.getTotalAge() * 1000) / 10.0);
-		age.setAge20(Math.round(age.getAge20()/age.getTotalAge() * 1000) / 10.0);
-		age.setAge30(Math.round(age.getAge30()/age.getTotalAge() * 1000) / 10.0);
-		age.setAge40(Math.round(age.getAge40()/age.getTotalAge() * 1000) / 10.0);
-		age.setAge50(Math.round(age.getAge50()/age.getTotalAge() * 1000) / 10.0);
-		
+
+		age.setAge10(Math.round(age.getAge10() / age.getTotalAge() * 1000) / 10.0);
+		age.setAge20(Math.round(age.getAge20() / age.getTotalAge() * 1000) / 10.0);
+		age.setAge30(Math.round(age.getAge30() / age.getTotalAge() * 1000) / 10.0);
+		age.setAge40(Math.round(age.getAge40() / age.getTotalAge() * 1000) / 10.0);
+		age.setAge50(Math.round(age.getAge50() / age.getTotalAge() * 1000) / 10.0);
+
 		return age;
 	}
 
+	/* 최경호 : 10/18 통합 이후 추가 */
+
+	// 메인 이달의 축제 페이징처리
+	public int todayFestivalCount(Date currentDate) {
+		return (int) sqlSession.selectOne("festivalMapper.todayFestivalCount", currentDate);
+	}
+
+	// 메인 이달의 축제 페이지
+	public List<Festival> todayFestivalSearch(Date currentDate, int currentPage, int limit) {
+		int startRow = (currentPage - 1) * limit + 1;
+		int endRow = startRow + limit - 1;
+
+		Map<Object, Object> param = new HashMap<Object, Object>();
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
+		param.put("currentDate", currentDate);
+
+		return (List) sqlSession.selectList("festivalMapper.todayFestivalSearch", param);
+	}
+
+	// 위치 검색 페이징 처리
+	public int locationSearchCount(Festival festival) {
+		Map<Object, Object> param = new HashMap<Object, Object>();
+
+		param.put("address", festival.getAddress());
+		param.put("start_date", festival.getStart_date());
+		param.put("end_date", festival.getEnd_date());
+
+		String[] list = festival.getTheme().split(",");
+
+		List<String> themeList = new ArrayList<String>();
+
+		for (int i = 0; i < list.length; i++) {
+			themeList.add(list[i]);
+		}
+		param.put("theme_list", themeList);
+
+		return (int) sqlSession.selectOne("festivalMapper.locationSearchCount", param);
+	}
+
+	// 태그 검색 페이징 처리
+	public int tagSearchCount(Festival festival) {
+		return (int) sqlSession.selectOne("festivalMapper.tagSearchCount", festival);
+	}
 
 }

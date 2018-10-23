@@ -67,14 +67,14 @@
 				#{file_name},
 			</when>
 		</choose>
-		#{tag}, default, default)
+		#{tag}, default, default, default)
 	</insert>
 
 	<!-- 10/18 이후 수정 -->
 	<select id="locationSearch" resultMap="resultList" parameterType="java.util.HashMap">
 		<![CDATA[
 		select * 
-		from (select rownum rnum, no, name, new_img_name, address, start_date, end_date, theme, tag, recommend
+		from (select rownum rnum, no, name, new_img_name, address, start_date, end_date, theme, tag, recommend, content
 				from (select * 
 						from tb_festival )) 
 		where address like '%'||#{address}||'%'
@@ -94,7 +94,7 @@
 	<select id="tagSearch" resultMap="resultList" parameterType="java.util.HashMap">
 		<![CDATA[
 		select * 
-		from (select rownum rnum, no, name, new_img_name, address, start_date, end_date, theme, tag, recommend
+		from (select rownum rnum, no, name, new_img_name, address, start_date, end_date, theme, tag, recommend, content
 				from (select * 
 						from tb_festival ))
 		where tag like '%'||#{tag}||'%'	and rnum >= #{startRow} and rnum <= #{endRow}

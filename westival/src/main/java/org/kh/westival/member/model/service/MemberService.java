@@ -15,6 +15,10 @@ public interface MemberService {
 	Member selectMember(Member member);
 
 	Member checkId(Member member);
+	
+	int insertMember(Member member);
+	
+	
 
 	// 충섭
 	// 회원정보 수정
@@ -62,4 +66,5 @@ public interface MemberService {
 
 	// 내 예매내역 티켓 날짜조회 (1,3,6개월)
 	List<Ticket> myTicketSearchMonth(int month, Member member);
+
 }

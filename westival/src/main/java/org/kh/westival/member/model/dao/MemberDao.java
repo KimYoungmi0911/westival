@@ -20,8 +20,6 @@ public class MemberDao {
 
 	// 병훈
 	public Member loginCheck(Member member) {
-
-		System.out.println(member);
 		return (Member) sqlSession.selectOne("memberMapper.loginCheck", member);
 	}
 
@@ -31,6 +29,10 @@ public class MemberDao {
 
 	public Member checkId(Member member) {
 		return (Member) sqlSession.selectOne("memberMapper.checkId", member);
+	}
+
+	public int insertMember(Member member) {
+		return sqlSession.insert("memberMapper.insertMember", member);
 	}
 
 	// 충섭
@@ -50,22 +52,22 @@ public class MemberDao {
 		param.put("list", list);
 		return (int) sqlSession.update("memberMapper.updateMyList", param);
 	}
-	
+
 	// 내 게시글 페스티벌 전체 조회
 	public ArrayList<Festival> MyTotalList(String user_id) {
-		if(user_id != null)
+		if (user_id != null)
 			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myTotalList", user_id);
 		else
 			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myTotalListNonLogin");
 	}
-	
+
 	// 내 게시글 페스티벌 날짜 조회
 	public ArrayList<Festival> myListSearch(String start_date, String end_date, Member member) {
 		Map<Object, Object> param = new HashMap<Object, Object>();
 		param.put("start_date", start_date);
 		param.put("end_date", end_date);
 		String user_id = member.getUser_id();
-		if(user_id != null) {
+		if (user_id != null) {
 			param.put("user_id", user_id);
 			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myListSearch", param);
 		} else
@@ -77,23 +79,23 @@ public class MemberDao {
 		Map<Object, Object> param = new HashMap<Object, Object>();
 		param.put("month", month * (-1));
 		String user_id = member.getUser_id();
-		if(user_id != null) {
+		if (user_id != null) {
 			param.put("user_id", user_id);
 			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myListSearchMonth", param);
 		} else
 			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myListSearchMonthNonLogin", param);
 	}
-	
+
 	// 관심축제 스크랩 삭제
 	public int deleteMyFesta(ArrayList<Integer> list) {
 		Map<String, ArrayList<Integer>> param = new HashMap<String, ArrayList<Integer>>();
 		param.put("list", list);
 		return (int) sqlSession.delete("memberMapper.deleteMyFesta", param);
 	}
-	
+
 	// 관심축제 페스티벌 전체 조회
 	public ArrayList<Festival> MyLikeFestaList(String user_id) {
-		if(user_id != null)
+		if (user_id != null)
 			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myLikeFestaList", user_id);
 		else
 			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myLikeFestaListNonLogin");
@@ -105,7 +107,7 @@ public class MemberDao {
 		param.put("start_date", start_date);
 		param.put("end_date", end_date);
 		String user_id = member.getUser_id();
-		if(user_id != null) {
+		if (user_id != null) {
 			param.put("user_id", user_id);
 			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myLikeFestaSearch", param);
 		} else
@@ -117,22 +119,22 @@ public class MemberDao {
 		Map<Object, Object> param = new HashMap<Object, Object>();
 		param.put("month", month * (-1));
 		String user_id = member.getUser_id();
-		if(user_id != null) {
+		if (user_id != null) {
 			param.put("user_id", user_id);
 			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myLikeFestaSearchMonth", param);
 		} else
 			return (ArrayList<Festival>) sqlSession.selectList("memberMapper.myLikeFestaSearchMonthNonLogin", param);
 	}
-	
+
 	// 내 예매내역 환불할 티켓 정보 조회
 	public Ticket myCurrentTicket(String ticket_no) {
-		return (Ticket)sqlSession.selectOne("memberMapper.myCurrentTicket", ticket_no);
+		return (Ticket) sqlSession.selectOne("memberMapper.myCurrentTicket", ticket_no);
 	}
 
 	// 경호
 	// 내 티켓 조회
 	public List<Ticket> recommendList(String user_id) {
-		if(user_id != null)
+		if (user_id != null)
 			return (List<Ticket>) sqlSession.selectList("ticketMapper.recommendList", user_id);
 		else
 			return (List<Ticket>) sqlSession.selectList("ticketMapper.recommendListNonLogin");
@@ -149,7 +151,7 @@ public class MemberDao {
 		param.put("start_date", start_date);
 		param.put("end_date", end_date);
 		String user_id = member.getUser_id();
-		if(user_id != null) {
+		if (user_id != null) {
 			param.put("user_id", user_id);
 			return (List<Ticket>) sqlSession.selectList("ticketMapper.myTicketSearch", param);
 		} else

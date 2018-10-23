@@ -34,7 +34,12 @@ public class MemberServiceImpl implements MemberService {
 	public Member selectMember(Member member) {
 		return memberDao.selectMember(member);
 	}
-
+	
+	@Override
+	public int insertMember(Member member) {
+		return memberDao.insertMember(member);
+	}
+	
 	// 충섭
 	// 회원정보 수정
 	@Override
@@ -126,4 +131,6 @@ public class MemberServiceImpl implements MemberService {
 	public ArrayList<Ticket> myTicketSearchMonth(int month, Member member) {
 		return (ArrayList<Ticket>) memberDao.myTicketSearchMonth(month, member);
 	}
+
+
 }

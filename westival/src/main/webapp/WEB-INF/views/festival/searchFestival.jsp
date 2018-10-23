@@ -28,6 +28,10 @@
 </style>
 
 <script type="text/javascript">
+
+	$(function(){
+		
+	});
 	
 	function locationSearch(page){
 		
@@ -87,8 +91,8 @@
 						resultList += "<div class='offers_item'><div class='row'><div class='col-lg-3 col-1680-4'><div class='offers_image_container'>"
 							+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name
 							+ "'></div></div></div><div class='col-lg-8'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name + "<span>" 
-							+ jsonObj.list[i].start_date + " ~ " + jsonObj.list[i].end_date + "</span></div><p class='offers_text'>" + "설명<br><br><Br><br>" 
-							+ "</p><div class='button book_button'><a href='#'>상세보기<span></span><span></span><span></span></a></div>" 
+							+ jsonObj.list[i].start_date + " ~ " + jsonObj.list[i].end_date + "</span></div><p class='offers_text'>" + jsonObj.list[i].content + "<br><br><br><br>" 
+							+ "</p><div class='button book_button'><a href='Info.do?no=" + jsonObj.list[i].no + "'>상세보기<span></span><span></span><span></span></a></div>" 
 							+ "<div class='offer_reviews'><div class='offer_reviews_content'><div class='offer_reviews_subtitle'>" + jsonObj.list[i].recommend 
 							+ " 명의 추천을 받았습니다.</div></div>" ;
 						
@@ -193,8 +197,8 @@
 							resultList += "<div class='offers_item'><div class='row'><div class='col-lg-3 col-1680-4'><div class='offers_image_container'>"
 								+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name
 								+ "'></div></div></div><div class='col-lg-8'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name + "<span>" 
-								+ jsonObj.list[i].start_date + " ~ " + jsonObj.list[i].end_date + "</span></div><p class='offers_text'>" + "설명<br><br><Br><br>" 
-								+ "</p><div class='button book_button'><a href='#'>상세보기<span></span><span></span><span></span></a></div>" 
+								+ jsonObj.list[i].start_date + " ~ " + jsonObj.list[i].end_date + "</span></div><p class='offers_text'>" + jsonObj.list[i].content +"<br><br><Br><br>" 
+								+ "</p><div class='button book_button'><a href='Info.do?no=" + jsonObj.list[i].no + "'>상세보기<span></span><span></span><span></span></a></div>" 
 								+ "<div class='offer_reviews'><div class='offer_reviews_content'><div class='offer_reviews_subtitle'>" + jsonObj.list[i].recommend 
 								+ " 명의 추천을 받았습니다.</div></div>" ;
 							
@@ -280,7 +284,7 @@
 
 <body>
 
-<%-- <c:import url="/WEB-INF/views/header.jsp" /> --%>
+<c:import url="/WEB-INF/views/header.jsp" />
 
 <div class="super_container">
 
@@ -290,7 +294,7 @@
 	<div class="home">
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/about_background.jpg"></div>
 		<div class="home_content">
-			<div class="home_title">our offers</div>
+			<div class="home_title">축제 검색 페이지</div>
 		</div>
 	</div>
 

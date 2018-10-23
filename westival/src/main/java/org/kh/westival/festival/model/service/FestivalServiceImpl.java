@@ -18,8 +18,8 @@ public class FestivalServiceImpl implements FestivalService {
 
 	@Autowired
 	private FestivalDao festivalDao;
-	
-	//경호
+
+	// 경호
 	@Override
 	public int insertFestival(Festival festival) {
 		return festivalDao.insertFestival(festival);
@@ -30,31 +30,28 @@ public class FestivalServiceImpl implements FestivalService {
 		return festivalDao.insertTicketOption(ticketOption);
 	}
 
+	// 10/18수정
 	@Override
-	public ArrayList<Festival> locationSearch(Festival festival) {
-		return (ArrayList<Festival>)festivalDao.locationSearch(festival);
+	public ArrayList<Festival> locationSearch(Festival festival, int currentPage, int limit) {
+		return (ArrayList<Festival>) festivalDao.locationSearch(festival, currentPage, limit);
 	}
 
+	// 10/18수정
 	@Override
-	public ArrayList<Festival> tagSearch(Festival festival) {
-		return (ArrayList<Festival>)festivalDao.tagSearch(festival);
-	}
-	
-	@Override
-	public ArrayList<Festival> todayFestivalSearch(Date currentDate) {
-		return (ArrayList<Festival>)festivalDao.todayFestivalSearch(currentDate);
+	public ArrayList<Festival> tagSearch(Festival festival, int currentPage, int limit) {
+		return (ArrayList<Festival>) festivalDao.tagSearch(festival, currentPage, limit);
 	}
 
 	@Override
 	public ArrayList<Festival> top3FestivalSearch() {
-		return (ArrayList<Festival>)festivalDao.top3FestivalSearch();
+		return (ArrayList<Festival>) festivalDao.top3FestivalSearch();
 	}
-	
+
 	@Override
 	public Scrap selectScrap(Scrap scrap) {
 		return festivalDao.selectScrap(scrap);
 	}
-	
+
 	@Override
 	public int insertScrap(Scrap scrap) {
 		return festivalDao.insertScrap(scrap);
@@ -63,10 +60,10 @@ public class FestivalServiceImpl implements FestivalService {
 	@Override
 	public int deleteScrap(Scrap scrap) {
 		return festivalDao.deleteScrap(scrap);
-		
+
 	}
-	
-	//다혜
+
+	// 다혜
 	@Override
 	public Festival selectFestival(int no) {
 		System.out.println("상세페이지 서비스");
@@ -79,20 +76,20 @@ public class FestivalServiceImpl implements FestivalService {
 		return festivalDao.updateCount(no);
 	}
 
-	/*@Override
-	public int insertScrap(Scrap scrap) {
-		return festivalDao.insertScrap(scrap);
-	}*/
+	/*
+	 * @Override public int insertScrap(Scrap scrap) { return
+	 * festivalDao.insertScrap(scrap); }
+	 */
 
 	@Override
 	public int scrapCheck(Scrap scrap) {
 		return festivalDao.scrapCheck(scrap);
 	}
 
-	/*@Override
-	public int deleteScrap(Scrap scrap) {
-		return festivalDao.deleteScrap(scrap);
-	}*/
+	/*
+	 * @Override public int deleteScrap(Scrap scrap) { return
+	 * festivalDao.deleteScrap(scrap); }
+	 */
 
 	@Override
 	public int recommendCheck(Recommend recommend) {
@@ -102,7 +99,7 @@ public class FestivalServiceImpl implements FestivalService {
 	@Override
 	public int insertRecommend(Recommend recommend) {
 		return festivalDao.insertRecommend(recommend);
-		
+
 	}
 
 	@Override
@@ -113,7 +110,7 @@ public class FestivalServiceImpl implements FestivalService {
 	@Override
 	public ArrayList<FestivalReply> selectFestivalReply(int no, int currentPage, int limit) {
 		System.out.println("댓글 불러오기 service");
-		return festivalDao.selectFestivalReply(no,currentPage,limit);
+		return festivalDao.selectFestivalReply(no, currentPage, limit);
 	}
 
 	@Override
@@ -156,6 +153,30 @@ public class FestivalServiceImpl implements FestivalService {
 		return festivalDao.selectAge(no);
 	}
 
+	/* 최경호 : 10/18 통합 이후 추가 */
 
+	// 메인 이달의 축제 페이징처리
+	@Override
+	public int todayFestivalCount(Date currentDate) {
+		return festivalDao.todayFestivalCount(currentDate);
+	}
+
+	// 메인 이달의 축제
+	@Override
+	public ArrayList<Festival> todayFestivalSearch(Date currentDate, int currentPage, int limit) {
+		return (ArrayList<Festival>) festivalDao.todayFestivalSearch(currentDate, currentPage, limit);
+	}
+
+	// 위치 검색 페이징 처리
+	@Override
+	public int locationSearchCount(Festival festival) {
+		return festivalDao.locationSearchCount(festival);
+	}
+
+	// 태그 검색 페이징처리
+	@Override
+	public int tagSearchCount(Festival festival) {
+		return festivalDao.tagSearchCount(festival);
+	}
 
 }
