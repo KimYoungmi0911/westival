@@ -261,6 +261,7 @@
 				var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈				
 				var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈	
 				var myList = '';
+				var pagenation = '';
 				var idx = -1;
 				
 				if(jsonObj.list.length==0) {
@@ -435,6 +436,10 @@
 				<div align="center" style="margin-top: 5%;"><img src="resources/images/loading.gif" alt="loading" width="7%" height="7%"></div>
 				<h3 style="text-align: center; margin-top: 5%; margin-bottom: 5%;">Loading...</h3>
 			</div>
+			
+		<!-- pagenation -->
+		<div id="pagenation" style="text-align: center"></div>
+			
 		</c:if>
 		<c:if test="${empty sessionScope.member.user_id }">
 			<div align="center" style="margin-top: 5%;"><img src="resources/images/logo1.PNG" alt="logo" width="20%" height="10%"></div>

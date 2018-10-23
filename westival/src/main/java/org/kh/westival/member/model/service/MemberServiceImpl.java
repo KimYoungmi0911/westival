@@ -34,12 +34,12 @@ public class MemberServiceImpl implements MemberService {
 	public Member selectMember(Member member) {
 		return memberDao.selectMember(member);
 	}
-	
+
 	@Override
 	public int insertMember(Member member) {
 		return memberDao.insertMember(member);
 	}
-	
+
 	// 충섭
 	// 회원정보 수정
 	@Override
@@ -58,13 +58,13 @@ public class MemberServiceImpl implements MemberService {
 	public int updateMyList(ArrayList<Integer> list) {
 		return memberDao.updateMyList(list);
 	}
-	
+
 	// 내 게시글 페스티벌 전체 조회
 	@Override
 	public List<Festival> myTotalList(String user_id) {
 		return (ArrayList<Festival>) memberDao.MyTotalList(user_id);
 	}
-	
+
 	// 내 게시글 페스티벌 날짜 검색
 	@Override
 	public List<Festival> myListSearch(String start_date, String end_date, Member member) {
@@ -82,7 +82,7 @@ public class MemberServiceImpl implements MemberService {
 	public int deleteMyFesta(ArrayList<Integer> list) {
 		return memberDao.deleteMyFesta(list);
 	}
-	
+
 	// 관심축제 페스티벌 전체 조회
 	@Override
 	public List<Festival> myLikeFestaList(String user_id) {
@@ -100,11 +100,29 @@ public class MemberServiceImpl implements MemberService {
 	public List<Festival> myLikeFestaSearchMonth(int month, Member member) {
 		return (ArrayList<Festival>) memberDao.myLikeFestaSearchMonth(month, member);
 	}
-	
+
 	// 내 예매내역 환불할 티켓 정보 조회
 	@Override
 	public Ticket myCurrentTicket(String ticket_no) {
 		return memberDao.myCurrentTicket(ticket_no);
+	}
+
+	// 내 예매내역 환불 처리
+	@Override
+	public int refundCurrentTicket(String ticket_no) {
+		return memberDao.refundCurrentTicket(ticket_no);
+	}
+
+	// 내 예매내역 환불 사유 전송
+	@Override
+	public int updateRefundWhy(String ticket_no, String refund_why) {
+		return memberDao.updateRefundWhy(ticket_no, refund_why);
+	}
+
+	// 페스티벌 컬럼 개수 조회
+	@Override
+	public int FestivalgetListCount(String user_id) {
+		return memberDao.FestivalgetListCount(user_id);
 	}
 
 	// 경호
@@ -131,6 +149,5 @@ public class MemberServiceImpl implements MemberService {
 	public ArrayList<Ticket> myTicketSearchMonth(int month, Member member) {
 		return (ArrayList<Ticket>) memberDao.myTicketSearchMonth(month, member);
 	}
-
 
 }

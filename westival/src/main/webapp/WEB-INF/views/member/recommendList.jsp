@@ -269,7 +269,6 @@
 	}
 </style>
 <script type="text/javascript">
-	
 	$(function(){
 		$.ajax({
 			url : "myTicketList.do",
@@ -332,9 +331,9 @@
 				var myCurrentTicket = '';
 				
 				for(var i in jsonObj.list) {
-					myCurrentTicket += "<div class='modal_recommend_no' id='modal_recommend_no'>" + jsonObj.list[i].ticket_no + "</div><div class='modal_recommend_date' id='modal_recommend_date'>"
-						+ jsonObj.list[i].ticket_date + "</div><div class='modal_recommend_name' id='modal_recommend_name'><p>" + jsonObj.list[i].festival_name
-						+ "</p></div><div class='modal_recommend_count' id='modal_recommend_count'>" + jsonObj.list[i].ticket_count + "</div><div class='modal_recommend_credit' id='modal_recommend_credit'>" + jsonObj.list[i].price
+					myCurrentTicket += "<div class='modal_recommend_no' id='modal_recommend_no'>" + jsonObj.list[i].ticket_no + "</div><div class='modal_recommend_date'>"
+						+ jsonObj.list[i].ticket_date + "</div><div class='modal_recommend_name'><p>" + jsonObj.list[i].festival_name
+						+ "</p></div><div class='modal_recommend_count'>" + jsonObj.list[i].ticket_count + "</div><div class='modal_recommend_credit'>" + jsonObj.list[i].price
 						+ "</div></div>";
 				}	
 				$(".refund_tbody_tr").html(myCurrentTicket);
@@ -347,30 +346,21 @@
 	}
 	
 	function refundSubmit() {
-		var jArray = [
-				{"ticket_no": $("#modal_recommend_no").text()}, {"ticket_date": $("#modal_recommend_date").text()}, {"festival_name": $("#modal_recommend_name").text()},
-				{"ticket_count": $("#modal_recommend_count").text()}, {"price": $("#modal_recommend_credit").text()}, {"refund_why": $("#refund_why").val()} 
-			];
-		
-		$.ajax({
-			url: "refundCurrentTicket.do",
-			type: "post",
-			contentType: "application/json; charset=utf-8",
-			data: JSON.stringify(jArray),
-			success: function(result) {
-				if(result == "success") {
-					if(confirm('해당 티켓을 환불하시겠습니까?') == true) {
-						alert("환불 처리가 완료되었습니다.");
-						location.href="recommendList.do";
-					} else {
-						return;
-					}
+		if(confirm('해당 티켓을 환불하시겠습니까?') == true) {
+			$.ajax({
+				url: "refundCurrentTicket.do",
+				type: "post",
+				data: {ticket_no : $("#modal_recommend_no").text(), refund_why : $("#refund_why").val()},
+				success: function(result) {
+					location.href="recommendList.do";
+				},
+				error: function(request, status, errorData){
+					alert("error code : "+ request.status + "\n" + "message : " + request.responseText + "\n" + "error : " + errorData);
 				}
-			},
-			error: function(request, status, errorData){
-				alert("error code : "+ request.status + "\n" + "message : " + request.responseText + "\n" + "error : " + errorData);
-			}
-		});
+			});
+		} else {
+			return;
+		}
 	}
 	
 	function myTicketSearch(){
