@@ -18,6 +18,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.kh.westival.festival.exception.FestivalException;
 import org.kh.westival.festival.model.service.FestivalService;
+import org.kh.westival.festival.model.vo.Age;
 import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.festival.model.vo.FestivalReply;
 import org.kh.westival.festival.model.vo.Recommend;
@@ -393,12 +394,6 @@ public class FestivalController {
 			System.out.println("조회수 증가 실패");
 		}
 
-		/*
-		 * Festival festival = festivalService.selectFestival(no); festivalReply
-		 * = festivalService.selectFestivalReply(no);
-		 * System.out.println(festival); System.out.println(festivalReply);
-		 */
-
 		int totalCount = festivalService.selectlistCount(no);
 		int currentPage = 1;
 		int limit = 5;
@@ -415,22 +410,20 @@ public class FestivalController {
 		
 		/*통계값 가져오기*/
 		//전체
-		int totalValue = festivalService.selectTotalValue(no);
+		double totalValue = festivalService.selectTotalValue(no);
 		//남
-		int maleValue = festivalService.selectMaleValue(no);
+		double maleValue = festivalService.selectMaleValue(no);
 		//여
-		int femaleValue = festivalService.selectFemaleValue(no);
-		
-		System.out.println(totalValue + ", " +maleValue + ", " + femaleValue);
+		double femaleValue = festivalService.selectFemaleValue(no);
 		
 		//남자,여자 퍼센트
-		int male = (int)((double)maleValue/(double)totalValue * 100.0);
-		int female = (int)((double)femaleValue/(double)totalValue * 100.0);
-		System.out.println(male + ", " + female);
-		mv.addObject("male", male);
-		mv.addObject("female", female);
+		mv.addObject("male", Math.round(maleValue/totalValue * 1000) / 10.0);
+		mv.addObject("female", Math.round(femaleValue/totalValue * 1000) / 10.0);
 		
-		// System.out.println(festivalService.selectFestivalReply(no,currentPage,limit));
+		//나이
+		mv.addObject("age", festivalService.selectAge(no));
+		System.out.println(festivalService.selectAge(no));
+		
 		mv.addObject("festival", festivalService.selectFestival(no));
 		mv.addObject("reply", festivalService.selectFestivalReply(no, currentPage, limit));
 		mv.addObject("currentPage", currentPage);

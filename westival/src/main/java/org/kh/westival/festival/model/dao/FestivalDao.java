@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.kh.westival.festival.model.vo.Age;
 import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.festival.model.vo.FestivalReply;
 import org.kh.westival.festival.model.vo.Recommend;
@@ -156,6 +157,18 @@ public class FestivalDao {
 
 	public int selectFemaleValue(int no) {
 		return (int) sqlSession.selectOne("festivalMapper.selectFemaleValueFes", no);
+	}
+
+	public Age selectAge(int no) {
+		Age age = (Age) sqlSession.selectOne("festivalMapper.selectAge", no);
+		
+		age.setAge10(Math.round(age.getAge10()/age.getTotalAge() * 1000) / 10.0);
+		age.setAge20(Math.round(age.getAge20()/age.getTotalAge() * 1000) / 10.0);
+		age.setAge30(Math.round(age.getAge30()/age.getTotalAge() * 1000) / 10.0);
+		age.setAge40(Math.round(age.getAge40()/age.getTotalAge() * 1000) / 10.0);
+		age.setAge50(Math.round(age.getAge50()/age.getTotalAge() * 1000) / 10.0);
+		
+		return age;
 	}
 
 

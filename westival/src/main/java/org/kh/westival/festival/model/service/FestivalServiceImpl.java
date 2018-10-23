@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 import org.kh.westival.festival.model.dao.FestivalDao;
+import org.kh.westival.festival.model.vo.Age;
 import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.festival.model.vo.FestivalReply;
 import org.kh.westival.festival.model.vo.Recommend;
@@ -148,6 +149,11 @@ public class FestivalServiceImpl implements FestivalService {
 	@Override
 	public int selectFemaleValue(int no) {
 		return festivalDao.selectFemaleValue(no);
+	}
+
+	@Override
+	public Age selectAge(int no) {
+		return festivalDao.selectAge(no);
 	}
 
 

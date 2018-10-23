@@ -13,6 +13,7 @@
 		<typeAlias type="org.kh.westival.festival.model.vo.Recommend" alias="Recommend" />
 		<typeAlias type="org.kh.westival.festival.model.vo.Scrap" alias="Scrap" />
 		<typeAlias type="org.kh.westival.festival.model.vo.TicketOption" alias="TicketOption" />	
+		<typeAlias type="org.kh.westival.festival.model.vo.Age" alias="Age" /> 
 		<typeAlias type="org.kh.westival.notice.model.vo.Notice" alias="Notice" />
 		<typeAlias type="org.kh.westival.notice.model.vo.NoticePage" alias="NoticePage" />
 		<typeAlias type="org.kh.westival.qna.model.vo.Qna" alias="Qna" />

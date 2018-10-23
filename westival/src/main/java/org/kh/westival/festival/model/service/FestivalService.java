@@ -3,6 +3,7 @@ package org.kh.westival.festival.model.service;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import org.kh.westival.festival.model.vo.Age;
 import org.kh.westival.festival.model.vo.Festival;
 import org.kh.westival.festival.model.vo.FestivalReply;
 import org.kh.westival.festival.model.vo.Recommend;
@@ -62,5 +63,7 @@ public interface FestivalService {
 	int selectMaleValue(int no);
 
 	int selectFemaleValue(int no);
+
+	Age selectAge(int no);
 
 }
