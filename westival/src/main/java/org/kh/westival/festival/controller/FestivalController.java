@@ -160,7 +160,7 @@ public class FestivalController {
 			ticketOption.setPhone(request.getParameter("phone"));
 			ticketOption.setBank_name(request.getParameter("bank_name"));
 			ticketOption.setAccount_holder_name(request.getParameter("account_holder_name"));
-			ticketOption.setAccount_no(Integer.parseInt(request.getParameter("account_no")));
+			ticketOption.setAccount_no(request.getParameter("account_no"));
 		} else {
 			festival.setTicket("N");
 		}
