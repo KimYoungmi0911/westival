@@ -99,6 +99,9 @@
 		<when test="category2 == 'total'">
 			and ( content like '%' || #{ keyword } || '%' or subject like '%' || #{ keyword } || '%' )
 		</when>
+		<when test="category2 == 'user_id'">
+			and ( user_id like #{ keyword } )
+		</when>
 		</choose>
 		order by qna_no desc))
 		where RNUM between #{startRow} and #{endRow}
@@ -120,6 +123,9 @@
 		</when>
 		<when test="category2 == 'total'">
 			and ( content like '%' || #{ keyword } || '%' or subject like '%' || #{ keyword } || '%' )
+		</when>
+		<when test="category2 == 'user_id'">
+			and ( user_id like #{ keyword } )
 		</when>
 		</choose>
 	</select>
