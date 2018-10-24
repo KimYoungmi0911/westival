@@ -142,8 +142,8 @@
                         style="background: linear-gradient(to right, #fa9e1b, #8d4fff); border:0px solid; font-family: 'Open Sans', sans-serif; text-transform: uppercase; width:50%">
                      </form>
                      <br>
-                     <input type="button" class="btn btn-primary pull-center"  value="ID/PASSWORD 찾기" id="" onclick=""
-                            style="background: #350a4e; border:0px solid; font-family: 'Open Sans', sans-serif; width:50%">
+                     <a href="ipsearch.do"><input type="button" class="btn btn-primary pull-center" value="ID/PASSWORD 찾기" id="" 
+                            style="background: #350a4e; border:0px solid; font-family: 'Open Sans', sans-serif; width:50%"></a>
                   </div>
                </div>
             </div>

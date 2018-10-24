@@ -708,10 +708,17 @@
       <div class="container">
          <div class="row">
             <div class="col">
-               <c:set var="token" value="${ festival.tag }" /> <!-- Display Each token -->
-               <c:forTokens var="list" items="${token}" delims=" ">
-                  &nbsp;&nbsp;&nbsp;<a href="#">${ list }</a>
-               </c:forTokens>
+            	<div class="photos_header">
+            		<img src="/westival/resources/images/post.png">
+            		<p>관련 태그</p>
+            	</div>
+				<c:set var="token" value="${ festival.tag }" /> <!-- Display Each token -->
+				<c:forTokens var="list" items="${token}" delims="#">
+					<c:url var="tagClick" value="tagClick.do">
+						<c:param name="tag" value="${ list }" />
+					</c:url>
+					&nbsp;&nbsp;&nbsp;<a href="${ tagClick }">#${ list }</a>
+                </c:forTokens>
             </div>
          </div>
       </div>

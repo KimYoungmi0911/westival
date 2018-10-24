@@ -23,6 +23,7 @@
 
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/offers_styles.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/offers_responsive.css">
+
 <style type="text/css">
 	
 </style>
@@ -56,8 +57,6 @@
 <c:import url="/WEB-INF/views/header.jsp" />
 
 <div class="super_container">
-
-
 	
 	<!-- Home -->
 	<div class="home">
@@ -69,19 +68,16 @@
 
 	<!-- Offers -->
 
-	<div class="offers" style="height:1500px;" >
-
-		
+	<div class="offers" style="height:1800px;" >
 
 		<!-- Offers -->
-
 		<div class="container" >
 			<div class="row">
 				<div class="col text-center">
 					<div class="section_title"><font color="red">#${ tag }</font> 검색 결과</div>
 				</div>				
 				<div class="col-lg-1 temp_col"></div>
-				<br><br><br>
+				<br><br><br><br><br>
 				<div class="col-lg-12">					
 
 						<!-- Offers Item -->
@@ -90,7 +86,7 @@
 								<div class='row'>
 									<div class='col-lg-3 col-1680-4'>
 										<div class='offers_image_container'>
-											<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/${ item.new_img_name}'>
+											<div class='offers_image_background' style="background-image:url(/westival/resources/uploadFiles/festivalImg/${ item.new_img_name });">
 											</div>
 										</div>
 									</div>
@@ -98,40 +94,105 @@
 										<div class='offers_content'>
 											<div class='offers_price'>${ item.name }<span>${ item.start_date } ~ ${ item.end_date }</span>
 											</div>
-											<p class='offers_text'>${ item.content }<br><br><Br><br></p>
+											<p class='offers_text'>
+												<font color="black">${ item.start_date }일 부터 ${ item.end_date }일 까지</font>
+												 <br> ${ item.content }
+											
+											</p>
 											<div class='button book_button'>
-												<a href='#'>상세보기<span></span><span></span><span></span></a>
+												<c:url var="info" value="Info.do">
+													<c:param name="no" value="${ item.no }" />
+												</c:url>
+												<a href='${ info }'>상세보기<span></span><span></span><span></span></a>
 											</div>
 											<div class='offer_reviews'>
 												<div class='offer_reviews_content'>
-													<div class='offer_reviews_subtitle'>${ item.recommend } 명의 추천을 받았습니다.</div>
+													<div class="offer_reviews_subtitle"> ${ item.recommend } 명의 추천을 받았습니다.</div>
 												</div>
-												<%-- 작업중....
-												${scrap[status.index]}
-												
-												
-												
-												<div class='offer_reviews_rating text-center'>
-													<a href='#' id='scrapCheck' onclick='scrap(${ item.no }); return false;'> scrap </a>
-												</div> --%>
-												
-												
+										
+												<c:if test="${scrap[status.index] eq 0}">
+													<div class='offer_reviews_rating text-center'>
+														<a href='#' id='scrapCheck' onclick='scrap(${ item.no }); return false;'>♡</a>
+													</div>
+												</c:if>	
+												<c:if test="${scrap[status.index] eq 1}">
+													<div class='offer_reviews_rating text-center'>
+														<a href='#' id='scrapCheck' onclick='scrap(${ item.no }); return false;'>♥</a>
+													</div>
+												</c:if>											
 											</div>
+											
 										</div>
 									</div>
 								</div>
-							</div>
-							
+							</div>							
 						</c:forEach>
-
 						
-					</div>					
-				</div>
+						<div align="center">
+						
+							<c:if test="${ currentPage <= 1 }">
+								[맨처음]&nbsp;
+							</c:if>
+							<c:if test="${ currentPage > 1 }">
+								<c:url var="tl" value="tagClick.do">
+									<c:param name="tag" value="${ tag }" />
+									<c:param name="page" value="1" />
+								</c:url>
+								<a href="${ tl }">[맨처음]</a>
+							</c:if>
+							
+							<c:if test="${ ( (currnetPage-10) < startPage) && ((currentPage-10) > 1) }">
+								<c:url var="tl2" value="tagClick.do">
+									<c:param name="tag" value="${ tag }" />
+									<c:param name="page" value="${ startPage-10 }" />
+								</c:url>
+								<a href="${ tl2 }">[이전]</a>
+							</c:if>
+							<c:if test="${ ( (currnetPage-10) >= startPage) || ((currentPage-10) <= 1) }">
+								[이전]&nbsp;
+							</c:if>
+	
+							<c:forEach var="p" begin="${ startPage }" end="${ endPage }">		
+								<c:if test="${ p == currentPage}">
+									<font color="red" size='4'>[${ p }]</font>
+								</c:if>
+								<c:if test="${ p != currentPage }">
+									<c:url var="tl3" value="tagClick.do">
+										<c:param name="tag" value="${ tag }" />
+										<c:param name="page" value="${ p }" />
+									</c:url>
+									<a href="${ tl3 }">[${ p }]</a>
+								</c:if>
+							</c:forEach>
+							
+							<c:if test="${ ((currentPage+10) > endPage) && ((currentPage+10) < maxPage) }">
+								<c:url var="tl4" value="tagClick.do">
+									<c:param name="tag" value="${ tag }" />
+									<c:param name="page" value="${ endPage+10 }" />
+								</c:url>
+								<a href="${ tl4 }">[다음]</a>
+							</c:if>
+							<c:if test="${ ((currentPage+10) <= endPage) || ((currentPage+10) >= maxPage) }">
+								[다음]&nbsp;
+							</c:if>
+							
+							<c:if test="${ currentPage >= maxPage }">
+								[맨끝]&nbsp;
+							</c:if>
+							<c:if test="${ currentPage < maxPage }">
+								<c:url var="tl5" value="tagClick.do">
+									<c:param name="tag" value="${ tag }" />
+									<c:param name="page" value="${ maxPage }" />
+								</c:url>
+								<a href="${ tl5 }">[맨끝]</a>
+							</c:if>
 
+						</div>
+						
+				</div>					
 			</div>
+
 		</div>
-		
-			
 	</div>
 
 </div>

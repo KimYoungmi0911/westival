@@ -121,6 +121,11 @@ public class MemberController {
 		return "main";
 
 	}
+	
+	@RequestMapping(value = "ipsearch.do")
+	public String ipsearchPage() {
+		return "ipsearch";
+	}
 
 	// 페이지 이동처리만 담당
 	@RequestMapping(value = "memberInfo.do")
@@ -130,7 +135,7 @@ public class MemberController {
 
 	// 페이지 이동처리만 담당
 	@RequestMapping(value = "recommendList.do")
-	public String recommendList(ModelAndView mv, Member member) {
+	public String recommendList() {
 		return "member/recommendList";
 	}
 
