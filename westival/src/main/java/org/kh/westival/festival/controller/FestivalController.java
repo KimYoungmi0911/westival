@@ -519,8 +519,13 @@ public class FestivalController {
 		mv.addObject("startPage", startPage);
 		mv.addObject("endPage", endPage);
 		mv.addObject("totalCount", totalCount);
-		mv.setViewName("festival/fesInfoView");
-
+		
+		if(festivalService.selectFestival(no) != null){
+			mv.setViewName("festival/fesInfoView");
+		}else{
+			mv.setViewName("common/error");
+		}
+		
 		return mv;
 	}
 
