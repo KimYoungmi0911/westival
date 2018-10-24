@@ -70,43 +70,46 @@
 		#{tag}, default, default, default)
 	</insert>
 
-	<!-- 10/18 이후 수정 -->
+	<!-- 10/24 -->
 	<select id="locationSearch" resultMap="resultList" parameterType="java.util.HashMap">
 		<![CDATA[
 		select * 
 		from (select rownum rnum, no, name, new_img_name, address, start_date, end_date, theme, tag, recommend, content
 				from (select * 
-						from tb_festival )) 
-		where address like '%'||#{address}||'%'
-		and start_date >= #{start_date} and end_date <= #{end_date}	
-		]]>		
+						from tb_festival
+						where address like '%'||#{address}||'%'
+		and start_date <= #{start_date} and end_date >= #{end_date} and delete_check ='N' ]]> 
 		<if test="theme_list.size!=0">
 			and theme like
 			<foreach collection="theme_list" item="item" separator=" and theme like ">
 				'%'||#{item}||'%'
 			</foreach>
 		</if>
+		)) 
+
 		<![CDATA[
-		and rnum >= #{startRow} and rnum <= #{endRow}
+		where rnum >= #{startRow} and rnum <= #{endRow}
 		]]>	
 	</select>
-	<!-- 10/18 이후 수정 -->
+	<!-- 10/24 -->
 	<select id="tagSearch" resultMap="resultList" parameterType="java.util.HashMap">
 		<![CDATA[
 		select * 
 		from (select rownum rnum, no, name, new_img_name, address, start_date, end_date, theme, tag, recommend, content
 				from (select * 
-						from tb_festival ))
-		where tag like '%'||#{tag}||'%'	and rnum >= #{startRow} and rnum <= #{endRow}
+						from tb_festival
+						where tag like '%'||#{tag}||'%' and delete_check ='N'))
+		where rnum >= #{startRow} and rnum <= #{endRow}
 		]]>
 	</select>
-
+	<!-- 10/24 -->
 	<select id="top3FestivalSearch" resultMap="resultList">
 		<![CDATA[
 		SELECT * 
 		FROM (SELECT ROWNUM RNUM, no, name, address, start_date, end_date, new_img_name, tag, theme  
 		  	  FROM (SELECT * 
 		          	FROM tb_festival 
+		          	WHERE delete_check ='N'
 					ORDER BY recommend DESC)) 
 		WHERE RNUM >= 1 AND RNUM <= 3
 		]]>
@@ -251,14 +254,14 @@
 		select name from tb_festival where no = #{no}
 	</select>
 
-	<!-- 최경호 10/18 이후 추가 -->
 
+	<!-- 10/24 -->
 	<!-- 오늘의 축제 페이징 -->
 	<select id="todayFestivalCount" resultType="_int" parameterType="date">
 		<![CDATA[
 		SELECT count(*) 
 		FROM tb_festival
-		where start_date<= #{currentDate} and end_date >= #{currentDate}		
+		where start_date<= #{currentDate} and end_date >= #{currentDate} and delete_check ='N'
 		]]>
 	</select>
 
@@ -267,16 +270,17 @@
 		select * 
 		from (select rownum rnum, no, name, new_img_name, address, start_date, end_date, theme, tag 
 				from (select * 
-						from tb_festival )) 
-		where start_date <= #{currentDate} and end_date >= #{currentDate} and rnum >= #{startRow} and rnum <= #{endRow}	
+						from tb_festival
+						where start_date <= #{currentDate} and end_date >= #{currentDate} and delete_check ='N')) 
+		where rnum >= #{startRow} and rnum <= #{endRow}	
 		]]>
 	</select>
 	
 	<select id="locationSearchCount" resultType="_int" parameterType="java.util.HashMap">
 		<![CDATA[
 		select count(*) from tb_festival 
-		where address like '%'||#{address}||'%'
-		and start_date >= #{start_date} and end_date <= #{end_date}		
+		where address like '%'||#{address}||'%' and delete_check ='N'
+		and start_date <= #{start_date} and end_date >= #{end_date}		
 		]]>
 		<if test="theme_list.size!=0">
 			and theme like
@@ -289,7 +293,7 @@
 	<select id="tagSearchCount" resultType="_int" parameterType="Festival">
 		<![CDATA[
 		select count(*) from tb_festival 
-		where tag like '%'||#{tag}||'%'	
+		where tag like '%'||#{tag}||'%'	and delete_check ='N'
 		]]>
 	</select>
 	

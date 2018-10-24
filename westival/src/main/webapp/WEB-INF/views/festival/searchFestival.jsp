@@ -300,7 +300,7 @@
 
 	<!-- Offers -->
 
-	<div class="offers" style="height:1500px;" >
+	<div class="offers" style="height:1800px;" >
 
 		<!-- Search -->
 
@@ -362,25 +362,25 @@
 										<ul class="search_extras clearfix">
 											<li class="search_extras_item">
 												<div class="clearfix">
-													<input type="checkbox" name="theme" id="search_extras_1" class="search_extras_cb" value="festival">
+													<input type="checkbox" name="theme" id="search_extras_1" class="search_extras_cb" value="축제">
 													<label for="search_extras_1">축제</label>
 												</div>	
 											</li>
 											<li class="search_extras_item">
 												<div class="clearfix">
-													<input type="checkbox" name="theme" id="search_extras_2" class="search_extras_cb" value="party">
+													<input type="checkbox" name="theme" id="search_extras_2" class="search_extras_cb" value="파티">
 													<label for="search_extras_2">파티</label>
 												</div>
 											</li>
 											<li class="search_extras_item">
 												<div class="clearfix">
-													<input type="checkbox" name="theme" id="search_extras_3" class="search_extras_cb" value="meeting">
-													<label for="search_extras_3">모임</label>
+													<input type="checkbox" name="theme" id="search_extras_3" class="search_extras_cb" value="전시회">
+													<label for="search_extras_3">전시회</label>
 												</div>
 											</li>
 											<li class="search_extras_item">
 												<div class="clearfix">
-													<input type="checkbox" name="theme" id="search_extras_4" class="search_extras_cb" value="performance">
+													<input type="checkbox" name="theme" id="search_extras_4" class="search_extras_cb" value="공연">
 													<label for="search_extras_4">공연</label>
 												</div>
 											</li>

@@ -2,8 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:import url="header.jsp" />
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +10,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
 <script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
+
+<!-- <script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<script src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+<script src="/westival/resources/plugins/easing/easing.js"></script>
+<script src="/westival/resources/js/custom.js"></script>
+ -->
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
@@ -21,8 +27,18 @@
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/main_styles.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/responsive.css">
 
-<script type="text/javascript">
 
+<style type="text/css">
+	.intro_center h2{
+		font-size: 32px;
+	   	font-weight: 700;
+	    color: #FFFFFF;
+	    letter-spacing: -0.05em;
+	}
+</style>
+
+<script type="text/javascript">
+	
 	$(function(){
 		// 오늘의 축제
 		$.ajax({
@@ -47,7 +63,7 @@
 				// 페이징 정보
 				console.log("maxPage : " + maxPage + ", startPage : " + startPage + ", endPage : " + endPage + ", currentPage : " + currentPage);
 
-				for(var i in jsonObj.list){
+				for(var i in jsonObj.list){ 
 					
 					var tagArr = jsonObj.list[i].tag.split('#');
 					var tag = "";
@@ -56,30 +72,12 @@
 						tag += "<a href='tagClick.do?tag=" + tagArr[j] + "'>#" + tagArr[j] + "</a>&nbsp;"
 					}
 					
-					var themeArr = jsonObj.list[i].theme.split(',');
-					var theme = "";
-
-					for(var k in themeArr){
-						switch(themeArr[k]){
-						case 'festival' : 
-							theme += '축제 '; 
-							break;
-						case 'party' : 
-							theme += '파티 '; 
-							break;
-						case 'meeting' : 
-							theme += '모임 '; 
-							break;
-						case 'performance' : 
-							theme += '공연 '; 
-						}
-					}
 					todayFestival += "<div class='col-lg-6 offers_col'><div class='offers_item'><div class='row'><div class='col-lg-6'><div class='offers_image_container'>"
 						+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name 
-						+ "); width:250px; height:280px;'></div></div></div><div class='col-lg-6'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name
-						+ "<span><br><br>" + jsonObj.list[i].end_date + "일 까지</span></div><p class='offers_text' style='width:200px; height:50px;'>" + "테마 : " + theme 
-						+ "<br>태그 : " + tag + "<br></p><div class='offers_link'>" + "<a href='Info.do?no=" + jsonObj.list[i].no + "'>자세히 보기</a></div>"
-						+ "</div></div></div></div></div>";
+						+ "); width:250px; height:280px;'></div></div></div><div class='col-lg-6'><div class='offers_content'><div class='offers_price' style='font-size:24px;'>" + jsonObj.list[i].name
+						+ "<span><br><br>" + jsonObj.list[i].end_date + "일 까지</span></div><p class='offers_text' style='width:200px; height:50px;'>" + "테마 : " 
+						+ jsonObj.list[i].theme + "<br>태그 : " + tag + "<br></p><div class='offers_link'><a href='Info.do?no=" + jsonObj.list[i].no 
+						+ "'>자세히 보기</a></div></div></div></div></div></div>";
 				}
 				
 				if(currentPage <= 1){
@@ -144,13 +142,17 @@
 				
 				var top3='';
 				
-				for(var i in jsonObj.list){					
+				for(var i in jsonObj.list){	
+					
+					var addressArr = jsonObj.list[i].address.split('#');
+					var address = addressArr[0]+ "<br>" + addressArr[1] ;
+					
 					top3 += "<div class='col-lg-4 intro_col'><div class='intro_item'><div class='intro_item_overlay'></div>" 
 						+ "<div class='intro_item_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" 
 						+ jsonObj.list[i].new_img_name + ")'></div><div class='intro_item_content d-flex flex-column align-items-center justify-content-center'>"
 						+ "<div class='intro_date'>" + jsonObj.list[i].start_date + " ~ " + jsonObj.list[i].end_date + "</div><div class='button intro_button'>"
-						+ "<div class='button_bcg'></div><a href='Info.do?no=" + jsonObj.list[i].no + "'>더보기</a></div><div class='intro_center text-center'><h1>" 
-						+ jsonObj.list[i].name + "</h1><div class='intro_price'>" + jsonObj.list[i].address + "</div></div></div></div></div>"; 
+						+ "<div class='button_bcg'></div><a href='Info.do?no=" + jsonObj.list[i].no + "'>더보기</a></div><div class='intro_center text-center'><h2>" 
+						+ jsonObj.list[i].name + "</h2><div class='intro_price'>" + address + "</div></div></div></div></div>"; 
 				}
 				$("#top3").html(top3);
 			},
@@ -188,42 +190,20 @@
 				// 페이징 정보
 				console.log("maxPage : " + maxPage + ", startPage : " + startPage + ", endPage : " + endPage + ", currentPage : " + currentPage);
 
-				for(var i in jsonObj.list){ 					
-					for(var i in jsonObj.list){
-						
-						var tagArr = jsonObj.list[i].tag.split('#');
-						var tag = "";
+				for(var i in jsonObj.list){ 
+					var tagArr = jsonObj.list[i].tag.split('#');
+					var tag = "";
 
-						for(var j=1; j<tagArr.length; j++){
-							tag += "<a href='tagClick.do?tag=" + tagArr[j] + "'>#" + tagArr[j] + "</a>&nbsp;"
-						}
-						
-						var themeArr = jsonObj.list[i].theme.split(',');
-						var theme = "";
-
-						for(var k in themeArr){
-							switch(themeArr[k]){
-							case 'festival' : 
-								theme += '축제 '; 
-								break;
-							case 'party' : 
-								theme += '파티 '; 
-								break;
-							case 'meeting' : 
-								theme += '모임 '; 
-								break;
-							case 'performance' : 
-								theme += '공연 '; 
-							}
-						}
-					
-						todayFestival += "<div class='col-lg-6 offers_col'><div class='offers_item'><div class='row'><div class='col-lg-6'><div class='offers_image_container'>"
-							+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name 
-							+ "); width:250px; height:280px;'></div></div></div><div class='col-lg-6'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name
-							+ "<span><br><br>" + jsonObj.list[i].end_date + "일 까지</span></div><p class='offers_text' style='width:200px; height:50px;'>" + "테마 : " + theme 
-							+ "<br>태그 : " + tag + "<br></p><div class='offers_link'>" + "<a href='Info.do?no=" + jsonObj.list[i].no + "'>자세히 보기</a></div>"
-							+ "</div></div></div></div></div>";
+					for(var j=1; j<tagArr.length; j++){
+						tag += "<a href='tagClick.do?tag=" + tagArr[j] + "'>#" + tagArr[j] + "</a>&nbsp;"
 					}
+					
+					todayFestival += "<div class='col-lg-6 offers_col'><div class='offers_item'><div class='row'><div class='col-lg-6'><div class='offers_image_container'>"
+						+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name 
+						+ "); width:250px; height:280px;'></div></div></div><div class='col-lg-6'><div class='offers_content'><div class='offers_price' style='font-size:24px;'>" + jsonObj.list[i].name
+						+ "<span><br><br>" + jsonObj.list[i].end_date + "일 까지</span></div><p class='offers_text' style='width:200px; height:50px;'>" + "테마 : " 
+						+ jsonObj.list[i].theme + "<br>태그 : " + tag + "<br></p><div class='offers_link'><a href='Info.do?no=" + jsonObj.list[i].no 
+						+ "'>자세히 보기</a></div></div></div></div></div></div>";
 				}
 				
 				if(currentPage <= 1){
@@ -275,6 +255,7 @@
 	
 	
 </script>
+
 
 </head>
 

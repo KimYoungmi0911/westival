@@ -98,9 +98,10 @@
                alert("이미 사용중인 아이디 입니다.");
             }else {
                $("#cId").css("background-color", "#FFFFF0");
-               alert("사용해도 좋은 아이디 입니다.")
+               if(confirm("사용해도 좋은 아이디입니다. 아이디를 사용하시겠습니까?")){
+            	   $("#cId").attr("readonly", true);
+               }
             }
-            
          }
       });   
    }
