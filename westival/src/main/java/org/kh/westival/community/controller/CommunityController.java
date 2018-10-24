@@ -39,7 +39,7 @@ public class CommunityController {
 		
 		communityPaging.setCurrentPage(1);
 		communityPaging.setLimit(10);
-		
+		System.out.println("commuPage.do : " + request.getParameter("page"));
 		if(request.getParameter("page") != null){
 			communityPaging.setCurrentPage(Integer.parseInt(request.getParameter("page")));
 		}
@@ -246,8 +246,6 @@ public class CommunityController {
 		communityReply.setCommunity_no(Integer.parseInt((String)request.getParameter("community_no")));
 		communityReply.setComment_content(request.getParameter("comment_content"));
 		communityReply.setComment_level(Integer.parseInt((String)request.getParameter("comment_level")));
-		//communityReply.setComment_seq(Integer.parseInt((String)request.getParameter("comment_seq")));
-		//communityReply.setComment_ref(Integer.parseInt((String)request.getParameter("comment_ref")));
 		
 		System.out.println(communityReply);
 		

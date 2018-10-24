@@ -36,8 +36,6 @@ public interface CommunityService {
 
 	int deleteCommunity(int community_no);
 
-	/*int deleteCommunityReply(int community_no);*/
-
 	int updateCommunity(Community community);
 
 	int deleteCommunityReply(int comment_no);

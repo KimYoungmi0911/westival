@@ -7,13 +7,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>Travelix</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css"> -->
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
@@ -22,6 +21,7 @@
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_styles.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_responsive.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/responsive.css">
+<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
 
 <style type="text/css">
 
@@ -64,28 +64,27 @@
     	height: 43px;
     	font-size:14px;
     }
+    #home {
+      height: 90%;
+      display: block;
+   }
+    
+   .home_background {
+      position: relative;
+   }
 </style>
 <script>
 	var festivalName;
-	
-	function categoryChange(){
-		if($("#category option:selected").val() == "동행"){
-			$(".festivalSelect").attr("style", "display:inline");
-			//$(".user_count").attr("style", "display:inline");
-		}
-		if($("#category option:selected").val() == "일반"){
-			$(".festivalSelect").attr("style", "display:none");
-			//$("#user_count").attr("style", "display:none");		
-		}
-		
-	}
+	var category;
+	var search;
+	var keyword;
+	var page;
 	
 	$(function(){
 		$("#category").val("일반").prop("selected", true);
-		
 		//게시글 수정시 필드 값 초기화  
-		if('${community.community_no}' != 0){
-			$("#category").val('${community.category}').prop("selected", true);
+		if('${community.community_no}' != ""){
+			$("#searchFilter").val('${community.category}').prop("selected", true);
 			if("${community.category}" == "동행"){
 				$(".festivalSelect").prop("style", "display:inline");
 				$("#festival").val("${community.no}").prop("selected", true);
@@ -99,11 +98,29 @@
 			$("#insertBtn").prop("style", "display:none");
 			$("#updateBtn").prop("style", "display:inline");
 	    }
+		
+		//쿼리스트링 값 가져오기
+	      var oParams = getUrlParams();
+	      var a = decodeURI(oParams.category2);
+	      var b = decodeURI(oParams.search2);
+	      var c = decodeURI(oParams.keyword2);
+	      var d = oParams.page; 
 	}); 
 	
+	function categoryChange(){
+		if($("#category option:selected").val() == "동행"){
+			$(".festivalSelect").attr("style", "display:inline");
+		}
+		if($("#category option:selected").val() == "일반"){
+			$(".festivalSelect").attr("style", "display:none");
+		}
+		
+	}
+
 	//게시글 수정
 	function updataBtnClick(){
 		var formData = $("#commuInsert").serialize();
+		var commuNo = '${community.community_no}';
 		$.ajax({
 			url : "commuupdate.do",
 			type : "post",
@@ -111,7 +128,7 @@
 			success : function(data){
 				if(data > 0){
 					alert("수정이 완료되었습니다.");
-					location.href="commuDetail.do?community_no=${community.community_no}";
+					location.href="commuDetail.do?community_no="+commuNo;
 				}else{
 					alert("게시글 수정 실패");
 				}
@@ -131,25 +148,28 @@
 		}
 		return true;
 	} 
+	
+	//쿼리스트링 함수
+   function getUrlParams() {
+       var params = {};
+       window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+       return params;
+   } 
 	 
 </script>
 </head>
 
 <body>
 
-
 <div class="super_container">
-	
 	<!-- Home -->
-	<div class="home">
+	<div class="home" id="home">
 		<div class="home_background parallax-window" style="background-image:url(/westival/resources/images/about_background.jpg)"></div>
 		<div class="home_content">
-			<div class="home_title">글쓰기</div>
+			<div class="home_title">동행게시판</div>
 		</div>
 	</div>
-	
 	<!-- Intro -->
-	
 	<div class="intro">
 		<div class="container">
 			<div class="row">
@@ -207,9 +227,8 @@
 	<br><br><br><br><br><br>
 </div>
 
-<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
-<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
-<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<!-- <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script> -->
 <script src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
 <script src="/westival/resources/plugins/easing/easing.js"></script>
 <script src="/westival/resources/js/custom.js"></script>

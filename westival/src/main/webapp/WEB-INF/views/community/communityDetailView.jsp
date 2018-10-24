@@ -7,13 +7,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>Travelix</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css"> -->
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
@@ -22,6 +21,7 @@
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_styles.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/about_responsive.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/responsive.css">
+<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
 <style type="text/css">
 
 	.intro {
@@ -152,6 +152,14 @@
        left: -10000px;
    }
     
+    #home {
+      height: 90%;
+      display: block;
+   }
+    
+   .home_background {
+      position: relative;
+   }
 </style>
 <script>
 
@@ -358,25 +366,25 @@
 		return false;
 	}
 	
+	//목록 클릭시
+	function listClick(){
+		location.href="commuPage.do?category2=${category }&search2=${search}&keyword2=${keyword}&page2=${page}";
+	}
 	
 </script>
 </head>
 
 <body>
 
-
 <div class="super_container">
-	
 	<!-- Home -->
-	<div class="home">
+	<div class="home" id="home">
 		<div class="home_background parallax-window" style="background-image:url(/westival/resources/images/about_background.jpg)"></div>
 		<div class="home_content">
-			<div class="home_title">QnA</div>
+			<div class="home_title">동행게시판</div>
 		</div>
 	</div>
-	
 	<!-- Intro -->
-	
 	<div class="intro">
 		<div class="container">
 			<div class="row">
@@ -457,7 +465,7 @@
                   </div>
                </div>
                <div align="center">
-               <a class="btn btn-dark" href="commuPage.do?category=${category }&search=${search}&keyword=${keyword}&page=${page}">목록</a>
+               <a class="btn btn-dark" href="#" onclick="listClick();">목록</a>
                </div>
                <!-- 댓글 목록 끝 -->
 				</div>
@@ -468,9 +476,9 @@
 	
 </div>
 
-<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
-<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
-<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+
+<!-- <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script> -->
 <script src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
 <script src="/westival/resources/plugins/easing/easing.js"></script>
 <script src="/westival/resources/js/custom.js"></script>
