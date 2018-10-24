@@ -336,7 +336,7 @@ public class AdminController {
 		return mv;
 	}
 	//축제 수정
-	/*@RequestMapping(value="updatefestival.do", method=RequestMethod.POST)
+	@RequestMapping(value="updatefestival.do", method=RequestMethod.POST)
 	public ModelAndView updateFestival(ModelAndView mv, HttpServletRequest request, Festival festival, 
 			@RequestParam(name = "name") String name,
 			@RequestParam(name = "address") String address, 
@@ -344,7 +344,6 @@ public class AdminController {
 			@RequestParam(name = "img_name") MultipartFile img_name,
 			@RequestParam(name = "start_date") Date start_date,
 			@RequestParam(name = "end_date") Date end_date,
-			@RequestParam(name = "theme") String theme,
 			@RequestParam(name = "telephone") String telephone,
 			@RequestParam(name = "manage") String manage,
 			@RequestParam(name = "tag") String tag,
@@ -393,13 +392,11 @@ public class AdminController {
 					festival.setContent(content);
 					festival.setStart_date(start_date);
 					festival.setEnd_date(end_date);
-					if(theme != null){
-					festival.setTheme(theme);
-					}
+					festival.setTheme(request.getParameter("theme"));
 					festival.setTelephone(telephone);
 					festival.setManage(manage);
 					festival.setTag(tag);
-					
+				
 
 				} catch (IllegalStateException | IOException e) {
 					e.printStackTrace();
@@ -455,14 +452,13 @@ public class AdminController {
 					ticketOption.setPhone(request.getParameter("phone"));
 					ticketOption.setBank_name(request.getParameter("bank_name"));
 					ticketOption.setAccount_holder_name(request.getParameter("account_holder_name"));
-					ticketOption.setAccount_no(Integer.parseInt(request.getParameter("account_no")));
+					ticketOption.setAccount_no(request.getParameter("account_no"));
 				} else {
 					festival.setTicket("N");
 				}
 
-				try {
-					// 축제 등록
-					mv.addObject(adminService.updateFestival(festival));
+				mv.addObject(adminService.updateFestival(festival));
+					
 
 					// 아이디 넣어줌
 					// ticketOption.setNo(festival.getNo());
@@ -472,15 +468,24 @@ public class AdminController {
 						mv.addObject(adminService.updateTicketOption(ticketOption));
 							
 					}
-				} catch (Exception e) {
-					throw new FestivalException(e.getMessage());
-				}
+				
 
-				mv.setViewName("admin/festivalView");
+				mv.setViewName("redirect:/adminfestival.do");
 				
 				return mv;
 		
-	}*/
+	}
+
+		@RequestMapping(value="afdelete.do", method=RequestMethod.POST)
+	public String afDelete(HttpServletResponse response, HttpServletRequest request, int fno, ModelAndView mv) throws IOException{
+		
+	
+		mv.addObject(adminService.afdelete(fno));
+	
+		System.out.println("afDelete 컨트롤러");
+		return "redirect:/adminfestival.do";
+	
+	}
 	
 	
 //---------------------------------------------------------------------	
@@ -490,6 +495,18 @@ public class AdminController {
 	public String adminMemberView(){
 		return "admin/memberView";
 	}
+	
+	@RequestMapping(value = "register1.do", method = RequestMethod.POST)
+	public String registerMethod(Member member) {
+
+		// 예외처리
+
+		int result = adminService.insertMember(member);
+		return "redirect:/adminmember.do";
+		
+
+	}
+	
 	/*@RequestMapping("adminmember.do")
 	public ModelAndView adminMemberView(ModelAndView mv, HttpServletRequest request){
 		int currentPage = 1;

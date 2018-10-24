@@ -43,16 +43,21 @@ public interface AdminService {
 	//축제 디테일
 	Festival festivalDetail(int fno);
 	
-	/*//축제 수정(축제)
+	//축제 수정(축제)
 	int updateFestival(Festival festival);
 	
 	//축제 수정(티켓)
-	int updateTicketOption(TicketOption ticketOption);*/
+	int updateTicketOption(TicketOption ticketOption);
 	
+	//축제삭제
+	int afdelete(int fno);
+
 	
 //------------------------------------------------------------------	
 	//회원관리
 	
+	//회원등록
+	int insertMember(Member member);
 	//회원리스트
 	//Object adminMemberView();
 	int getListCount();
@@ -68,6 +73,11 @@ public interface AdminService {
 	
 	//회원 삭제
 	Object amdelete(String mid);
+	
+	
+
+	
+	
 	
 	
 	

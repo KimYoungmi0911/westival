@@ -241,34 +241,34 @@
 	select * from (
         select ROWNUM RNUM, no, name, address, start_date, telephone, 
         manage, read_count, recommend, ticket 
-        from (select * from tb_festival 
-        order by start_date asc))
+        from (select * from tb_festival where delete_check= 'N'
+        order by no asc))
         where RNUM between #{startRow} and #{endRow}
 	
 	</select>
 	
 	<!-- 축제검색페이징 -->
 	<select id="festivalgetSelectListCount" resultType="_int" parameterType="string">
-	select count(*) from tb_festival
+	select count(*) from tb_festival where delete_check = 'N' 
 	<choose>
 	<when test="filter == 'all'">
-	where name like '%'||#{searchTF}||'%' 
+	and name like '%'||#{searchTF}||'%' 
 	or address like '%'||#{searchTF}||'%' 
 	or name like '%'||#{searchTF}||'%' 
 	or manage like '%'||#{searchTF}||'%' 
 	or ticket like '%'||#{searchTF}||'%'
 	</when>
 	<when test="filter == 'location'">
-	where address like '%'||#{searchTF}||'%'
+	and address like '%'||#{searchTF}||'%' 
 	</when>
 	<when test="filter == 'fname'">
-	where name like '%'||#{searchTF}||'%'
+	and name like '%'||#{searchTF}||'%' 
 	</when>
 	<when test="filter == 'manage'">
-	where manage like '%'||#{searchTF}||'%'
+	and manage like '%'||#{searchTF}||'%' 
 	</when>
 	<when test="filter == 'ticket'">
-	where ticket like '%'||#{searchTF}||'%'
+	and ticket like '%'||#{searchTF}||'%' 
 	</when>
 	</choose>
 	</select>
@@ -276,41 +276,41 @@
 	<!-- 축제 검색(리스트) -->
 	<select id="fsearchList" parameterType="java.util.Map" resultMap="festivalList">
 	
-	select * from (select ROWNUM RNUM, name, address, start_date, telephone, 
-	manage, read_count, recommend, ticket from (select * from tb_festival
+	select * from (select ROWNUM RNUM, no, name, address, start_date, telephone, 
+	manage, read_count, recommend, ticket from (select * from tb_festival 
 	
 	<choose>
 	<when test="filter == 'all'">
-	
-	where name like '%'||#{searchTF}||'%' 
-	or address like '%'||#{searchTF}||'%' 
-	or name like '%'||#{searchTF}||'%' 
-	or manage like '%'||#{searchTF}||'%' 
-	or ticket like '%'||#{searchTF}||'%' ))
+
+	where (name like '%'||#{searchTF}||'%' and delete_check= 'N')
+	or (address like '%'||#{searchTF}||'%' and delete_check= 'N') 
+	or (name like '%'||#{searchTF}||'%' and delete_check= 'N') 
+	or (manage like '%'||#{searchTF}||'%' and delete_check= 'N') 
+	or (ticket like '%'||#{searchTF}||'%' and delete_check= 'N') order by no asc ))
 	
 	
 	</when>
 	<when test="filter == 'location'">
 	
-	where address like '%'||#{searchTF}||'%' ))
+	where (address like '%'||#{searchTF}||'%' and delete_check= 'N') order by no asc))
 	
 	
 	</when>
 	<when test="filter == 'fname'">
 	
-	where name like '%'||#{searchTF}||'%' ))
+	where (name like '%'||#{searchTF}||'%' and delete_check= 'N') order by no asc))
 	
 
 	</when>
 	<when test="filter == 'manage'">
 	
-	where manage like '%'||#{searchTF}||'%' ))
+	where (manage like '%'||#{searchTF}||'%' and delete_check= 'N') order by no asc))
 	
 	
 	</when>
 	<when test="filter == 'ticket'">
 	
-	where ticket like '%'||#{searchTF}||'%' ))
+	where (ticket like '%'||#{searchTF}||'%' and delete_check= 'N') order by no asc))
 
 
 	</when>
@@ -344,8 +344,6 @@
 		file_name = #{file_name},
 	</when>
 	</choose>
-	  read_count = default, 
-	  recommend = default
 	  where no = #{no}
 	</update>	
 
@@ -362,11 +360,27 @@
 	where ticket_no = #{ticket_no}
 	</update>
 	
+	<!-- 축제삭제(축제) -->
+	<update id="afdelete" parameterType="_int" flushCache="true"
+		statementType="PREPARED">
+	update tb_festival set delete_check = 'Y'
+	where no = #{no}
+	</update>
+	
+	
+	
 	<!-- 회원리스트 -->
 	
 	<!-- <select id="adminMemberView" resultMap="memberList">
 	select * from tb_user
 	</select> -->
+	
+	<!-- 회원등록 -->
+	<insert id="insertMember" parameterType="Member" flushCache="true"
+		statementType="PREPARED" useGeneratedKeys="true">
+		insert into tb_user values (#{user_id}, #{user_pwd}, #{user_name}, #{user_birth}, 
+		#{user_address}, #{user_phone}, #{user_email}, #{user_gender})		
+	</insert>
 	
 	<!-- 회원리스트 페이징 -->
 	<select id="getListCount" resultType="_int">

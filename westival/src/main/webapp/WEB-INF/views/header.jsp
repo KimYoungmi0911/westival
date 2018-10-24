@@ -9,6 +9,22 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<link rel="stylesheet" type="text/css"
+   href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
+<link
+   href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css"
+   rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css"
+   href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+<link rel="stylesheet" type="text/css"
+   href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+<link rel="stylesheet" type="text/css"
+   href="/westival/resources/plugins/OwlCarousel2-2.2.1/animate.css">
+<link rel="stylesheet" type="text/css"
+   href="/westival/resources/styles/main_styles.css">
+<link rel="stylesheet" type="text/css"
+   href="/westival/resources/styles/responsive.css">
+
  
 <style type="text/css">
    #header-color{background-color:#350a4e; border-color:#350a4e; border:0px solid #350a4e;}
@@ -20,74 +36,15 @@
 
 </head>
 
-<body>
+<body>      
 
-
-<!-- Modal-login -->
-<%-- <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-         <div class="modal-header">
-         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-               <img src="/westival/resources/images/logo.png"   class="modal-title rounded mx-auto d-block" width="80" height="80">
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-           </div>
-           
-            <div class="modal-body">
-            <%@ include file="login.jsp" %> <br>
-            <div style="text-align: center;">
-               <button type="button" class="btn btn-secondary" 
-                         style="width:100px; background: #350a4e; border:0px solid; font-family: 'Open Sans', sans-serif; text-transform: uppercase;"
-                         data-toggle="modal" data-target="#register">회원가입</button>
-               <button type="button" data-dismiss="modal" data-toggle="modal"
-                        data-target="#ipsearch"
-                        style="width:215px; background: #350a4e; border:0px solid; font-family: 'Open Sans', sans-serif; text-transform: uppercase;"
-                        class="btn btn-secondary">아이디 / 비밀번호 찾기
-               </button><br><br><br>
-            </div>         
-         </div>
-      </div>
-   </div>
-</div> --%>
-
-<!-- Modal-register -->
-<%-- <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-         <div class="modal-header">
-         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-               <img src="/westival/resources/images/logo.png" class="modal-title rounded mx-auto d-block" width="80" height="80">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
-            </button>
-         </div>
-         <div class="modal-body"><%@ include file="register.jsp" %></div>
-      </div>
-   </div>
-</div> --%>
-
-
-<!--Modal- id/pw찾기 -->
-<%-- <div class="modal fade" id="ipsearch" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-         <div class="modal-header">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <img src="/westival/resources/images/logo.png"   class="modal-title rounded mx-auto d-block" width="80" height="80">                 
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                   <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-         <div class="modal-body">
-            <%@ include   file="ipsearch.jsp"%>
-         </div>
-      </div>
-   </div>
-</div> --%>
-      
-      
+<script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
+   <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+   <script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+   <script
+      src="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+   <script src="/westival/resources/plugins/easing/easing.js"></script>
+   <script src="/westival/resources/js/custom.js"></script>
    
 
 <!-- Header -->
@@ -95,38 +52,31 @@
 
 <header class="header">
 
-      <!-- Top Bar -->
 
-      <%-- <div class="top_bar">
+   <div class="top_bar">
          <div class="container">
             <div class="row">
                <div class="col d-flex flex-row">
                    <div class="phone">+ 안될거없조</div>
                    
-                  <c:if test="${empty sessionScope.member }">
-               
-                  <div class="user_box ml-auto">            
-                     <div class="user_box_login user_box_link"><button id="header-color" data-toggle="modal" data-target="#login"><a href="#">login</a></button></div>
-                     <div class="user_box_register user_box_link"><button id="header-color" data-toggle="modal" data-target="#register"><a href="#" >register</a></button></div>                  
+                   <div class="user_box ml-auto">            
+                     <div class=" user_box_link"><a href="index.jsp">westival에 오신 것을 환영합니다!</a></button></div>
+                                    
                   </div>
-                  </c:if>
                   
-                  <c:if test="${!empty sessionScope.member }">
-                  <div class="user_box ml-auto">                  
-                     <div class="user_box_login user_box_link"><a href="#">${member.user_name }</a></div>
-                     <div class="user_box_register user_box_link"><a href="logout.do">logout</a></div>                  
-                  </div>
-                  </c:if>
                </div>
             </div>
          </div>      
-      </div> --%>
+      </div>
+
+      
 
       <!-- Main Navigation -->
 
       <nav class="main_nav">
          <div class="container">
             <div class="row">
+            <c:if test="${sessionScope.member.user_id != 'admin' || empty sessionScope.member }">
                <div class="col main_nav_col d-flex flex-row align-items-center justify-content-start">
                   <div class="logo_container">
                      <div class="logo"><a href="index.jsp">westival</a></div>
@@ -134,6 +84,7 @@
                   
                   <div class="main_nav_container ml-auto">
                      <ul class="main_nav_list">
+                     
                         <li class="main_nav_item"><a href="index.jsp">home &nbsp;</a></li>   
                                                                                           
                         <li class="main_nav_item"><a href="#">my surroundings</a></li>
@@ -165,6 +116,7 @@
                              </div>
                           </div>
                         </li>
+                        
                         <c:if test="${empty sessionScope.member }">
                            <li class="main_nav_item" style="color:white;">
                               <a href="loginPage.do" style="color:white;">로그인</a>
@@ -182,6 +134,55 @@
                   </div>
 
                </div>
+               </c:if>
+               <c:if
+                  test="${sessionScope.member.user_id == 'admin' && !empty sessionScope.member}">
+                  
+                  <div class="col main_nav_col d-flex flex-row align-items-center justify-content-start">
+                  <div class="logo_container">
+                     <div class="logo"><a href="index.jsp">westival</a></div>
+                  </div>
+                  
+                  <div class="main_nav_container ml-auto">
+                     <ul class="main_nav_list">
+                     <li class="main_nav_item"><a href="index.jsp">home</a></li>
+                     
+                     <li class="main_nav_item">
+                          <div class="dropdown">
+                           <a class="dropdown-toggle"  href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Management page
+                           </a>
+                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                               <a class="dropdown-item" href="adminfestival.do" id="dropdown-menu">축제 관리</a>                           
+                               <a class="dropdown-item" href="adminticket.do" id="dropdown-menu">예약 관리</a>
+                               <a class="dropdown-item" href="adminmember.do" id="dropdown-menu">회원 관리</a>
+                               <a class="dropdown-item" href="noticeview.do" id="dropdown-menu">공지 관리</a>
+                               <a class="dropdown-item" href="qnaBoard.do" id="dropdown-menu">문의 관리</a>
+                               
+                             </div>
+                          </div>
+                        </li>            
+                           
+                        <c:if test="${empty sessionScope.member }">
+                           <li class="main_nav_item" style="color:white;">
+                              <a href="loginPage.do" style="color:white;">로그인</a>
+                           </li>
+                           <li class="main_nav_item" style="color:white;">
+                              <a href="registerPage.do" style="color:white;">회원가입</a>
+                           </li>
+                        </c:if>                           
+                        <c:if test="${!empty sessionScope.member }">
+                           <li class="main_nav_item" style="color:white;">
+                              ${ member.user_name }님 &nbsp;&nbsp; <a href="logout.do" style="color:red;">로그아웃</a>
+                           </li>
+                        </c:if>                        
+                     </ul>
+                  </div>
+
+               </div>
+               
+                  
+               </c:if>
             </div>
          </div>   
       </nav>

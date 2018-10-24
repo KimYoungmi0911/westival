@@ -122,7 +122,7 @@ public class AdminDao {
 		return (Festival) sqlSession.selectOne("adminMapper.festivalDetail", fno);
 	}
 	
-	/*//축제 수정(축제)
+	//축제 수정(축제)
 	public int updateFestival(Festival festival) {
 		System.out.println("updateFestival dao");
 		return sqlSession.update("adminMapper.updateFestival", festival);
@@ -132,11 +132,26 @@ public class AdminDao {
 		System.out.println("updateTicketOption dao");
 		return sqlSession.update("adminMapper.updateTicketOption", ticketOption);
 	}
-	*/
+	
+	//축제 삭제
+	public int afdelete(int fno) {
+		System.out.println("afdelete dao");
+		return sqlSession.update("adminMapper.afdelete", fno);
+	}
+	
+	
+	
 	
 	
 	//-------------------------------------------------------------------
 	//회원관리
+	
+	//회원등록
+	public int insertMember(Member member) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("adminMapper.insertMember", member);
+	}
+
 	
 	//회원리스트
 	/*public Object adminMemberView() {
@@ -201,6 +216,13 @@ public class AdminDao {
 		
 		return sqlSession.delete("adminMapper.amdelete", mid);
 	}
+
+	
+
+
+	
+
+
 
 	
 
