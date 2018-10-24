@@ -11,7 +11,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css"> -->
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
@@ -490,8 +490,8 @@
 </div>
 
 <script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
-<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
-<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<!-- <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script> -->
 <script src="/westival/resources/plugins/greensock/TweenMax.min.js"></script>
 <script src="/westival/resources/plugins/greensock/TimelineMax.min.js"></script>
 <script src="/westival/resources/plugins/scrollmagic/ScrollMagic.min.js"></script>

@@ -112,7 +112,6 @@
                                <a class="dropdown-item" href="insertFestivalPage.do" id="dropdown-menu">축제 등록</a>
                                <a class="dropdown-item" href="commuPage.do" id="dropdown-menu">동행 게시판</a>
                                <a class="dropdown-item" href="qnaBoard.do" id="dropdown-menu">문의 게시판</a>
-                               <a class="dropdown-item" href="#" id="dropdown-menu">약관 및 정책</a>
                              </div>
                           </div>
                         </li>
@@ -157,7 +156,7 @@
                                <a class="dropdown-item" href="adminticket.do" id="dropdown-menu">예약 관리</a>
                                <a class="dropdown-item" href="adminmember.do" id="dropdown-menu">회원 관리</a>
                                <a class="dropdown-item" href="noticeview.do" id="dropdown-menu">공지 관리</a>
-                               <a class="dropdown-item" href="#" id="dropdown-menu">문의 관리</a>
+                               <a class="dropdown-item" href="qnaBoard.do" id="dropdown-menu">문의 관리</a>
                                
                              </div>
                           </div>
