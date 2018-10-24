@@ -11,7 +11,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- <link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css"> -->
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
@@ -100,8 +100,8 @@
 						+ "<td>" + decodeURIComponent(json.list[i].maddress) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].mphone) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].memail) + "</td>"
-						+ "<td>" + decodeURIComponent(json.list[i].mgender) + "</td>"
-						+ "<td><input type='button' value='탈퇴' class='btn btn-secondary btn-sm' onclick='javascript:memberdelete("+ idx +")'>" + "</td></tr>"; 
+						+ "<td>" + decodeURIComponent(json.list[i].mgender) + "</td></tr>";
+					 
 					}//for
 					$("#tb1").html(values);
 					
@@ -194,8 +194,7 @@
 				+ "<td>" + decodeURIComponent(json.list[i].maddress) + "</td>"
 				+ "<td>" + decodeURIComponent(json.list[i].mphone) + "</td>"
 				+ "<td>" + decodeURIComponent(json.list[i].memail) + "</td>"
-				+ "<td>" + decodeURIComponent(json.list[i].mgender) + "</td>"
-				+ "<td><input type='button' value='탈퇴' class='btn btn-secondary btn-sm' onclick='javascript:memberdelete("+ idx +")'>" + "</td></tr>";
+				+ "<td>" + decodeURIComponent(json.list[i].mgender) + "</td></tr>";
 				
 			}//for
 			$("#tb1").html(values);  
@@ -358,7 +357,7 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body"><%@ include file="/WEB-INF/views/register.jsp" %></div>
+					<div class="modal-body"><%@ include file="/WEB-INF/views/register1.jsp" %></div>
 				</div>
 			</div>
 		</div>
@@ -379,7 +378,7 @@
 					      <th scope="col" width="">연락처</th>
 					      <th scope="col" width="">이메일</th>
 					      <th scope="col" width="">성별</th>
-					       <th scope="col" width=""></th>
+					     
 					     
 					    </tr>
 					  </thead>
@@ -453,8 +452,8 @@
 </div>
 
 <script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
-<!-- <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
-<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script> -->
+<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
 <script src="/westival/resources/plugins/greensock/TweenMax.min.js"></script>
 <script src="/westival/resources/plugins/greensock/TimelineMax.min.js"></script>
 <script src="/westival/resources/plugins/scrollmagic/ScrollMagic.min.js"></script>

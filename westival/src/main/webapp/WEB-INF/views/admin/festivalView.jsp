@@ -11,7 +11,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- <link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css"> -->
+<link rel="stylesheet" type="text/css" href="/westival/resources/styles/bootstrap4/bootstrap.min.css">
 <link href="/westival/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
@@ -75,7 +75,7 @@
 	 var maxPage;
 	 var startPage;
 	 var endPage;
-	
+	 var idx = -1;
 	 $.ajax({
 		 url: "fpage.do",
 		 type: "get",
@@ -102,14 +102,17 @@
 						for(var b = 0; b < json.list[i].fmanage.length; b++){
 							json.list[i].fmanage = json.list[i].fmanage.replace("+", " ");
 						}
-						values += "<tr align='center'><td><a href='detailFestival.do?fno="+json.list[i].fno+"'>" + decodeURIComponent(json.list[i].fname) + "</a></td>"
+						idx += 1;
+						values += "<tr align='center' class='tbtr'><td>" + json.list[i].fno + "</td>"
+						+ "<td><a href='Info.do?no=" + json.list[i].fno + "'>" + decodeURIComponent(json.list[i].fname) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].faddress) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].fstart) + "</td>" 
 						+ "<td>" + decodeURIComponent(json.list[i].fmanage) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].ftelephone) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].fticket) + "</td>"
 						+ "<td>" + json.list[i].freadcount + "</td>"
-						+ "<td>" + json.list[i].frecommend + "</td></tr>";
+						+ "<td>" + json.list[i].frecommend + "</td>"
+						+ "<td><input type='button' value='탈퇴' class='btn btn-secondary btn-sm' onclick='javascript:festivaldelete("+ idx +")'>" + "</td></tr>";
 					}//for
 					$("#tb1").html(values);
 					
@@ -156,6 +159,8 @@
 			});
 		}
  
+ 	
+ 	
 	  function selectBtnClick(page){
 		 var filter = $("#filter").val();
 		 var searchTF = $("#searchTF").val();
@@ -164,7 +169,7 @@
 		 var maxPage;
 		 var startPage;
 		 var endPage;
-		 
+		 var idx = -1;
 		
 		
 	 
@@ -195,14 +200,17 @@
 				for(var b = 0; b < json.list[i].fmanage.length; b++){
 					json.list[i].fmanage = json.list[i].fmanage.replace("+", " ");
 				}
-				values += "<tr align='center'><td>" + decodeURIComponent(json.list[i].fname) + "</td>"
+				idx += 1;
+				values += "<tr align='center' class='tbtr'><td>" + json.list[i].fno + "</td>"
+				+ "<td><a href='Info.do?no=" + json.list[i].fno + "'>" + decodeURIComponent(json.list[i].fname) + "</td>"
 				+ "<td>" + decodeURIComponent(json.list[i].faddress) + "</td>"
 				+ "<td>" + decodeURIComponent(json.list[i].fstart) + "</td>" 
 				+ "<td>" + decodeURIComponent(json.list[i].fmanage) + "</td>"
 				+ "<td>" + decodeURIComponent(json.list[i].ftelephone) + "</td>"
 				+ "<td>" + decodeURIComponent(json.list[i].fticket) + "</td>"
 				+ "<td>" + json.list[i].freadcount + "</td>"
-				+ "<td>" + json.list[i].frecommend + "</td></tr>";
+				+ "<td>" + json.list[i].frecommend + "</td>"
+				+ "<td><input type='button' value='탈퇴' class='btn btn-secondary btn-sm' onclick='javascript:festivaldelete("+ idx +")'>" + "</td></tr>";
 			}//for
 			$("#tb1").html(values);
 			
@@ -246,9 +254,48 @@
 	  });
 	  }
  
- 
- 
- 
+	  function festivaldelete(idx){
+		  if(confirm('축제정보를 삭제하시겠습니까?') == true){
+			var fno = $(".tbtr").eq(idx).children(":first").text();
+			console.log("fno : " + fno);
+			 $.ajax({
+				url: "afdelete.do",
+				type:"post",
+				data: {"fno" : fno},
+				success: function(result){
+					if(result > 0){
+						paging(1);
+					}
+					/* var objStr = JSON.stringify(result);
+					var jsonObj = JSON.parse(objStr);
+					
+					var values = "";
+					for(var i in jsonObj.list){
+						values += "<tr align='center' class='tbtr'><td><input type='hidden' value='no' name='no'>" + decodeURIComponent(json.list[i].fname) + "</a></td>"
+						+ "<td>" + decodeURIComponent(json.list[i].faddress) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].fstart) + "</td>" 
+						+ "<td>" + decodeURIComponent(json.list[i].fmanage) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].ftelephone) + "</td>"
+						+ "<td>" + decodeURIComponent(json.list[i].fticket) + "</td>"
+						+ "<td>" + json.list[i].freadcount + "</td>"
+						+ "<td>" + json.list[i].frecommend + "</td>"
+						+ "<td><input type='button' value='탈퇴' class='btn btn-secondary btn-sm' onclick='javascript:festivaldelete("+ idx +")'>" + "</td></tr>";
+						
+					}
+					$("#tb1").html(); */
+				},
+				error: function(request, status, errorData){
+					alert("error code : " + request.status + "\n" + "message : " + request.responseText 
+							+ "\n" + "error : " + errorData);
+				} 
+			}); 
+			 alert("정상적으로 탈퇴되었습니다.");
+			 location.href="adminfestival.do";
+		  }else
+			  return;
+	  }
+	 
+	 
  
 	</script>
  
@@ -388,6 +435,7 @@
 					  <thead>
 					    <tr align="center">
 					      
+					      <th scope="col" width="">No</th>
 					      <th scope="col" width="">축제명</th>
 					      <th scope="col" width="">위치</th>
 					      <th scope="col" width="">날짜</th>
@@ -396,6 +444,7 @@
 					      <th scope="col" width="">티켓(Y/N)</th>
 					      <th scope="col" width="">조회수</th>
 					      <th scope="col" width="">추천수</th>
+					      <th scope="col" width=""></th>
 					     
 					    </tr>
 					  </thead>
@@ -441,8 +490,8 @@
 </div>
 
 <script src="/westival/resources/js/jquery-3.2.1.min.js"></script>
-<!-- <script src="/westival/resources/styles/bootstrap4/popper.js"></script>
-<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script> -->
+<script src="/westival/resources/styles/bootstrap4/popper.js"></script>
+<script src="/westival/resources/styles/bootstrap4/bootstrap.min.js"></script>
 <script src="/westival/resources/plugins/greensock/TweenMax.min.js"></script>
 <script src="/westival/resources/plugins/greensock/TimelineMax.min.js"></script>
 <script src="/westival/resources/plugins/scrollmagic/ScrollMagic.min.js"></script>

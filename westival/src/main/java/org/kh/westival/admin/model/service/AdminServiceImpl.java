@@ -99,20 +99,37 @@ public class AdminServiceImpl implements AdminService{
 		System.out.println("festivalDetail serviceImpl");
 		return adminDao.festivalDetail(fno);
 	}
-	/*//축제 수정(축제)
+	//축제 수정(축제)
+	@Override
 	public int updateFestival(Festival festival) {
 		System.out.println("updateFestival serviceImpl");
 		return adminDao.updateFestival(festival);
 	}
 	//축제 수정(티켓)
+	@Override
 	public int updateTicketOption(TicketOption ticketOption) {
 		System.out.println("updateTicketOption serviceImpl");
 		return adminDao.updateTicketOption(ticketOption);
-	}*/
+	}
+	
+	//축제 삭제
+	@Override
+	public int afdelete(int fno) {
+		System.out.println("afdelete serviceImpl");
+		return adminDao.afdelete(fno);
+	}
+	
+
 	
 	//----------------------------------------------------------
 	//회원관리
 	
+	//회원등록
+	@Override
+	public int insertMember(Member member) {
+		// TODO Auto-generated method stub
+		return adminDao.insertMember(member);
+	}
 	
 	//회원리스트
 	/*@Override
@@ -162,6 +179,9 @@ public class AdminServiceImpl implements AdminService{
 		System.out.println("amdelete serviceImpl");
 		return adminDao.amdelete(mid);
 	}
+	
+	
+	
 	
 	
 	
