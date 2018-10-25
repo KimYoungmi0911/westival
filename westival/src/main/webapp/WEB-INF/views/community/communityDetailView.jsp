@@ -163,7 +163,7 @@
 </style>
 <script>
 
-	var community_no
+	var community_no;
 	/*jquery*/
 	$(function(){
 		var userid = "${ member.user_id }";
@@ -234,16 +234,19 @@
 	                  outValues += '<td colspan="2" class="center">등록된 댓글이 없습니다.</td>';
 	               }else{
 	                  for(var i in jsonObj.list){
-	                     outValues += '<tr><td class="number">'+obj.list[i].comment_seq+'</td>';
+	                	  for(var j=0; j < jsonObj.list[i].comment_content.length; j++){
+	                		  jsonObj.list[i].comment_content = jsonObj.list[i].comment_content.replace("+", " ");
+	                	  }
+	                     outValues += '<tr><td class="number">'+jsonObj.list[i].comment_seq+'</td>';
 	                     outValues += '<td><div class="comment_writer">';
-	                     outValues += '<span style="margin-right: 10px; font-weight: bold;">'+decodeURIComponent(obj.list[i].user_id)+'</span> 작성일 : '+obj.list[i].comment_date+'';
+	                     outValues += '<span style="margin-right: 10px; font-weight: bold;">'+decodeURIComponent(jsonObj.list[i].user_id)+'</span> 작성일 : '+jsonObj.list[i].comment_date+'';
 	                     if(userid == obj.list[i].user_id){
-	                        outValues += '&nbsp;&nbsp;&nbsp;&nbsp;<button id="editBtn'+obj.list[i].comment_no+'" type="button" class="btn btn-secondary btn-sm" value="'+obj.list[i].comment_no+'" onclick="updateReplyClick('+obj.list[i].comment_no+')">수정</button>&nbsp;<button id="deleteBtn'+obj.list[i].comment_no+'" type="button" class="btn btn-secondary btn-sm" onclick="deleteReply('+obj.list[i].comment_no+')">삭제</button></div>';   
+	                        outValues += '&nbsp;&nbsp;&nbsp;&nbsp;<button id="editBtn'+jsonObj.list[i].comment_no+'" type="button" class="btn btn-secondary btn-sm" value="'+jsonObj.list[i].comment_no+'" onclick="updateReplyClick('+jsonObj.list[i].comment_no+')">수정</button>&nbsp;<button id="deleteBtn'+jsonObj.list[i].comment_no+'" type="button" class="btn btn-secondary btn-sm" onclick="deleteReply('+jsonObj.list[i].comment_no+')">삭제</button></div>';   
 	                     }
-	                     outValues += '<div class="comment_content" id="comment_content'+obj.list[i].comment_no+'">'+decodeURIComponent(obj.list[i].comment_content)+'</div>';
-	                     outValues += '<div class="modify_content" style="display:none;margin-top:10px;"><textarea style="height:85px;width:700px">'+decodeURIComponent(obj.list[i].comment_content)+'</textarea></div>';
-	                     outValues += '<div class="modify_contentBtn" id="Btn'+obj.list[i].comment_no+'" style="display:none;margin-top:10px;"><button type="button" class="btn btn-secondary btn-sm" onclick="updateReply('+obj.list[i].comment_no+')">수정하기</button>&nbsp;<button id="cancelBtn'+obj.list[i].comment_seq+'" type="button" class="btn btn-secondary btn-sm" onclick="cancleBtn()">취소</button></div>';
-	                     outValues += '<div id="'+obj.list[i].comment_no+'" style="display:none;"></div></td></tr>';
+	                     outValues += '<div class="comment_content" id="comment_content'+jsonObj.list[i].comment_no+'">'+decodeURIComponent(jsonObj.list[i].comment_content)+'</div>';
+	                     outValues += '<div class="modify_content" style="display:none;margin-top:10px;"><textarea style="height:85px;width:700px">'+decodeURIComponent(jsonObj.list[i].comment_content)+'</textarea></div>';
+	                     outValues += '<div class="modify_contentBtn" id="Btn'+jsonObj.list[i].comment_no+'" style="display:none;margin-top:10px;"><button type="button" class="btn btn-secondary btn-sm" onclick="updateReply('+jsonObj.list[i].comment_no+')">수정하기</button>&nbsp;<button id="cancelBtn'+jsonObj.list[i].comment_seq+'" type="button" class="btn btn-secondary btn-sm" onclick="cancleBtn()">취소</button></div>';
+	                     outValues += '<div id="'+jsonObj.list[i].comment_no+'" style="display:none;"></div></td></tr>';
 	                  }
 	               }
 	               $("#replyTable tbody").html(outValues);
@@ -276,7 +279,6 @@
 	
 	//댓글 수정완료 클릭시
 	function updateReply(number){
-		if(confirm("확인을 누르면 수정이 완료됩니다.") == true){
 			$.ajax({
 				url : "replyupdate.do",
 				type : "post",
@@ -295,10 +297,6 @@
 		                     + "error : " + errorData);
 		        }
 			});
-		}else{
-			alert("수정을 취소합니다.");
-			
-		}
 		return false;
 	}
 	
@@ -368,8 +366,20 @@
 	
 	//목록 클릭시
 	function listClick(){
-		location.href="commuPage.do?category2=${category }&search2=${search}&keyword2=${keyword}&page2=${page}";
+		var oParams = getUrlParams();
+		if(oParams.w == "w"){
+			location.href="commuPage.do";
+		}else{
+			location.href="commuPage2.do?category2=${category }&search2=${search}&keyword2=${keyword}&page=${page}";
+		}
 	}
+	
+	//쿼리스트링 함수
+	   function getUrlParams() {
+	       var params = {};
+	       window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+	       return params;
+	   }
 	
 </script>
 </head>
@@ -420,8 +430,12 @@
 								</c:if>
 							</tr>
 							<tr><td colspan="6" id="content"> ${ community.content }
-								<div style="float:right;">
-							  		<a href="Info.do?no=${community.no }"><img style="width:300px;height:300px;" src="/westival/resources/images/2561914_image2_1.jpg" alt=""></a>
+								<div style="float:right;display: table-cell; ">
+							  		<a href="Info.do?no=${community.no }">
+							  			<img style="width:300px;height:300px;" src="/westival/resources/uploadFiles/festivalImg/${festival.original_img_name }">
+							  				<div style="vertical-align:middle;"><strong ><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							  				< ${festival.name } > 상세보기</em></strong></div>
+							  		</a>
 								</div> 
 								<input type="hidden" name="content" value="${community.content }">
 								<input type="hidden" id="community_no" name="community_no" value="${ community.community_no }">

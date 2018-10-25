@@ -114,7 +114,7 @@ a:active {
 	left: 35%;
 	margin-top: -51px;
 	margin-left: -153px;
-	width: 700px;
+	width: 900px;
 	height: 80px;
 }
 
@@ -141,28 +141,40 @@ a:active {
 </style>
 <script>
 	var currentPage = 1;
-	
+	var all = "all";
 	$(function(){
-		 //쿼리스트링 값 가져오기
-	      var oParams = getUrlParams();
+		var oParams = getUrlParams();
+		//쿼리스트링 값 가져오기
+		/* alert("category2 : " + oParams.category2 + "\n oParams.search2 : " + oParams.search2
+				+ "\n oParams.keyword2 : " + oParams.keyword2 + "\n oParams.page : " + oParams.keyword2); */
+		if(oParams.category2 != "undefined" || oParams.search2 != "undefined" || oParams.keyword2 != "undefined"){ 
 	      var a = decodeURI(oParams.category2);
 	      var b = decodeURI(oParams.search2);
 	      var c = decodeURI(oParams.keyword2);
-	      var d = oParams.page2;
+	      var d = oParams.page;
 	      if( a != "undefined" || b != "undefined" || c != "undefined" ){
-	    	  console.log("typeOf : " + typeof(a) + "," + typeof(b) + ", " + typeof(c) + ", " + typeof(d));
-	    	  if( a == null || b == null || c == null ){
-		    	  $("#categoryFilter").val("분류").prop("selected", true);
-			      $("#searchFilter").val("전체").prop("selected", true);
+	    	  if(a == "undefined" && b == "undefined" && c == "undefined" &&  d != "undefined"){
+		    	  location.href="commuPage.do?page="+d;
 		      }
-	         $("#categoryFilter").val(a).prop("selected", true);
-	         $("#searchFilter").val(b).prop("selected", true);
-	         $("#keywordFilter").val(c);
+		      if(a == "undefined"){
+		    	  $("#categoryFilter").val(all).prop("selected", true);
+		      }else{
+		    	  $("#categoryFilter").val(a).prop("selected", true);
+		      }
+		      if(b == "undefined"){
+		    	  $("#searchFilter").val(all).prop("selected", true);
+		      }else{
+		    	  $("#searchFilter").val(b).prop("selected", true);
+		      }     
+		      if(c != "undefined"){
+		    	  $("#keywordFilter").val(c);
+		      }
+		      
 	         clickSearch(d);
-	      }else{
-	    	  $("#categoryFilter").val("분류").prop("selected", true);
-		      $("#searchFilter").val("전체").prop("selected", true);
-	      }
+			}
+	      return false;
+		}
+		
 	});
 	//글쓰기 버튼 클릭시
 	function writeBtnCilck(){
@@ -171,6 +183,7 @@ a:active {
 		}else{
 			alert("로그인 후 작성 가능합니다");
 		}
+		return false;
 	}
 	
 	//조회 버튼 클릭시
@@ -180,7 +193,12 @@ a:active {
 		if($("#categoryFilter option:selected").val() == "all" 
 				&& $("#searchFilter option:selected").val() == "all"
 				&& $("#keywordFilter").val() == ""){
-			location.href="commuPage.do";
+			location.href="commuPage.do?page="+page;
+		/* }else if($("#keywordFilter").val() == "" && 
+				$("#categoryFilter option:selected").val() != "all"
+				|| $("#searchFilter option:selected").val() != "all"
+				){
+				alert("검색어를 입력해주세요."); */
 		}else{
 			$.ajax({
 				url : "commufilter.do",
@@ -199,13 +217,15 @@ a:active {
 		            	 outValues += '<td colspan="7">검색 결과가 존재하지 않습니다.</td>';
 		            }else{
 		            	 for(var i in jsonObj.list){
-		            		 obj.list[i].title = obj.list[i].title.replace("+", " ");
-		            		 outValues += '<tr><td>'+obj.list[i].community_no+'</td>';
-		            		 outValues += '<td>'+decodeURIComponent(obj.list[i].category)+'</td>';
-		            		 outValues += '<td onclick="detailClick(' + obj.list[i].community_no + ');">'+decodeURIComponent(obj.list[i].title)+'</td>';	            		 
-		            		 outValues += '<td>'+obj.list[i].user_id+'</td>';
-		            		 outValues += '<td>'+obj.list[i].community_date+'</td>';
-		            		 outValues += '<td>'+obj.list[i].read_count+'</td></tr>';
+		            		 for(var j=0; j < jsonObj.list[i].title.length; j++){
+		            		 	jsonObj.list[i].title = jsonObj.list[i].title.replace("+", " ");
+		            		 }
+		            		 outValues += '<tr><td>'+jsonObj.list[i].community_no+'</td>';
+		            		 outValues += '<td>'+decodeURIComponent(jsonObj.list[i].category)+'</td>';
+		            		 outValues += '<td onclick="detailClick(' + jsonObj.list[i].community_no + ');">'+decodeURIComponent(jsonObj.list[i].title)+'</td>';	            		 
+		            		 outValues += '<td>'+jsonObj.list[i].user_id+'</td>';
+		            		 outValues += '<td>'+jsonObj.list[i].community_date+'</td>';
+		            		 outValues += '<td>'+jsonObj.list[i].read_count+'</td></tr>';
 		            	 }
 		            }
 		            
@@ -223,6 +243,10 @@ a:active {
 		            $(".table tbody").html(outValues);
 		            $(".pagination").html(pageValues);
 		            
+		          /* oParams.category2 = "undefined";
+		  	      oParams.search2 = "undefined";
+		  	      oParams.keyword2 = "undefined";
+		  	      oParams.page = "undefined"; */
 				},
 				error : function (jqXHR, textstatus, errorThrown){
 					console.log("error : " + jqXHR + ", " + textstatus + ", " + errorThrown);
@@ -234,14 +258,44 @@ a:active {
 	
 	//상세보기 클릭시
 	function detailClick (community_no){
-		$("#tbody").append("<form id='detailForm' action='commuDetail.do' method='post'>"
-				+"<input type='hidden' name='community_no' value='" + community_no + "'>"
-				+"<input type='hidden' name='category' value='" + $("#categoryFilter option:selected").val() + "'>"
-				+"<input type='hidden' name='search' value='" + $("#searchFilter option:selected").val() + "'>"
-				+"<input type='hidden' name='keyword' value='" + $("#keywordFilter").val() + "'>"
-				+"<input type='hidden' name='page' value='" + currentPage + "'>"
-				+"</form>");
-		$("#detailForm").submit();
+		/* if(oParams.category2 == "undefined" && oParams.search2 == "undefined" && oParams.keyword2 == "undefined"){
+			alert("전체조회시 상세보기 '${paging.currentPage} : ,,,"+currentPage); */
+			if($("#keywordFilter").val() == ""){
+			$("#tbody").append("<form id='detailForm' action='commuDetail.do?category2="+$("#categoryFilter option:selected").val()
+					+"&search2="+$("#searchFilter option:selected").val()+"&keyword2="+$("#keywordFilter").val()+"&page=${paging.currentPage}' method='post'>"
+					+"<input type='hidden' name='community_no' value='" + community_no + "'>"
+					+"<input type='hidden' name='category' value='" + $("#categoryFilter option:selected").val() + "'>"
+					+"<input type='hidden' name='search' value='" + $("#searchFilter option:selected").val() + "'>"
+					+"<input type='hidden' name='keyword' value='" + $("#keywordFilter").val() + "'>"
+					+"<input type='hidden' name='page' value='" + currentPage + "'>"
+					+"</form>");
+			}else{
+				$("#tbody").append("<form id='detailForm' action='commuDetail.do?category2="+$("#categoryFilter option:selected").val()
+						+"&search2="+$("#searchFilter option:selected").val()+"&keyword2="+$("#keywordFilter").val()+"&page="+currentPage+"' method='post'>"
+						+"<input type='hidden' name='community_no' value='" + community_no + "'>"
+						+"<input type='hidden' name='category' value='" + $("#categoryFilter option:selected").val() + "'>"
+						+"<input type='hidden' name='search' value='" + $("#searchFilter option:selected").val() + "'>"
+						+"<input type='hidden' name='keyword' value='" + $("#keywordFilter").val() + "'>"
+						+"<input type='hidden' name='page' value='" + currentPage + "'>"
+						+"</form>");
+			}
+			$("#detailForm").submit();
+		/* }else{
+			alert("필터조회시 상세보기");
+			$("#tbody").append("<form id='detailForm' action='commuDetail.do?category2="+$("#categoryFilter option:selected").val()
+					+"&search2="+$("#searchFilter option:selected").val()+"&keyword2="+$("#keywordFilter").val()+"&page="+oParams.page+"' method='post'>"
+					+"<input type='hidden' name='community_no' value='" + community_no + "'>"
+					+"<input type='hidden' name='category' value='" + $("#categoryFilter option:selected").val() + "'>"
+					+"<input type='hidden' name='search' value='" + $("#searchFilter option:selected").val() + "'>"
+					+"<input type='hidden' name='keyword' value='" + $("#keywordFilter").val() + "'>"
+					+"<input type='hidden' name='page' value='" + currentPage + "'>"
+					+"</form>");
+			$("#detailForm").submit();
+			var a = decodeURI(oParams.category2);
+		      var b = decodeURI(oParams.search2);
+		      var c = decodeURI(oParams.keyword2);
+		} */
+		
 		return false;
 	}
 	
@@ -308,7 +362,13 @@ a:active {
 							<div class="main_3 main_common">
 								<p class="content">
 									<button class="btn btn-default" type="button"
-										style="margin-bottom: 3px;" onclick="clickSearch(1)">검색</button>
+										style="margin-bottom: 3px;" onclick="clickSearch(1)">조회</button>
+								</p>
+							</div>
+							<div class="main_3 main_common">
+								<p class="content">
+									<button class="btn btn-default" type="button"
+										style="margin-bottom: 3px;" onclick="location.href='commuPage.do'">전체조회</button>
 								</p>
 							</div>
 						</div>

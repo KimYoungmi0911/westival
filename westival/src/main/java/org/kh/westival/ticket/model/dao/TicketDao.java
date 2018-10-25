@@ -16,7 +16,6 @@ public class TicketDao {
 
 	//예매정보 등록
 	public int insertTicket(Ticket ticket) {
-		System.out.println("생성왜안?");
 		return sqlSession.insert("ticketMapper.insertTicket", ticket);
 	}
 
