@@ -39,6 +39,28 @@ public class MemberServiceImpl implements MemberService {
 	public int insertMember(Member member) {
 		return memberDao.insertMember(member);
 	}
+	
+	// 아이디 비번찾기 10/25
+	@Override
+	public String searchId(Member member) {
+		return memberDao.searchId(member);
+	}
+	@Override
+	public int searchPwd(Member member) {
+		return memberDao.searchPwd(member);
+	}
+	@Override
+	public int changePwd(Member member) {
+		return memberDao.changePwd(member);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	// 충섭
 	// 회원정보 수정

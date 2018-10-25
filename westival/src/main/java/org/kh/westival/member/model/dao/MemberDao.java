@@ -34,6 +34,23 @@ public class MemberDao {
 	public int insertMember(Member member) {
 		return sqlSession.insert("memberMapper.insertMember", member);
 	}
+	
+	// 아이디,비번찾기 10/25
+	public String searchId(Member member) {
+		return (String) sqlSession.selectOne("memberMapper.searchId", member);
+	}
+	public int searchPwd(Member member) {
+		return (int) sqlSession.selectOne("memberMapper.searchPwd", member);
+	}
+	public int changePwd(Member member) {
+		return (int) sqlSession.update("memberMapper.changePwd", member);
+	}
+	
+	
+	
+	
+	
+	
 
 	// 충섭
 	// 회원정보 수정

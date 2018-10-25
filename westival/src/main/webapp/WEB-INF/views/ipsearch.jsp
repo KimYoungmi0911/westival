@@ -64,13 +64,97 @@
    .home_background {
       position:relative;
    }
-   
-
 
 </style>
 
 <script type="text/javascript">
 
+	// 이메일 유효성 검사
+	function email_check( email ) {       
+	    var regex=/([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+	    return (email != '' && email != 'undefined' && regex.test(email));
+	}
+	
+	// 전화번호 유효성 검사
+	function isCellPhone(p) {
+		p = p.split('-').join('');
+		var regPhone = /^((01[1|6|7|8|9])[1-9]+[0-9]{6,7})|(010[1-9][0-9]{7})$/;
+		return regPhone.test(p);
+	}	
+
+	function searchId(){
+		
+		if($("#i_user_name").val().length==0 || $("#i_user_email").val().length==0 ){
+			alert("빈칸을 확인해주세요.");
+			return false;
+		} else if(!email_check($("#i_user_email").val())){
+			alert("이메일을 확인해주세요.");
+	        return false;
+	    } else{
+			var user_name = $("#i_user_name").val();
+			var user_email = $("#i_user_email").val();
+			
+			$.ajax({
+				url : "searchId.do",
+				type : "post",
+				data : { "user_name" : user_name, "user_email" : user_email },
+				dataType : "json",
+				success : function(result){
+					console.log(result);
+					if(result.user_id=="0"){
+						alert("입력하신 회원정보로 가입된 아이디가 존재하지 않습니다.");
+					} else{
+						alert("회원님의 아이디는 " + result.user_id + " 입니다.");
+					}			
+				},
+				error : function(request, status, errorData){
+					alert("error code : " + request.status + "\n" + "message : " + request.responseText 
+							+ "\n" + "error : " + errorData);
+				} 				
+			});
+	    }
+	}
+	
+	function searchPwd(){
+		if($("#p_user_id").val().length==0 || $("#p_user_email").val().length==0 || $("#p_user_phone").val().length==0 ){
+			alert("빈칸을 확인해주세요.");
+			return false;
+		} else if($("#p_user_id").val().length < 4){
+			alert("아이디를 확인해주세요.");
+			return false;
+		} else if(!email_check($("#p_user_email").val())){
+			alert("이메일을 확인해주세요.");
+	        return false;
+	    } else if( !(isCellPhone($("#p_user_phone").val())) ){
+	    	alert("연락처를 확인해주세요");
+	        return false;
+	    }
+		
+		else{
+			var user_id= $("#p_user_id").val();
+			var user_email = $("#p_user_email").val();
+			var user_phone = $("#p_user_phone").val();
+			
+			$.ajax({
+				url : "searchPwd.do",
+				type : "post",
+				data : { "user_id" : user_id, "user_email" : user_email, "user_phone" : user_phone },
+				dataType : "json",
+				success : function(result){					
+					if(result.result== "1"){
+						document.getElementById("searchPwdForm").submit();
+					} else{
+						alert("입력하신 회원정보로 가입된 아이디가 존재하지 않습니다.");
+					}
+				
+				},
+				error : function(request, status, errorData){
+					alert("error code : " + request.status + "\n" + "message : " + request.responseText 
+							+ "\n" + "error : " + errorData);
+				} 				
+			});
+	    }
+	}
 
    
 </script>
@@ -96,75 +180,54 @@
       <h3 style="margin-bottom: 25px; text-align: center;"><img src="/westival/resources/images/titlelogo.png" style="width:10%"></h3>
          <div class="row">
          
-         
-            <div class="col">   
-               <div class="container" align="center">
-                   <div class="form-area" >  
-                   
-                       <form action="insertFestival.do" method="post" id="insertFestival" style="border:0px;">
-                         
-                          
-                           <div class="form-group" align="center"> 
-                          <h3 style="font-weight:bold">아이디 찾기</h3>  
-                          <br>
-                              <div class="form-inline form group">                  
-                               <label style="width:120px; font-weight:bold">NAME</label>&nbsp;
-                               <input type="text" class="form-1" id="user_id" name="user_id" required>
-                            </div><br>
-                              <div class="form-inline form group">                  
-                                <label style="width:120px; font-weight:bold">EMAIL</label>&nbsp;
-                                <input type="password" class="form-1" id="user_pwd" name="user_pwd" required>
-                             </div>
-                            </div>
-                            <br>
-                                                               
-                        <input type="submit" id="submit" name="submit" class="btn btn-primary pull-center" value="SEARCH ID" onclick="loginCheck(); return false;"
-                        style="background: linear-gradient(to right, #fa9e1b, #8d4fff); border:0px solid; font-family: 'Open Sans', sans-serif; text-transform: uppercase; width:50%">
-                     </form>                                                               
-                                                 
-                            
-                  </div>
-               </div>
+         	<div class="col">
+         		<div class="container" align="center">
+         			<div class="form-area" >
+         				<form action="" style="border:0px;">
+         					<div class="form-group" align="center"> 
+         						<h3 style="font-weight:bold">아이디 찾기</h3><br>
+         						<div class="form-inline form group">                  
+                                	<label style="width:120px; font-weight:bold">NAME</label>&nbsp;
+                                	<input type="text" class="form-1" id="i_user_name"  required>
+                                </div><br>
+                                <div class="form-inline form group">                  
+	                                <label style="width:120px; font-weight:bold">EMAIL</label>&nbsp;
+	                                <input type="email" class="form-1" id="i_user_email"  required>
+	                            </div>
+	                        </div><br>
+	                        <input type="submit" class="btn btn-primary pull-center" value="SEARCH ID" onclick="searchId(); return false;"
+                        	style="background: linear-gradient(to right, #fa9e1b, #8d4fff); border:0px solid; font-family: 'Open Sans', sans-serif; text-transform: uppercase; width:50%">
+                     	</form>                                                               
+                     </div>
+                </div>
             </div>
-            
+
+
             <div class="col">   
-               <div class="container" align="center">
-                  
-                   <div class="form-area" >  
-                   
-                       <form action="insertFestival.do" method="post" id="insertFestival" style="border:0px;">
-                          
-                          
-                           <div class="form-group" align="center"> 
-                           <h3 style="font-weight:bold">비밀번호 찾기</h3>
-                           <br>      
-                              <div class="form-inline form group">                  
-                               <label style="width:120px; font-weight:bold">ID</label>&nbsp;
-                               <input type="text" class="form-1" id="user_id" name="user_id" required>
-                            </div><br>
-                              <div class="form-inline form group">                  
-                                <label style="width:120px; font-weight:bold">EMAIL</label>&nbsp;
-                                <input type="password" class="form-1" id="user_pwd" name="user_pwd" required>
-                             </div><br>
-                              <div class="form-inline form group">                  
-                                <label style="width:120px; font-weight:bold">PHONE</label>&nbsp;
-                                <input type="password" class="form-1" id="user_pwd" name="user_pwd" required>
-                             </div><br>
+            	<div class="container" align="center">
+            		<div class="form-area" >
+            			<form action="changePwdPage.do" method="post" id="searchPwdForm" style="border:0px;">
+            				<div class="form-group" align="center">
+            					<h3 style="font-weight:bold">비밀번호 찾기</h3><br>
+            					<div class="form-inline form group">
+            						<label style="width:120px; font-weight:bold">ID</label>&nbsp;
+            						<input type="text" class="form-1" name="p_user_id" id="p_user_id" required>
+            					</div><br>
+            					<div class="form-inline form group">                  
+	                                <label style="width:120px; font-weight:bold">EMAIL</label>&nbsp;
+	                                <input type="email" class="form-1" name="p_user_email" id="p_user_email" required>
+                                </div><br>
+                                <div class="form-inline form group">                  
+	                                <label style="width:120px; font-weight:bold">PHONE</label>&nbsp;
+	                                <input type="text" class="form-1" name="p_user_phone" id="p_user_phone" required>
+                                </div><br>
                             </div>
-                           
-                                                               
-                        <input type="submit" id="submit" name="submit" class="btn btn-primary pull-center" value="SEARCH PWD" onclick="loginCheck(); return false;"
+                            <input type="submit" class="btn btn-primary pull-center" value="SEARCH PWD" onclick="searchPwd(); return false;"
                         style="background: linear-gradient(to right, #fa9e1b, #8d4fff); border:0px solid; font-family: 'Open Sans', sans-serif; text-transform: uppercase; width:50%">
-                     </form>
-                     
-                            
-                        
-                           
-                            
-                            
+                      </form>
                   </div>
-               </div>
-            </div>
+          	 </div>
+         	 </div>
          </div>
          <br><br><br>
       </div>

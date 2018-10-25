@@ -17,6 +17,17 @@ public interface MemberService {
 	Member checkId(Member member);
 
 	int insertMember(Member member);
+	
+	// 아이디 비번찾기 10/25
+	String searchId(Member member);
+	int searchPwd(Member member);
+	int changePwd(Member member);
+	
+	
+	
+	
+	
+	
 
 	// 충섭
 	// 회원정보 수정
