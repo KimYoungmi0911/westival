@@ -93,7 +93,6 @@
                   + "\n" + "error : " + errorData);
          } 
       });
-      return false;
    }
    
 </script>
@@ -125,15 +124,16 @@
                           style="border:0px;">
                           <!-- <br style="clear:both"> -->
                           <h3 style="margin-bottom: 25px; text-align: center;"><img src="/westival/resources/images/titlelogo.png" style="width:20%"></h3>
+                          <br>
                           
                            <div class="form-group" align="center">      
                               <div class="form-inline form group">                  
                                <label style="width:120px; font-weight:bold">ID</label>&nbsp;
-                               <input type="text" class="form-1" id="user_id" name="user_id" required>
+                               <input type="text" class="form-1" id="user_id" name="user_id" required style="width:300px">
                             </div><br>
                               <div class="form-inline form group">                  
                                 <label style="width:120px; font-weight:bold">PASSWORD</label>&nbsp;
-                                <input type="password" class="form-1" id="user_pwd" name="user_pwd" required>
+                                <input type="password" class="form-1" id="user_pwd" name="user_pwd" required style="width:300px">
                              </div>
                             </div>
                             <br>
