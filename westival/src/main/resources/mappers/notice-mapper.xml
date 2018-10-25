@@ -3,145 +3,145 @@
 "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="noticeMapper">
-	
-	 
-	<resultMap type="Notice" id="resultList">
-		<result property="notice_no" column="notice_no" />
-		<result property="user_id" column="user_id" />
-		<result property="notice_title" column="notice_title" />
-		<result property="notice_date" column="notice_date" />
-		<result property="notice_content" column="notice_content" />
-		<result property="original_filepath" column="original_filepath" />
-		<result property="rename_filepath" column="rename_filepath" />
-		
-	</resultMap>
-	
-	<select id="noticeList"  resultMap="resultList">
-	select * from tb_notice order by notice_no asc
-	</select>
-	
-	<select id="noticeDetail" parameterType="_int" resultMap="resultList">
-	
-	select * from tb_notice where notice_no = #{notice_no}
-	
-	</select>
+   
+    
+   <resultMap type="Notice" id="resultList">
+      <result property="notice_no" column="notice_no" />
+      <result property="user_id" column="user_id" />
+      <result property="notice_title" column="notice_title" />
+      <result property="notice_date" column="notice_date" />
+      <result property="notice_content" column="notice_content" />
+      <result property="original_filepath" column="original_filepath" />
+      <result property="rename_filepath" column="rename_filepath" />
+      
+   </resultMap>
+   
+   <select id="noticeList"  resultMap="resultList">
+   select * from tb_notice order by notice_no desc
+   </select>
+   
+   <select id="noticeDetail" parameterType="_int" resultMap="resultList">
+   
+   select * from tb_notice where notice_no = #{notice_no}
+   
+   </select>
 
-	<insert id="noticeInsert1" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
-	
-	insert into tb_notice values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, #{original_filepath}, #{rename_filepath})
-	</insert>
-	
-	<insert id="noticeInsert2" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
-	insert into tb_notice values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, null, null)
-	</insert>
+   <insert id="noticeInsert1" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
+   
+   insert into tb_notice values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, #{original_filepath}, #{rename_filepath})
+   </insert>
+   
+   <insert id="noticeInsert2" parameterType="Notice" flushCache="true" statementType="PREPARED" useGeneratedKeys="true">
+   insert into tb_notice values (notice_seq.nextval, 'admin', #{notice_title}, DEFAULT, #{notice_content}, null, null)
+   </insert>
 
-	<delete id="noticeDelete" parameterType="_int" flushCache="true"
-		statementType="PREPARED">
-		
-		delete from tb_notice where notice_no = #{notice_no}
-		
-	</delete>
-	
-	<update id="noticeUpdate1" parameterType="Notice" flushCache="true"
-		statementType="PREPARED">
-		update tb_notice set notice_title = #{notice_title}, 
-		notice_content = #{notice_content},
-		original_filepath = #{original_filepath},
-		rename_filepath = #{rename_filepath}
-		where notice_no = #{notice_no}
-	</update>
-	
-	<update id="noticeUpdate2" parameterType="Notice" flushCache="true"
-		statementType="PREPARED">
-		update tb_notice set notice_title = #{notice_title}, 
-		notice_content = #{notice_content},
-		original_filepath = null,
-		rename_filepath = null
-		where notice_no = #{notice_no}
-	</update>
-	
-	<select id="noticeSelect"  resultMap="resultList">
-	select * from tb_notice where notice_no = #{notice_no}
-	</select>
-	
-	<!-- 페이징뷰 -->
-	<select id="getListCount" resultType="_int">
-	
-	select count(*) from tb_notice
-	
-	</select>
-	
-	<select id="selectListPage" parameterType="NoticePage" resultMap="resultList">
-	
-	select * from (
-				select ROWNUM RNUM, notice_no, user_id, 
-				notice_title, notice_date, notice_content, original_filepath, rename_filepath 
-				from (select * from tb_notice 
-				order by notice_no asc))
-				where RNUM between #{startRow} and #{endRow} 
-	
-	</select>
-	
-	<!-- 공지사항 전체(페이징) -->
-	<select id="nGetListCount" resultType="_int">
-	
-	select count(*) from tb_notice
-	
-	</select>
-		
-	<!-- 공지사항 전체(리스트) -->
-	<select id="nAllSelectList" parameterType="java.util.Map" resultMap="resultList">
-	
-	select * from (
-				select ROWNUM RNUM, notice_no, user_id, notice_title, notice_date, 
-				notice_content, original_filepath, rename_filepath
-				from (select * from tb_notice
-				order by notice_no))
-				where RNUM between #{startRow} and #{endRow}
-	
-	</select>
-	
+   <delete id="noticeDelete" parameterType="_int" flushCache="true"
+      statementType="PREPARED">
+      
+      delete from tb_notice where notice_no = #{notice_no}
+      
+   </delete>
+   
+   <update id="noticeUpdate1" parameterType="Notice" flushCache="true"
+      statementType="PREPARED">
+      update tb_notice set notice_title = #{notice_title}, 
+      notice_content = #{notice_content},
+      original_filepath = #{original_filepath},
+      rename_filepath = #{rename_filepath}
+      where notice_no = #{notice_no}
+   </update>
+   
+   <update id="noticeUpdate2" parameterType="Notice" flushCache="true"
+      statementType="PREPARED">
+      update tb_notice set notice_title = #{notice_title}, 
+      notice_content = #{notice_content},
+      original_filepath = null,
+      rename_filepath = null
+      where notice_no = #{notice_no}
+   </update>
+   
+   <select id="noticeSelect"  resultMap="resultList">
+   select * from tb_notice where notice_no = #{notice_no}
+   </select>
+   
+   <!-- 페이징뷰 -->
+   <select id="getListCount" resultType="_int">
+   
+   select count(*) from tb_notice
+   
+   </select>
+   
+   <select id="selectListPage" parameterType="NoticePage" resultMap="resultList">
+   
+   select * from (
+            select ROWNUM RNUM, notice_no, user_id, 
+            notice_title, notice_date, notice_content, original_filepath, rename_filepath 
+            from (select * from tb_notice 
+            order by notice_no desc))
+            where RNUM between #{startRow} and #{endRow} 
+   
+   </select>
+   
+   <!-- 공지사항 전체(페이징) -->
+   <select id="nGetListCount" resultType="_int">
+   
+   select count(*) from tb_notice
+   
+   </select>
+      
+   <!-- 공지사항 전체(리스트) -->
+   <select id="nAllSelectList" parameterType="java.util.Map" resultMap="resultList">
+   
+   select * from (
+            select ROWNUM RNUM, notice_no, user_id, notice_title, notice_date, 
+            notice_content, original_filepath, rename_filepath
+            from (select * from tb_notice
+            order by notice_no desc))
+            where RNUM between #{startRow} and #{endRow}
+   
+   </select>
+   
 
-	<!-- 페이징검색뷰 -->
-	<select id="nGetSelectListCount" resultType="_int" parameterType="string">
-	select count(*) from tb_notice
-	<choose>
-	<when test="filter == 'all'">
-	where notice_no like '%'||#{searchTF}||'%' 
-	or notice_title like '%'||#{searchTF}||'%'
-	</when>
-	<when test="filter == 'no'">
-	where notice_no like '%'||#{searchTF}||'%'
-	</when>
-	<when test="filter == 'ntitle'">
-	where notice_title like '%'||#{searchTF}||'%'
-	</when>
-	</choose> 
-	</select>
-	
-	
-	<!-- 공지 검색(리스트) -->
-	<select id="nSelectList" parameterType="java.util.Map" resultMap="resultList">
-	
-	select * from (select ROWNUM RNUM, notice_no, user_id, notice_title, notice_date, notice_content, original_filepath, 
- 	rename_filepath from (select * from tb_notice
-	
-	<choose>	
-	<when test="filter == 'all'">
-	where notice_no like '%'||#{searchTF}||'%' 
-	or notice_title like '%'||#{searchTF}||'%' ))
+   <!-- 페이징검색뷰 -->
+   <select id="nGetSelectListCount" resultType="_int" parameterType="string">
+   select count(*) from tb_notice
+   <choose>
+   <when test="filter == 'all'">
+   where notice_no like '%'||#{searchTF}||'%' 
+   or notice_title like '%'||#{searchTF}||'%'
+   </when>
+   <when test="filter == 'no'">
+   where notice_no like '%'||#{searchTF}||'%'
+   </when>
+   <when test="filter == 'ntitle'">
+   where notice_title like '%'||#{searchTF}||'%'
+   </when>
+   </choose> 
+   </select>
+   
+   
+   <!-- 공지 검색(리스트) -->
+   <select id="nSelectList" parameterType="java.util.Map" resultMap="resultList">
+   
+   select * from (select ROWNUM RNUM, notice_no, user_id, notice_title, notice_date, notice_content, original_filepath, 
+    rename_filepath from (select * from tb_notice
+   
+   <choose>   
+   <when test="filter == 'all'">
+   where notice_no like '%'||#{searchTF}||'%' 
+   or notice_title like '%'||#{searchTF}||'%' ))
 
-	</when>
-	<when test="filter == 'no'">
-	where notice_no like '%'||#{searchTF}||'%' ))
+   </when>
+   <when test="filter == 'no'">
+   where notice_no like '%'||#{searchTF}||'%' ))
 
-	</when>
-	<when test="filter == 'ntitle'">
-	where notice_title like '%'||#{searchTF}||'%' ))
+   </when>
+   <when test="filter == 'ntitle'">
+   where notice_title like '%'||#{searchTF}||'%' ))
 
-	</when>
-	</choose>
-	where RNUM between #{startRow} and #{endRow}
-	</select> 
+   </when>
+   </choose>
+   where RNUM between #{startRow} and #{endRow}
+   </select> 
 
 </mapper>
