@@ -97,9 +97,9 @@
 		background-color: #efeaea;
 	}
 	
-	.recommend_no_head, .recommend_no { width: 10%; display: inline-block; }
+	.recommend_no_head, .recommend_no { width: 20%; display: inline-block; }
 	.recommend_date_head, .recommend_date { width: 10%; display: inline-block; }
-	.recommend_name_head, .recommend_name { width: 45%; display: inline-block; }
+	.recommend_name_head, .recommend_name { width: 35%; display: inline-block; }
 	.recommend_count_head, .recommend_count { width: 5%; display: inline-block; }
 	.recommend_credit_head, .recommend_credit { width: 15%; display: inline-block; }
 	.recommend_refund_head, .recommend_refund { width: 10%; display: inline-block; }
@@ -117,8 +117,8 @@
 		margin: 1% 0 1% 0;
 		text-align: center;
 	}
-	
-	.recommend_name > p {
+	.recommend_no > p, .recommend_date > p, .recommend_name > p,
+	.recommend_count > p, .recommend_count > p, .recommend_count > p {
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		width: 95%;
@@ -139,7 +139,8 @@
 		border-radius: 10px;
 	}
 	
-	#modal_recommend_name > p {
+	.modal_recommend_no > p, .modal_recommend_date > p, .modal_recommend_name > p,
+	.modal_recommend_count > p, .modal_recommend_credit > p, .modal_recommend_name > p {
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		width: 95%;
@@ -173,9 +174,12 @@
 		
 		.recommend_refund > button { font-size: 9px; }
 		
-		.modal_recommend_date { width: 20%; }
-		.modal_recommend_name { width: 28%; }
-		.modal_recommend_credit { width: 20%; }
+		.recommend_no_head, .recommend_no { width: 15%;}
+		.recommend_date_head, .recommend_date { width: 15%;}
+		.recommend_name_head, .recommend_name { width: 20%;}
+		.recommend_count_head, .recommend_count { width: 10%;}
+		.recommend_credit_head, .recommend_credit { width: 15%;}
+		.recommend_refund_head, .recommend_refund { width: 15%;}
 	}
 	
 	@media only screen and (max-width: 768px) {
@@ -224,7 +228,7 @@
 		}
 		
 		.recommend_no > p, .recommend_date > p, .recommend_name > p,
-		 .recommend_count > p, .recommend_credit > p, .recommend_refund > p
+		.recommend_count > p, .recommend_credit > p, .recommend_refund > p
 		{
 			text-align: left;
 		}
@@ -331,10 +335,10 @@
 				var myCurrentTicket = '';
 				
 				for(var i in jsonObj.list) {
-					myCurrentTicket += "<div class='modal_recommend_no' id='modal_recommend_no'>" + jsonObj.list[i].ticket_no + "</div><div class='modal_recommend_date'>"
-						+ jsonObj.list[i].ticket_date + "</div><div class='modal_recommend_name'><p>" + jsonObj.list[i].festival_name
-						+ "</p></div><div class='modal_recommend_count'>" + jsonObj.list[i].ticket_count + "</div><div class='modal_recommend_credit'>" + jsonObj.list[i].price
-						+ "</div></div>";
+					myCurrentTicket += "<div class='modal_recommend_no'><p>" + jsonObj.list[i].ticket_no + "</p></div><div class='modal_recommend_date'><p>"
+						+ jsonObj.list[i].ticket_date + "</p></div><div class='modal_recommend_name'><p>" + jsonObj.list[i].festival_name
+						+ "</p></div><div class='modal_recommend_count'><p>" + jsonObj.list[i].ticket_count + "</p></div><div class='modal_recommend_credit'><p>" + jsonObj.list[i].price
+						+ "</p></div></div>";
 				}	
 				$(".refund_tbody_tr").html(myCurrentTicket);
 			},

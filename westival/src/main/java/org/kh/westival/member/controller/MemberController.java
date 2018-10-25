@@ -186,43 +186,44 @@ public class MemberController {
 			HttpSession session) throws IOException {
 		JSONArray jarr = new JSONArray();
 
-		int currentPage = 1;
+/*		int currentPage = 1;
 		int limit = 10;
 		if (request.getParameter("page") != null) {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
-
+*/
 		List<Festival> list = memberService.myTotalList(member.getUser_id());
-		int listCount = memberService.FestivalgetListCount(member.getUser_id());
+/*		int listCount = memberService.FestivalgetListCount(member.getUser_id());
 		int maxPage = (int) Math.ceil(((double) listCount / limit));
 		int startPage = (((int) ((double) currentPage / limit + 0.9)) - 1) * limit + 1;
 		int endPage = startPage + limit - 1;
 		if (maxPage < endPage) {
 			endPage = maxPage;
-		}
-		for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {
+		}*/
+		/*for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {*/
+		for (Festival festival : list) {
 			JSONObject job = new JSONObject();
 
-			job.put("new_img_name", list.get(i).getNew_img_name());
-			job.put("no", new Integer(list.get(i).getNo()).toString());
-			job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
-			job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
-			job.put("name", list.get(i).getName());
-			job.put("manage", list.get(i).getManage());
-			job.put("address", list.get(i).getAddress());
-			job.put("content", list.get(i).getContent());
+			job.put("new_img_name", festival.getNew_img_name());
+			job.put("no", new Integer(festival.getNo()).toString());
+			job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getStart_date()));
+			job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getEnd_date()));
+			job.put("name", festival.getName());
+			job.put("manage", festival.getManage());
+			job.put("address", festival.getAddress());
+			job.put("content", festival.getContent());
 
 			jarr.add(job);
 		}
 
-		System.out.println(limit * (currentPage - 1) + (listCount % limit));
+		/*System.out.println(limit * (currentPage - 1) + (listCount % limit));*/
 
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
-		sendJson.put("currentPage", currentPage);
+/*		sendJson.put("currentPage", currentPage);
 		sendJson.put("maxPage", maxPage);
 		sendJson.put("startPage", startPage);
-		sendJson.put("endPage", endPage);
+		sendJson.put("endPage", endPage);*/
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
