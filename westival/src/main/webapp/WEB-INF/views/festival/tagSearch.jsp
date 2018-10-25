@@ -64,7 +64,7 @@
    
    <!-- Home -->
    <div class="home">
-      <div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/about_background.jpg"></div>
+      <div class="home_background parallax-window" data-parallax="scroll" data-image-src="/westival/resources/images/tagbackground.jpg"></div>
       <div class="home_content">
          <div class="home_title">태그 별 축제 페이지</div>
       </div>
@@ -81,10 +81,10 @@
          
             <div class="col text-center">
              <a href="searchFestivalPage.do">
-	             <div style="background-image:url(/westival/resources/images/about_background.jpg); height:200px;">
-	               <br><br><br><br>
-	               <h2 style="font-weight:bold; ">더 다양한 축제를 검색하려면 Click!</h2>
-	             </div>
+                <div style="background-image:url(/westival/resources/images/contact_background.jpg); height:200px;">
+                  <br><br><br><br>
+                  <h2 style="font-weight:bold; color:white;">더 다양한 축제를 검색하려면 Click!</h2>
+                </div>
              </a>   
                <br><br><br><br>
             
@@ -130,13 +130,13 @@
                                     </div>
                               
                                     <c:if test="${ scrap[status.index] eq 0}">
-                                       <div class='offer_reviews_rating text-center'>
-                                          <a href='#' id='scrapCheck' onclick='scrap(${ item.no });'>♡</a>
+                                       <div class='offer_reviews_rating text-center' style="background: linear-gradient(to right, #fa9e1b, #8d4fff); border:0px solid;">
+                                          <a href='#' id='scrapCheck' onclick='scrap(${ item.no });' ><font color='red'>♡</font></a>
                                        </div>
                                     </c:if>   
                                     <c:if test="${scrap[status.index] eq 1}">
-                                       <div class='offer_reviews_rating text-center'>
-                                          <a href='#' id='scrapCheck' onclick='scrap(${ item.no });'>♥</a>
+                                       <div class='offer_reviews_rating text-center' style="background: linear-gradient(to right, #fa9e1b, #8d4fff); border:0px solid;">
+                                          <a href='#' id='scrapCheck' onclick='scrap(${ item.no });'><font color='red'>♥</font></a>
                                        </div>
                                     </c:if>                                 
                                  </div>
@@ -148,105 +148,102 @@
                      </div>                     
                   </c:forEach>
                   
-                  
-                  
-                  
-                  
+                 
                   <div align="center">
  
-			         <div class="page-nation" >
-			         	<ul class="pagination pagination-large" id="todayPagination">
-			         	
-			         		<c:if test="${ currentPage <= 1 }">
-			         			<li class='disabled'><span>맨처음</span></li>
-							</c:if>
-							<c:if test="${ currentPage > 1 }">
-								<c:url var="tl" value="tagClick.do">
-									<c:param name="tag" value="${ tag }" />
-									<c:param name="page" value="1" />
-								</c:url>
-								<li><a href="${ tl }">맨처음</a></li>
-							</c:if>
-							
-							<c:if test="${ ((currentPage-10) >= 1) }">
-								<c:url var="tl2" value="tagClick.do">
-									<c:param name="tag" value="${ tag }" />
-									<c:param name="page" value="${ startPage-10 }" />
-								</c:url>
-								<li><a href='${ tl2 }'>이전</a></li>
-							</c:if>
-							<c:if test="${ ((currentPage-10) < 1) }">
-								<li class='disabled'><span>이전</span></li>
-							</c:if>
-	
-							<c:forEach var="p" begin="${ startPage }" end="${ endPage }">      
-		                        <c:if test="${ p == currentPage}">
-		                           <li class="active"><span>${ p }</span></li>
-		                        </c:if>
-		                        <c:if test="${ p != currentPage }">
-		                           <c:url var="tl3" value="tagClick.do">
-		                              <c:param name="tag" value="${ tag }" />
-		                              <c:param name="page" value="${ p }" />
-		                           </c:url>
-		                           <li><a href="${ tl3 }">${ p }</a></li>
-		                        </c:if>
-		                     </c:forEach>
-							
-							<c:if test="${ ( (startPage+10) <= maxPage ) }">
-								<c:url var="tl4" value="tagClick.do">
-									<c:param name="tag" value="${ tag }" />
-									<c:param name="page" value="${ startPage+10 }" />
-								</c:url>
-								<li><a href='${ tl4 }'>다음</a></li>
-							</c:if>
-							<c:if test="${ ( (startPage+10) > maxPage ) }">
-								<li class='disabled'><span>다음</span></li>
-							</c:if>
-							
-							<c:if test="${ currentPage >= maxPage }">
-								<li class='disabled'><span>맨끝</span></li>
-							</c:if>
-							<c:if test="${ currentPage < maxPage }">
-								<c:url var="tl5" value="tagClick.do">
-									<c:param name="tag" value="${ tag }" />
-									<c:param name="page" value="${ maxPage }" />
-								</c:url>
-								<li><a href='${ tl5 }'>맨끝</a></li>
-							</c:if>
-			         	
-			         		<%-- <c:if test="${ ( (currnetPage-10) < startPage) && ((currentPage-10) > 1) }">
-		                        <c:url var="tl2" value="tagClick.do">
-		                           <c:param name="tag" value="${ tag }" />
-		                           <c:param name="page" value="${ startPage-10 }" />
-		                        </c:url>
-		                        <li><a href="${ tl2 }">«</a></li>
-		                    </c:if>
+                  <div class="page-nation" >
+                     <ul class="pagination pagination-large" id="todayPagination">
+                     
+                        <c:if test="${ currentPage <= 1 }">
+                           <li class='disabled'><span>맨처음</span></li>
+                     </c:if>
+                     <c:if test="${ currentPage > 1 }">
+                        <c:url var="tl" value="tagClick.do">
+                           <c:param name="tag" value="${ tag }" />
+                           <c:param name="page" value="1" />
+                        </c:url>
+                        <li><a href="${ tl }">맨처음</a></li>
+                     </c:if>
+                     
+                     <c:if test="${ ((currentPage-10) >= 1) }">
+                        <c:url var="tl2" value="tagClick.do">
+                           <c:param name="tag" value="${ tag }" />
+                           <c:param name="page" value="${ startPage-10 }" />
+                        </c:url>
+                        <li><a href='${ tl2 }'>이전</a></li>
+                     </c:if>
+                     <c:if test="${ ((currentPage-10) < 1) }">
+                        <li class='disabled'><span>이전</span></li>
+                     </c:if>
+   
+                     <c:forEach var="p" begin="${ startPage }" end="${ endPage }">      
+                              <c:if test="${ p == currentPage}">
+                                 <li class="active"><span>${ p }</span></li>
+                              </c:if>
+                              <c:if test="${ p != currentPage }">
+                                 <c:url var="tl3" value="tagClick.do">
+                                    <c:param name="tag" value="${ tag }" />
+                                    <c:param name="page" value="${ p }" />
+                                 </c:url>
+                                 <li><a href="${ tl3 }">${ p }</a></li>
+                              </c:if>
+                           </c:forEach>
+                     
+                     <c:if test="${ ( (startPage+10) <= maxPage ) }">
+                        <c:url var="tl4" value="tagClick.do">
+                           <c:param name="tag" value="${ tag }" />
+                           <c:param name="page" value="${ startPage+10 }" />
+                        </c:url>
+                        <li><a href='${ tl4 }'>다음</a></li>
+                     </c:if>
+                     <c:if test="${ ( (startPage+10) > maxPage ) }">
+                        <li class='disabled'><span>다음</span></li>
+                     </c:if>
+                     
+                     <c:if test="${ currentPage >= maxPage }">
+                        <li class='disabled'><span>맨끝</span></li>
+                     </c:if>
+                     <c:if test="${ currentPage < maxPage }">
+                        <c:url var="tl5" value="tagClick.do">
+                           <c:param name="tag" value="${ tag }" />
+                           <c:param name="page" value="${ maxPage }" />
+                        </c:url>
+                        <li><a href='${ tl5 }'>맨끝</a></li>
+                     </c:if>
+                     
+                        <%-- <c:if test="${ ( (currnetPage-10) < startPage) && ((currentPage-10) > 1) }">
+                              <c:url var="tl2" value="tagClick.do">
+                                 <c:param name="tag" value="${ tag }" />
+                                 <c:param name="page" value="${ startPage-10 }" />
+                              </c:url>
+                              <li><a href="${ tl2 }">«</a></li>
+                          </c:if>
 
-			         		
-			         		<c:forEach var="p" begin="${ startPage }" end="${ endPage }">      
-		                        <c:if test="${ p == currentPage}">
-		                           <li class="active"><span>${ p }</span></li>
-		                        </c:if>
-		                        <c:if test="${ p != currentPage }">
-		                           <c:url var="tl3" value="tagClick.do">
-		                              <c:param name="tag" value="${ tag }" />
-		                              <c:param name="page" value="${ p }" />
-		                           </c:url>
-		                           <li><a href="${ tl3 }">${ p }</a></li>
-		                        </c:if>
-		                     </c:forEach>
-			         		
-			         		
-			         		<c:if test="${ ((currentPage+10) > endPage) && ((currentPage+10) < maxPage) }">
-		                        <c:url var="tl4" value="tagClick.do">
-		                           <c:param name="tag" value="${ tag }" />
-		                           <c:param name="page" value="${ endPage+10 }" />
-		                        </c:url>
-		                        <li><a href="${ tl4 }">»</a></li>
-		                    </c:if> --%>
+                        
+                        <c:forEach var="p" begin="${ startPage }" end="${ endPage }">      
+                              <c:if test="${ p == currentPage}">
+                                 <li class="active"><span>${ p }</span></li>
+                              </c:if>
+                              <c:if test="${ p != currentPage }">
+                                 <c:url var="tl3" value="tagClick.do">
+                                    <c:param name="tag" value="${ tag }" />
+                                    <c:param name="page" value="${ p }" />
+                                 </c:url>
+                                 <li><a href="${ tl3 }">${ p }</a></li>
+                              </c:if>
+                           </c:forEach>
+                        
+                        
+                        <c:if test="${ ((currentPage+10) > endPage) && ((currentPage+10) < maxPage) }">
+                              <c:url var="tl4" value="tagClick.do">
+                                 <c:param name="tag" value="${ tag }" />
+                                 <c:param name="page" value="${ endPage+10 }" />
+                              </c:url>
+                              <li><a href="${ tl4 }">»</a></li>
+                          </c:if> --%>
 
-			         	</ul>
-			         </div>                     
+                     </ul>
+                  </div>                     
                      
                   </div>
                   
