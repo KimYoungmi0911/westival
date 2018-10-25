@@ -105,8 +105,8 @@ function paging(page){
 						+ "<td>" + decodeURIComponent(json.list[i].tcount) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].tprice) + "</td>"
 						+ "<td>" + decodeURIComponent(json.list[i].tptype) + "</td>"
-						+ "<td>" + decodeURIComponent(json.list[i].tstate) + "</td>"
-						+ "<td>" + decodeURIComponent(json.list[i].tano) + "</td></tr>";
+						+ "<td>" + decodeURIComponent(json.list[i].tstate) + "</td></tr>";
+						
 					}//for
 					$("#tb1").html(values);
 					
@@ -209,8 +209,8 @@ $.ajax({
 			+ "<td>" + decodeURIComponent(json.list[i].tcount) + "</td>"
 			+ "<td>" + decodeURIComponent(json.list[i].tprice) + "</td>"
 			+ "<td>" + decodeURIComponent(json.list[i].tptype) + "</td>"
-			+ "<td>" + decodeURIComponent(json.list[i].tstate) + "</td>"
-			+ "<td>" + decodeURIComponent(json.list[i].tano) + "</td></tr>";
+			+ "<td>" + decodeURIComponent(json.list[i].tstate) + "</td></tr>";
+			
 		}//for
 		$("#tb1").html(values);  
 		
@@ -289,7 +289,7 @@ $.ajax({
                                         <option value="price">금액</option>
                                         <option value="ptype">결제방식</option>
                                         <option value="state">상태</option>
-                                        <option value="account">계좌번호</option>
+                                        
 
                                     </select>
                                 </div>
@@ -327,7 +327,7 @@ $.ajax({
 					      <th scope="col" width="">금액</th>
 					      <th scope="col" width="">결제방식</th>
 					      <th scope="col" width="">상태</th>
-					      <th scope="col" width="">계좌번호</th>
+					      
 					     
 					    </tr>
 					  </thead>
@@ -353,7 +353,7 @@ $.ajax({
 								
 								<td align="center">${n.state }</td>
 								
-								<td align="center">${n.account_no }</td>
+								
 							</tr>				    
 					    </c:forEach>
 					  </tbody>
