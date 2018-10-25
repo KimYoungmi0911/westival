@@ -87,7 +87,7 @@
                      
                         <li class="main_nav_item"><a href="index.jsp">home &nbsp;</a></li>   
                                                                                           
-                        <li class="main_nav_item"><a href="#">my surroundings</a></li>
+                        
                         
                         <li class="main_nav_item">
                           <div class="dropdown">
