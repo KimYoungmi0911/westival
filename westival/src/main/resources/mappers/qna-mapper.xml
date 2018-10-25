@@ -170,10 +170,10 @@
 	</select>
 	
 	<!-- admin이 댓글 달면 답변완료로 변경 -->
-	<update id="updateReplyAdminState" parameterType="_int" flushCache="true"
+	<update id="updateReplyAdminState" parameterType="java.util.Map" flushCache="true"
 		statementType="PREPARED">
 		<![CDATA[
-		update tb_qna set state = '답변완료' where qna_no = #{qna_no}
+		update tb_qna set state = #{state} where qna_no = #{qna_no}
 		]]>
 	</update>
 	

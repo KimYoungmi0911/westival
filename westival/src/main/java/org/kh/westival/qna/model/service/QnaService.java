@@ -25,7 +25,7 @@ public interface QnaService {
 
 	ArrayList<QnaReply> selectQnaReply(int no);
 
-	int updateQnaState(int qna_no);
+	int updateQnaState(int qna_no, String string);
 
 	int deleteQna(int qna_no);
 

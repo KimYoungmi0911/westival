@@ -156,6 +156,10 @@
       font-size: 12px;
       color: #555;
    }
+   
+   [type='button'] {
+   		cursor: pointer;
+   }
 </style>
 </head>
 
@@ -403,22 +407,30 @@
 	      //댓글 등록
 	      $("#formBtn").on("click", function(){
 	    	  var formData = $("#commentInsert").serialize();
-	    	  $.ajax({
-	              url: "QnaInsertReply.do",
-	              data: formData,
-	              type: "post",
-	              success: function(result){
-	                 if(result == "fail")
-	                    alert("실패");
-	                 $("#festival_comment").val("");
-	                 $("#wordCount").text("0");
-	                 callReplyList(qnaNo);
-	              },
-	              error: function(request, status, errorData){
-	                 console.log("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
-	                       + "error : " + errorData);
-	              }
-	           });
+	    	  if(userid == ''){
+	              alert("로그인 후 등록 가능합니다.");
+	           }else{
+	        	   if($("#festival_comment").val() == ''){
+	        		   alert("내용을 입력하세요.");
+	        	   }else{
+	        		   $.ajax({
+	 	 	              url: "QnaInsertReply.do",
+	 	 	              data: formData,
+	 	 	              type: "post",
+	 	 	              success: function(result){
+	 	 	                 if(result == "fail")
+	 	 	                    alert("실패");
+	 	 	                 $("#festival_comment").val("");
+	 	 	                 $("#wordCount").text("0");
+	 	 	                 callReplyList(qnaNo);
+	 	 	              },
+	 	 	              error: function(request, status, errorData){
+	 	 	                 console.log("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
+	 	 	                       + "error : " + errorData);
+	 	 	              }
+	 	 	           });
+	        	   }
+	           }
 	      });
 	      modifyReply();
 	});	//jquery

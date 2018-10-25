@@ -75,8 +75,11 @@ public class QnaDao {
 		return (ArrayList) sqlSession.selectList("qnaMapper.selectQnaReplyList", no);
 	}
 
-	public int updateQnaState(int qna_no) {
-		return (int) sqlSession.update("qnaMapper.updateReplyAdminState", qna_no);
+	public int updateQnaState(int qna_no, String string) {
+		HashMap params = new HashMap();
+		params.put("qna_no", qna_no);
+		params.put("state", string);
+		return (int) sqlSession.update("qnaMapper.updateReplyAdminState", params);
 	}
 
 	public int deleteQna(int qna_no) {

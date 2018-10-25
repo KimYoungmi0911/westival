@@ -1030,7 +1030,7 @@
         	   }
            }
       });
-      modifyReply(1, ${ totalCount });
+      modifyReply(1, ${ totalCount } );
    });
    
    //댓글 수정

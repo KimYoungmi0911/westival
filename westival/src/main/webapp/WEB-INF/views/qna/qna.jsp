@@ -91,8 +91,8 @@
 								<option value="환불문의" >환불문의</option>
 								<option value="기타문의">기타문의</option>
 							</select>
-							<select class="form-control" id="search" name="search" style="width:97.8px; height:38px;">
-								<option value="total">전체</option>
+							<select class="form-control" id="search" name="search" style="width:120px; height:38px;">
+								<option value="total">제목+내용</option>
 								<option value="subject" >제목</option>
 								<option value="content">내용</option>
 								<option value="user_id">작성자</option>
@@ -158,7 +158,7 @@
 						<!-- 페이지 -->
 							<div class="paginate">
 									<ul class="pagination" style="justify-content: center;">
-										<li class="page-item"><a class="page-link" href="#" style="color: rgba(53, 10, 78, 0.6);">&laquo;</a></li>
+										<li class="page-item"><a class="page-link" href="qnaBoard.do?page=1" style="color: rgba(53, 10, 78, 0.6);">&laquo;</a></li>
 										<c:forEach var="p" begin="${ startPage }" end="${ endPage }">
 											<c:if test="${ p == currentPage }">
 												<li class="page-item"><a class="page-link" href="qnaBoard.do?page=${ p }" style="background: rgba(53, 10, 78, 0.6);color: white;">${ p }</a></li>
@@ -167,7 +167,7 @@
 												<li class="page-item"><a class="page-link" href="qnaBoard.do?page=${ p }" style="color: rgba(53, 10, 78, 0.6);">${ p }</a></li>
 											</c:if>
 										</c:forEach>
-										<li class="page-item"><a class="page-link" href="#" style="color: rgba(53, 10, 78, 0.6);">&raquo;</a></li>
+										<li class="page-item"><a class="page-link" href="qnaBoard.do?page=${ endPage }" style="color: rgba(53, 10, 78, 0.6);">&raquo;</a></li>
 									</ul>
 							</div>
 					<!-- 페이지 끝 -->
