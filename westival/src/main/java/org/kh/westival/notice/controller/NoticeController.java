@@ -365,6 +365,7 @@ public class NoticeController {
 		json.put("maxPage", maxPage);
 		json.put("startPage", startPage);
 		json.put("endPage", endPage);
+		json.put("listCount", listCount);
 		
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();

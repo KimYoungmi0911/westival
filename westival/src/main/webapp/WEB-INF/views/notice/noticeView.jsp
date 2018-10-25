@@ -178,6 +178,9 @@ function selectBtnClick(page){
 				endPage = json.endPage;
 				
 				var values = "";
+				if(data.listCount == 0){
+					values += '<td colspan="4" align="center">검색 결과가 존재하지 않습니다.</td>';
+				}else{
 				for(var i in json.list){
 					for(var j = 0; j < json.list[i].ntitle.length; j++){
 						json.list[i].ntitle = json.list[i].ntitle.replace("+", " ");		
@@ -192,6 +195,7 @@ function selectBtnClick(page){
 					+ "<td>" + nofvalue + "</td>"
 					+ "<td>" + decodeURIComponent(json.list[i].ndate) + "</td></tr>";
 				}//for
+				}
 				$("#tb1").html(values);
 				
 				$("#domain").html("");

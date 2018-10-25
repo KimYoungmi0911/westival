@@ -136,21 +136,24 @@ public class AdminController {
 			@RequestParam("filter") String filter, 
 			@RequestParam("searchTF") String searchTF) throws IOException{
 		
-		System.out.println("mSelectBtn 컨트롤러");
+		System.out.println("tSelectBtn 컨트롤러");
 		HashMap map = new HashMap();
 		map.put("filter", filter);
 		map.put("searchTF", searchTF);
+		int currentPage = Integer.parseInt(request.getParameter("page"));
 		
 		int listCount = adminService.tGetSelectListCount(map);
-		int currentPage = 1;
+		
+		/*int currentPage = 1;*/
 		int limit = 10;
+		ArrayList<Admin> list = adminService.tSelectList(currentPage, limit, filter, searchTF);
 		System.out.println("listCount: " + listCount);
 		if(request.getParameter("page") != null){
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		int maxPage = (int)Math.ceil((double)listCount / limit + 0.9);
-		System.out.println("maxPage213 : " + maxPage);
+		int maxPage = (int)Math.ceil((double)listCount / limit);
+		
 		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1;
 		
 		int endPage = startPage + limit - 1;
@@ -158,8 +161,12 @@ public class AdminController {
 		if(maxPage < endPage) {
 			endPage = maxPage;
 		}
+		System.out.println("maxPage213 : " + maxPage);
+		System.out.println("startPage213 : " + startPage);
+		System.out.println("endPage213  :" + endPage);
+		System.out.println("currentPage213 : " + currentPage);
 		
-		ArrayList<Admin> list = adminService.tSelectList(currentPage, limit, filter, searchTF);
+		/*ArrayList<Admin> list = adminService.tSelectList(currentPage, limit, filter, searchTF);*/
 		JSONArray jarr = new JSONArray();
 		for(Admin a : list){
 			JSONObject job = new JSONObject();
@@ -320,6 +327,7 @@ public class AdminController {
 		json.put("maxPage", maxPage);
 		json.put("startPage", startPage);
 		json.put("endPage", endPage);
+		json.put("listCount", listCount);
 		
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
