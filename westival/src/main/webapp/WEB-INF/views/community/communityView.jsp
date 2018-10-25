@@ -138,6 +138,12 @@ a:active {
    .home_background {
       position: relative;
    }
+   
+   .titleV { cursor:pointer; }
+   #searchBtn { cursor:pointer; }
+   #allSearchBtn { cursor:pointer; }
+   
+   
 </style>
 <script>
 	var currentPage = 1;
@@ -175,6 +181,14 @@ a:active {
 	      return false;
 		}
 		
+		//검색 엔터키 이벤트
+        $("#keywordFilter").keydown(function(key){
+           if(key.keyCode == 13){
+              $("#searchBtn").click();
+           }
+        });
+		
+		
 	});
 	//글쓰기 버튼 클릭시
 	function writeBtnCilck(){
@@ -194,72 +208,63 @@ a:active {
 				&& $("#searchFilter option:selected").val() == "all"
 				&& $("#keywordFilter").val() == ""){
 			location.href="commuPage.do?page="+page;
-		/* }else if($("#keywordFilter").val() == "" && 
-				$("#categoryFilter option:selected").val() != "all"
-				|| $("#searchFilter option:selected").val() != "all"
-				){
-				alert("검색어를 입력해주세요."); */
-		}else{
-			$.ajax({
-				url : "commufilter.do",
-				type : "post",
-				dataType : "json",
-				data : {"category" : $("#categoryFilter option:selected").val(),
-					"search" : $("#searchFilter option:selected").val(),
-					"keyword" : $("#keywordFilter").val(), "page" : page},
-				success : function (obj){
-					var objStr = JSON.stringify(obj);
-		            var jsonObj = JSON.parse(objStr);
-		            var outValues= '';
-		            var pageValues='';
-		            
-		            if(obj.list.length < 0){
-		            	 outValues += '<td colspan="7">검색 결과가 존재하지 않습니다.</td>';
-		            }else{
-		            	 for(var i in jsonObj.list){
-		            		 for(var j=0; j < jsonObj.list[i].title.length; j++){
-		            		 	jsonObj.list[i].title = jsonObj.list[i].title.replace("+", " ");
-		            		 }
-		            		 outValues += '<tr><td>'+jsonObj.list[i].community_no+'</td>';
-		            		 outValues += '<td>'+decodeURIComponent(jsonObj.list[i].category)+'</td>';
-		            		 outValues += '<td onclick="detailClick(' + jsonObj.list[i].community_no + ');">'+decodeURIComponent(jsonObj.list[i].title)+'</td>';	            		 
-		            		 outValues += '<td>'+jsonObj.list[i].user_id+'</td>';
-		            		 outValues += '<td>'+jsonObj.list[i].community_date+'</td>';
-		            		 outValues += '<td>'+jsonObj.list[i].read_count+'</td></tr>';
-		            	 }
-		            }
-		            
-		            pageValues += '<li class="page-item"><a class="page-link" style="color: rgba(53, 10, 78, 0.6);">&laquo;</a></li>';
-		               for( p=1; p<=obj.endPage; p++ ){
-		                  if( p == obj.currentPage ){
-		                     pageValues += '<li class="page-item"><a class="page-link" onclick="clickSearch('+p+')" style="background: rgba(53, 10, 78, 0.6);color: white;">'+p+'</a></li>';
-		                  }else{
-		                     pageValues += '<li class="page-item"><a class="page-link" onclick="clickSearch('+p+')" style="color: rgba(53, 10, 78, 0.6);">'+p+'</a></li>';
-		                  }
-		               }
-		               pageValues += '<li class="page-item"><a class="page-link" style="color: rgba(53, 10, 78, 0.6);">&raquo;</a></li>';
-		            
-		               
-		            $(".table tbody").html(outValues);
-		            $(".pagination").html(pageValues);
-		            
-		          /* oParams.category2 = "undefined";
-		  	      oParams.search2 = "undefined";
-		  	      oParams.keyword2 = "undefined";
-		  	      oParams.page = "undefined"; */
-				},
-				error : function (jqXHR, textstatus, errorThrown){
-					console.log("error : " + jqXHR + ", " + textstatus + ", " + errorThrown);
-				}
-			});
+			}else{
+				$.ajax({
+					url : "commufilter.do",
+					type : "post",
+					dataType : "json",
+					data : {"category" : $("#categoryFilter option:selected").val(),
+						"search" : $("#searchFilter option:selected").val(),
+						"keyword" : $("#keywordFilter").val(), "page" : page},
+					success : function (obj){
+						var objStr = JSON.stringify(obj);
+			            var jsonObj = JSON.parse(objStr);
+			            var outValues= '';
+			            var pageValues='';
+			            
+			            if(obj.endPage == 0){
+			            	 outValues += '<td colspan="7">검색 결과가 존재하지 않습니다.</td>';
+			            }else{
+			            	 for(var i in jsonObj.list){
+			            		 for(var j=0; j < jsonObj.list[i].title.length; j++){
+			            		 	jsonObj.list[i].title = jsonObj.list[i].title.replace("+", " ");
+			            		 }
+			            		 outValues += '<tr><td>'+jsonObj.list[i].community_no+'</td>';
+			            		 outValues += '<td>'+decodeURIComponent(jsonObj.list[i].category)+'</td>';
+			            		 outValues += '<td class="titleV" onclick="detailClick(' + jsonObj.list[i].community_no + ');">'+decodeURIComponent(jsonObj.list[i].title)+'</td>';	            		 
+			            		 outValues += '<td>'+jsonObj.list[i].user_id+'</td>';
+			            		 outValues += '<td>'+jsonObj.list[i].community_date+'</td>';
+			            		 outValues += '<td>'+jsonObj.list[i].read_count+'</td></tr>';
+			            	 }
+			            }
+			            
+			            pageValues += '<li class="page-item"><a class="page-link" style="color: rgba(53, 10, 78, 0.6);">&laquo;</a></li>';
+			               for( p=1; p<=obj.endPage; p++ ){
+			                  if( p == obj.currentPage ){
+			                     pageValues += '<li class="page-item"><a class="page-link" onclick="clickSearch('+p+')" style="background: rgba(53, 10, 78, 0.6);color: white;">'+p+'</a></li>';
+			                  }else{
+			                     pageValues += '<li class="page-item"><a class="page-link" onclick="clickSearch('+p+')" style="color: rgba(53, 10, 78, 0.6);">'+p+'</a></li>';
+			                  }
+			               }
+			               pageValues += '<li class="page-item"><a class="page-link" style="color: rgba(53, 10, 78, 0.6);">&raquo;</a></li>';
+			            
+			            $(".table tbody").html(outValues);
+			            $(".pagination").html(pageValues);
+
+					},
+					error : function (jqXHR, textstatus, errorThrown){
+						console.log("error : " + jqXHR + ", " + textstatus + ", " + errorThrown);
+					}
+				
+				});
+		
+			//}
 		}
 		return false;
 	}
 	
 	//상세보기 클릭시
 	function detailClick (community_no){
-		/* if(oParams.category2 == "undefined" && oParams.search2 == "undefined" && oParams.keyword2 == "undefined"){
-			alert("전체조회시 상세보기 '${paging.currentPage} : ,,,"+currentPage); */
 			if($("#keywordFilter").val() == ""){
 			$("#tbody").append("<form id='detailForm' action='commuDetail.do?category2="+$("#categoryFilter option:selected").val()
 					+"&search2="+$("#searchFilter option:selected").val()+"&keyword2="+$("#keywordFilter").val()+"&page=${paging.currentPage}' method='post'>"
@@ -280,21 +285,6 @@ a:active {
 						+"</form>");
 			}
 			$("#detailForm").submit();
-		/* }else{
-			alert("필터조회시 상세보기");
-			$("#tbody").append("<form id='detailForm' action='commuDetail.do?category2="+$("#categoryFilter option:selected").val()
-					+"&search2="+$("#searchFilter option:selected").val()+"&keyword2="+$("#keywordFilter").val()+"&page="+oParams.page+"' method='post'>"
-					+"<input type='hidden' name='community_no' value='" + community_no + "'>"
-					+"<input type='hidden' name='category' value='" + $("#categoryFilter option:selected").val() + "'>"
-					+"<input type='hidden' name='search' value='" + $("#searchFilter option:selected").val() + "'>"
-					+"<input type='hidden' name='keyword' value='" + $("#keywordFilter").val() + "'>"
-					+"<input type='hidden' name='page' value='" + currentPage + "'>"
-					+"</form>");
-			$("#detailForm").submit();
-			var a = decodeURI(oParams.category2);
-		      var b = decodeURI(oParams.search2);
-		      var c = decodeURI(oParams.keyword2);
-		} */
 		
 		return false;
 	}
@@ -305,6 +295,12 @@ a:active {
        window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
        return params;
    }
+	
+ 	//카테고리 변경시
+	function categoryChange(){
+		clickSearch(1);
+		return false;
+	}
 
 </script>
 
@@ -336,7 +332,7 @@ a:active {
 							<div class="main_1 main_common">
 								<p class="content">
 									<select class="form-control" id="categoryFilter"
-										name="category" style="width: 100%;">
+										name="category" style="width: 100%;" onchange="categoryChange();">
 										<option value="all">분류</option>
 										<option value="nomal">일반</option>
 										<option value="accompany">동행</option>
@@ -361,13 +357,13 @@ a:active {
 							</div>
 							<div class="main_3 main_common">
 								<p class="content">
-									<button class="btn btn-default" type="button"
+									<button id="searchBtn" class="btn btn-default" type="button"
 										style="margin-bottom: 3px;" onclick="clickSearch(1)">조회</button>
 								</p>
 							</div>
 							<div class="main_3 main_common">
 								<p class="content">
-									<button class="btn btn-default" type="button"
+									<button class="btn btn-default" type="button" id="allSearchBtn"
 										style="margin-bottom: 3px;" onclick="location.href='commuPage.do'">전체조회</button>
 								</p>
 							</div>
@@ -404,7 +400,7 @@ a:active {
 											<tr>
 												<td>${ list.community_no }</td>
 												<td>${ list.category }</td>
-												<td onclick="detailClick(${list.community_no});">${ list.title }
+												<td class="titleV" onclick="detailClick(${list.community_no});">${ list.title }
 												</td>
 												<td>${ list.user_id }</td>
 												<td>${ list.community_date }</td>

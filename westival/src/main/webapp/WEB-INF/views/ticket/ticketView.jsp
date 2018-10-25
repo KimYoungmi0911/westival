@@ -32,6 +32,7 @@
    .home_background {
       position: relative;
    }
+   [type='button'] { cursor:pointer; }
 </style>
 <script>
 	

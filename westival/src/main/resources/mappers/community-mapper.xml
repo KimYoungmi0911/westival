@@ -93,6 +93,26 @@
 		
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="category == 'nomal'">
+		      	category = '일반'
+		    </if>
+		    <if test="category == 'accompany'">
+		      	category = '동행'
+		    </if>
+		    <if test="search == 'all' and keyword != ''">
+			    and (title like '%'||#{keyword}||'%' or 
+				content like '%'||#{keyword}||'%' or
+				user_id like '%'||#{keyword}||'%')
+		    </if>
+		    <if test="search == 'title' and keyword != ''">
+			    and title like '%'||#{keyword}||'%'
+		    </if>
+		    <if test="search == 'content' and keyword != ''">
+			    and content like '%'||#{keyword}||'%'
+		    </if>
+		    <if test="search == 'writer' and keyword != ''">
+			    and user_id like '%'||#{keyword}||'%'
+		    </if>
+			<!-- <if test="category == 'nomal'">
 				category = '일반'
 			</if>
 			<if test="accompany == 'accompany'">
@@ -112,7 +132,7 @@
 			</if>
 			<if test="search == 'writer'">
 				and user_id like '%'||#{keyword}||'%'
-			</if>
+			</if> -->
 		</trim>
 	</select>
 	
@@ -121,8 +141,38 @@
 		select * from (select rownum rnum, community_no, no, user_id, category, title, content, 
 				read_count, community_date, user_count 
         from (select * from tb_community 
-        
+       
         <trim prefix="WHERE" prefixOverrides="AND">
+        	<!-- <choose> -->
+		    <if test="category == 'nomal'">
+		      	category = '일반'
+		    </if>
+		    <if test="category == 'accompany'">
+		      	category = '동행'
+		    </if>
+		    <if test="search == 'all' and keyword != ''">
+			    and (title like '%'||#{keyword}||'%' or 
+				content like '%'||#{keyword}||'%' or
+				user_id like '%'||#{keyword}||'%')
+		    </if>
+		    <if test="search == 'title' and keyword != ''">
+			    and title like '%'||#{keyword}||'%'
+		    </if>
+		    <if test="search == 'content' and keyword != ''">
+			    and content like '%'||#{keyword}||'%'
+		    </if>
+		    <if test="search == 'writer' and keyword != ''">
+			    and user_id like '%'||#{keyword}||'%'
+		    </if>
+		    
+		    <!-- <otherwise> -->
+		    	order by community_no desc)) 
+				where rnum  &gt;=  #{startRow} and rnum &lt;= #{endRow}
+		    <!-- </otherwise> -->
+		  	<!-- </choose> -->
+        </trim>
+        
+        <!-- <trim prefix="WHERE" prefixOverrides="AND">
 			<if test="category == 'nomal'">
 				category = '일반'
 			</if>
@@ -147,7 +197,7 @@
 			
 			order by community_no desc)) 
 			where rnum  &gt;=  #{startRow} and rnum &lt;= #{endRow}
-		</trim>
+		</trim> -->
 	</select>
 	
 	<!-- 축제명 리스트 -->

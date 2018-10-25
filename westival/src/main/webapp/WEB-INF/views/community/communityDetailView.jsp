@@ -160,6 +160,8 @@
    .home_background {
       position: relative;
    }
+   
+   [type='button'] { cursor:pointer; }
 </style>
 <script>
 
@@ -193,25 +195,37 @@
 	      
 	      //댓글등록
 	      $("#formBtn").on("click", function(){
-	    	  var formData = $("#commentInsert").serialize();
-	    	  $.ajax({
-	              url: "commuReplyInsert.do",
-	              data: formData,
-	              type: "post",
-	              success: function(result){
-	                 if(result == "fail")
-	                    alert("실패");
-	                 //callReplyList(number, 1);
-	                 $("#festival_comment").val("");
-	                 $("#wordCount").text("0");
-	                 callReplyList(community_no);
-	              },
-	              error: function(request, status, errorData){
-	                 console.log("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
-	                       + "error : " + errorData);
-	              }
-	           });
+	    	  if('${member.user_id}' == ""){
+	    		  alert('${member.user_id}');
+	    		  alert("로그인 후 이용 가능합니다.");
+	    	  }else{
+	    		  if($("#festival_comment").val() == ""){
+	    			  alert("내용을 입력해주세요.");
+	    		  }else{
+		    		  var formData = $("#commentInsert").serialize();
+			    	  $.ajax({
+			              url: "commuReplyInsert.do",
+			              data: formData,
+			              type: "post",
+			              success: function(result){
+			                 if(result == "fail")
+			                    alert("실패");
+			                 //callReplyList(number, 1);
+			                 $("#festival_comment").val("");
+			                 $("#wordCount").text("0");
+			                 callReplyList(community_no);
+			              },
+			              error: function(request, status, errorData){
+			                 console.log("error code : " + request.status + "\n" + "message : " + request.responseText + "\n"
+			                       + "error : " + errorData);
+			              }
+			    	  });
+	    		  }
+	    		}
 	      });
+	      if('${community.no}' == 0){
+	    	  $("#imgdiv").prop("style", "display:none;");
+	      } 
 	});	//jquery
 	
 	//댓글 목록, 페이지 함수
@@ -430,10 +444,10 @@
 								</c:if>
 							</tr>
 							<tr><td colspan="6" id="content"> ${ community.content }
-								<div style="float:right;display: table-cell; ">
+								<div id="imgdiv" style="float:right;display: table-cell;diplay:inline; ">
 							  		<a href="Info.do?no=${community.no }">
 							  			<img style="width:300px;height:300px;" src="/westival/resources/uploadFiles/festivalImg/${festival.original_img_name }">
-							  				<div style="vertical-align:middle;"><strong ><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							  				<div style="vertical-align:middle;"><strong ><em>&nbsp;&nbsp;
 							  				< ${festival.name } > 상세보기</em></strong></div>
 							  		</a>
 								</div> 

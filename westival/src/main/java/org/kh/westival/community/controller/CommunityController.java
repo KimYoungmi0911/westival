@@ -80,6 +80,8 @@ public class CommunityController {
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception{
 
+		System.out.println("필터컨트롤러");
+		
 		ArrayList<Community> filterList = new ArrayList<Community>();
 		JSONArray jarr = new JSONArray();
 		JSONObject job = new JSONObject();
@@ -92,7 +94,7 @@ public class CommunityController {
 			map.put("search", request.getParameter("search"));
 		if(request.getParameter("keyword") != null)
 			map.put("keyword", request.getParameter("keyword"));
-		
+			
 		communityPaging.setCurrentPage(1);
 		communityPaging.setLimit(10);
 		
@@ -103,7 +105,7 @@ public class CommunityController {
 		communityPaging.setListCount(communityService.getFilterListCount(map));
 		communityPaging.setStartRow((communityPaging.getCurrentPage() - 1) * communityPaging.getLimit() + 1);
 		communityPaging.setEndRow(communityPaging.getStartRow() + communityPaging.getLimit() - 1);
-	
+		
 		map.put("currentPage", communityPaging.getCurrentPage());
 		map.put("limit", communityPaging.getLimit());
 		map.put("listCount", communityPaging.getListCount());
@@ -143,7 +145,7 @@ public class CommunityController {
 		job.put("startPage", communityPaging.getStartPage());
 		job.put("endPage", communityPaging.getEndPage());
 		job.put("list", jarr);
-				
+
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.print(job.toJSONString());

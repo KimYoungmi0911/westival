@@ -83,7 +83,7 @@
 	$(function(){
 		
 		//게시글 수정시 필드 값 초기화  
-		if('${community.category}' != "undefined"){
+		if('${community.category}' != ""){
 			$("#searchFilter").val('${community.category}').prop("selected", true);
 			if("${community.category}" == "동행"){
 				$(".festivalSelect").prop("style", "display:inline");
@@ -131,7 +131,7 @@
 	
 	function categoryChange(){
 		if($("#category option:selected").val() == "동행"){
-			$(".festivalSelect").attr("style", "display:inline");
+			$(".festivalSelect").attr("style", "display:inline").css("width", "50%");
 		}
 		if($("#category option:selected").val() == "일반"){
 			$(".festivalSelect").attr("style", "display:none");
@@ -209,7 +209,7 @@
 						<table class="board">
 							<tr>
 								<th>분류</th>
-								<td><select class="form-control" id="category" name="category" onchange="categoryChange();" style="width:70%;">
+								<td><select class="form-control" id="category" name="category" onchange="categoryChange();" style="width:120px;">
 										<option value="일반">일반</option>
 										<option value="동행">동행</option>
 									   </select>
