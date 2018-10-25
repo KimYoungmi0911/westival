@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -371,7 +373,7 @@ public class QnaController {
 		
 		if(qnaService.insertQnaReply(qnaReply) > 0){
 			if(qnaReply.getReply_user_id().equals("admin"))
-				qnaService.updateQnaState(qnaReply.getQna_no());
+				qnaService.updateQnaState(qnaReply.getQna_no(), "답변완료");
 			
 			out.append("ok");
 		}else{
@@ -387,10 +389,14 @@ public class QnaController {
 		System.out.println("qna 댓글 컨트롤러");
 		
 		ArrayList<QnaReply> list = qnaService.selectQnaReply(no);
-		
+
 		System.out.println(list);
 		
 		JSONArray jarr = new JSONArray();
+		
+		if(list.size() == 0 && qnaService.selectQna(no).getState().equals("답변완료")){
+			qnaService.updateQnaState(no, "답변대기");
+		}
 		
 		for(QnaReply qnaReply : list){
 			JSONObject juser = new JSONObject();
@@ -402,6 +408,12 @@ public class QnaController {
 			juser.put("reply_seq", qnaReply.getReply_seq());
 			juser.put("reply_date", qnaReply.getReply_date().toString());
 			juser.put("reply_ref", qnaReply.getReply_ref());
+			
+			if(qnaService.selectQna(no).getState().equals("답변완료") && !qnaReply.getReply_user_id().equals("admin")){
+				qnaService.updateQnaState(no, "답변대기");
+			}else if(qnaService.selectQna(no).getState().equals("답변대기") && qnaReply.getReply_user_id().equals("admin")){
+				qnaService.updateQnaState(no, "답변완료");
+			}
 			
 			jarr.add(juser);
 		}

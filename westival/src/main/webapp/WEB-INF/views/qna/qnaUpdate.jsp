@@ -63,6 +63,10 @@
     	height: 43px;
     	font-size:14px;
     }
+    
+    [type='button'] {
+    	cursor: pointer;
+    }
 </style>
 </head>
 

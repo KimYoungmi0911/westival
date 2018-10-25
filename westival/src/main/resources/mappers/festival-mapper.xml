@@ -151,7 +151,7 @@
 	</resultMap>
 
 	<select id="infoFestival" parameterType="_int" resultMap="resultFestival">
-		<![CDATA[select * from tb_festival where no = #{no}]]>
+		<![CDATA[select * from tb_festival where no = #{no} and delete_check ='N']]>
 	</select>
 
 	<select id="listCount" parameterType="_int" resultType="int">

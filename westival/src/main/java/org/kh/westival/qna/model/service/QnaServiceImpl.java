@@ -66,8 +66,8 @@ public class QnaServiceImpl implements QnaService {
 	}
 
 	@Override
-	public int updateQnaState(int qna_no) {
-		return qnaDao.updateQnaState(qna_no);
+	public int updateQnaState(int qna_no, String string) {
+		return qnaDao.updateQnaState(qna_no, string);
 	}
 
 	@Override
