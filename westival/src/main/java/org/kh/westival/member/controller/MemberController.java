@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -127,6 +128,84 @@ public class MemberController {
 		return "ipsearch";
 	}
 
+	// 10/25 아이디,비밀번호찾기
+		@RequestMapping(value = "searchId.do", method = RequestMethod.POST)
+		@ResponseBody
+		public String searchIdMethod(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+			Member member = new Member();
+			member.setUser_name((String)request.getParameter("user_name"));
+			member.setUser_email((String)request.getParameter("user_email"));
+			
+			String user_id = memberService.searchId(member);
+
+			JSONObject job = new JSONObject();
+			
+			if (user_id != null) {
+				job.put("user_id", user_id);
+			} else if (user_id == null) {
+				job.put("user_id", "0");
+			}
+
+			return job.toJSONString();
+		}
+		
+		@RequestMapping(value = "searchPwd.do", method = RequestMethod.POST)
+		@ResponseBody
+		public String searchPwdMethod(HttpServletResponse response, HttpServletRequest request) throws IOException{
+			
+			Member member = new Member();
+			member.setUser_id((String)request.getParameter("user_id"));
+			member.setUser_email((String)request.getParameter("user_email"));
+			member.setUser_phone((String)request.getParameter("user_phone"));
+			
+			int result =  memberService.searchPwd(member);
+
+			JSONObject job = new JSONObject();
+			if(result == 1){
+				job.put("result", "1");
+			} else{
+				job.put("result", "0");
+			}
+			return job.toJSONString();
+		}
+
+		@RequestMapping(value = "changePwdPage.do", method = RequestMethod.POST)
+		public ModelAndView changePwdPageMethod(ModelAndView mv, HttpServletRequest request) {
+			String user_id = (String)request.getParameter("p_user_id");
+
+			System.out.println(user_id);
+
+			mv.addObject("user_id", user_id);
+			mv.setViewName("changePwd");
+			return mv;
+		}	
+		
+		@RequestMapping(value = "changePwd.do")
+		@ResponseBody
+		public String changePwdMethod(HttpServletRequest request) {
+			Member member = new Member();
+			member.setUser_id((String)request.getParameter("user_id"));
+			member.setUser_pwd((String)request.getParameter("user_pwd"));
+			
+			int result = memberService.changePwd(member);
+			
+			JSONObject job = new JSONObject();
+			if(result == 1){
+				job.put("result", "1");
+			} else{
+				job.put("result", "0");
+			}
+			return job.toJSONString();
+		}
+		
+		
+		
+		
+		
+		
+	
+	
 	// 페이지 이동처리만 담당
 	@RequestMapping(value = "memberInfo.do")
 	public String memberInfo() {

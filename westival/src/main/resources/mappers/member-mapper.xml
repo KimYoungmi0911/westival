@@ -64,6 +64,23 @@
 		#{user_address}, #{user_phone}, #{user_email}, #{user_gender})		
 	</insert>
 	
+	<!-- id/pw찾기 10/25 -->
+	<select id="searchId" parameterType="Member" resultType="string">
+		select user_id from tb_user where user_name = #{user_name} and user_email = #{user_email}
+	</select>
+
+	<select id="searchPwd" parameterType="Member" resultType="_int">
+		select count(*) from tb_user where user_id = #{user_id} and user_email = #{user_email} and user_phone = #{user_phone}
+	</select>	
+	
+	<update id="changePwd" parameterType="Member" flushCache="true" statementType="PREPARED">
+		update tb_user set user_pwd = #{user_pwd} where user_id = #{user_id}
+	</update>
+	
+	
+	
+	
+	
 	
 	<!-- 충섭 -->	
 	<!-- 회원정보 수정 -->
