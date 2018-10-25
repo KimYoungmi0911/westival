@@ -278,6 +278,13 @@
 			}
 		});
 		
+		//검색 엔터키 이벤트
+        $("#skeyword").keydown(function(key){
+           if(key.keyCode == 13){
+              $("#searchBtn").click();
+           }
+        });
+		
 		//검색 버튼
 		$("#searchBtn").on("click", function(){
 			var categoryValue =$("#category").val();
