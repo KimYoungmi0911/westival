@@ -7,6 +7,7 @@
 <title>header</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- <link rel="stylesheet" type="text/css"
@@ -31,6 +32,10 @@
    #dropdown-menu:hover{color:red;}
    #dropdown-menu {color:#350a4e;}
    #dropdownMenuButton2 {color:#350a4e;}
+   
+   #dropdownMenuButton2 {
+   color: #350a4e;
+}
 </style>
 
 
@@ -131,6 +136,26 @@
                         </c:if>                        
                      </ul>
                   </div>
+                  <div class="hamburger">
+
+                        <div class="dropdown">
+                           <a class="dropdown-toggle" href="#" id="dropdownMenuButton2"
+                              data-toggle="dropdown" aria-haspopup="true"
+                              aria-expanded="false"> <i class="fa fa-bars trans_200"></i>
+                           </a>
+                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="index.jsp" id="dropdown-menu"
+                                 style="font-family: 'Open Sans', sans-serif; text-transform: uppercase;">HOME</a>
+                              <a class="dropdown-item" href="memberInfo.do" id="dropdown-menu"
+                                 style="font-family: 'Open Sans', sans-serif; text-transform: uppercase;">MY PAGE</a> 
+                              <a class="dropdown-item" href="noticeview.do" id="dropdown-menu"
+                                 style="font-family: 'Open Sans', sans-serif; text-transform: uppercase;">SUPPORT PAGE</a> 
+                                  
+                                
+                           </div>
+                        </div>
+
+                     </div>
 
                </div>
                </c:if>
@@ -160,7 +185,9 @@
                                
                              </div>
                           </div>
-                        </li>            
+                        </li>    
+                        
+                              
                            
                         <c:if test="${empty sessionScope.member }">
                            <li class="main_nav_item" style="color:white;">
@@ -177,6 +204,23 @@
                         </c:if>                        
                      </ul>
                   </div>
+                    <div class="hamburger">
+
+                        <div class="dropdown">
+                           <a class="dropdown-toggle" href="#" id="dropdownMenuButton2"
+                              data-toggle="dropdown" aria-haspopup="true"
+                              aria-expanded="false"> <i class="fa fa-bars trans_200"></i>
+                           </a>
+                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="index.jsp" id="dropdown-menu"
+                                 style="font-family: 'Open Sans', sans-serif; text-transform: uppercase;">HOME</a>
+                              <a class="dropdown-item" href="adminfestival.do" id="dropdown-menu"
+                                 style="font-family: 'Open Sans', sans-serif; text-transform: uppercase;">MANAGEMENT PAGE</a> 
+                                
+                           </div>
+                        </div>
+
+                     </div> 
 
                </div>
                
