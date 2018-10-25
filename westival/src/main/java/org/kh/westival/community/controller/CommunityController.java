@@ -67,7 +67,11 @@ public class CommunityController {
 		return mv;	
 	}
 	
-	
+	//페이지 이동만 담당
+	@RequestMapping(value="commuPage2.do")
+	public String commnunityPageForwordMethod(){
+		return "community/communityView";
+	}
 	
 	
 	//필터조회

@@ -193,7 +193,7 @@
 			<div class="row">
 				<div class="col-lg-7">
 					<div class="intro_item_content d-flex flex-column align-items-center justify-content-center">
-					  <img class="img-thumbnail" style="width:550px;height:550px;" src="/westival/resources/images/2561914_image2_1.jpg" alt="">
+					  <img class="img-thumbnail" style="width:550px;height:550px;" src="/westival/resources/uploadFiles/festivalImg/${festival.original_img_name }" alt="">
 					</div>  
 				</div>
 				<div class="col-lg-5">

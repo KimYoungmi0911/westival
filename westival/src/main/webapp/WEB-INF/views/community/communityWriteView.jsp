@@ -81,9 +81,9 @@
 	var page;
 	
 	$(function(){
-		$("#category").val("일반").prop("selected", true);
+		
 		//게시글 수정시 필드 값 초기화  
-		if('${community.community_no}' != ""){
+		if('${community.category}' != "undefined"){
 			$("#searchFilter").val('${community.category}').prop("selected", true);
 			if("${community.category}" == "동행"){
 				$(".festivalSelect").prop("style", "display:inline");
@@ -94,17 +94,39 @@
 			$("#commuInsert").append("<input type='hidden' name='community_no' value='${community.community_no}'>");
 			$("#title").val("${community.title}");
 			$("#content").val("${community.content}");
-	    	
 			$("#insertBtn").prop("style", "display:none");
 			$("#updateBtn").prop("style", "display:inline");
-	    }
+		}else{
+			$("#category").val("일반").prop("selected", true);
+	    	$("#insertBtn").prop("style", "display:inline");
+			$("#updateBtn").prop("style", "display:none");
+		}
 		
+		/* if('${community.community_no}' != ""){
+			$("#searchFilter").val('${community.category}').prop("selected", true);
+			if("${community.category}" == "동행"){
+				$(".festivalSelect").prop("style", "display:inline");
+				$("#festival").val("${community.no}").prop("selected", true);
+				$(".festivalSelect").append("<input type='hidden' name='no' value='${festival.no}'>");
+				$("#user_count").val("${community.user_count}").prop("selected", true);
+			}
+			$("#commuInsert").append("<input type='hidden' name='community_no' value='${community.community_no}'>");
+			$("#title").val("${community.title}");
+			$("#content").val("${community.content}");
+			$("#insertBtn").prop("style", "display:none");
+			$("#updateBtn").prop("style", "display:inline");
+	    }else{
+	    	$("#category").val("일반").prop("selected", true);
+	    	$("#insertBtn").prop("style", "display:inline");
+			$("#updateBtn").prop("style", "display:none");
+	    } */
+	
 		//쿼리스트링 값 가져오기
-	      var oParams = getUrlParams();
+	      /* var oParams = getUrlParams();
 	      var a = decodeURI(oParams.category2);
 	      var b = decodeURI(oParams.search2);
 	      var c = decodeURI(oParams.keyword2);
-	      var d = oParams.page; 
+	      var d = oParams.page;  */
 	}); 
 	
 	function categoryChange(){
@@ -114,26 +136,28 @@
 		if($("#category option:selected").val() == "일반"){
 			$(".festivalSelect").attr("style", "display:none");
 		}
-		
+		return false;
 	}
 
 	//게시글 수정
 	function updataBtnClick(){
 		var formData = $("#commuInsert").serialize();
 		var commuNo = '${community.community_no}';
+		var w = "w";
 		$.ajax({
-			url : "commuupdate.do",
+			url : "commuupdate.do?",
 			type : "post",
 			data : formData,
 			success : function(data){
 				if(data > 0){
 					alert("수정이 완료되었습니다.");
-					location.href="commuDetail.do?community_no="+commuNo;
+					location.href="commuDetail.do?community_no="+commuNo+"&w="+w;
 				}else{
 					alert("게시글 수정 실패");
 				}
 			}
 		});
+		return false;
 	}
 	
 	function formCheck(){	
@@ -150,12 +174,19 @@
 	} 
 	
 	//쿼리스트링 함수
-   function getUrlParams() {
+   /* function getUrlParams() {
        var params = {};
        window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
        return params;
-   } 
-	 
+   }  */
+	
+	function cancleClick(){
+		if(confirm("작성한 내용이 저장되지 않고 목록으로 돌아갑니다.")){
+			location.href="commuPage.do";
+		}
+		return false;
+	}
+		 
 </script>
 </head>
 
@@ -174,7 +205,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col">
-					<form action="commuInsert.do" id ="commuInsert" method="post">
+					<form action="commuInsert.do?category2=${category }&search2=${search}&keyword2=${keyword}&page=${page}" id ="commuInsert" method="post">
 						<table class="board">
 							<tr>
 								<th>분류</th>
@@ -191,6 +222,11 @@
 										</c:forEach>
 									</select>
 									</div>
+								</td>
+								<td>
+								<div class="festivalSelect" style="display:none;">
+								인원
+								</div>
 								</td>
 								<td>
 									<div class="festivalSelect" style="display:none;">
@@ -215,7 +251,7 @@
 						<input type="text" name="user_id" value="${ member.user_id }" style="display:none;">
 				<br>
 			<div class="qnaWirteForm__btn">
-				<button class="btn btn-light" type="button" id="cancel" onclick="location.href='commuPage.do';">취소</button>
+				<button class="btn btn-light" type="button" id="cancel" onclick="cancleClick();">취소</button>
 				<button class="btn btn-light" type="button" id="updateBtn" onclick="updataBtnClick();" style="display:none;">수정완료</button>
 				<button class="btn btn-light" type="button" id="insertBtn" style="display:inline;" onclick="formCheck();">등록</button>
 			</div>

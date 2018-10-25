@@ -15,13 +15,12 @@ public class Ticket implements java.io.Serializable {
 	private int price;
 	private String state;
 	private String import_uid;
-	private String account_no;
 
 	public Ticket() {
 	}
 
 	public Ticket(String ticket_no, int no, String user_id, Date ticket_date, int ticket_count, String pay_type,
-			Date pay_date, int price, String state, String import_uid, String account_no) {
+			Date pay_date, int price, String state, String import_uid) {
 		super();
 		this.ticket_no = ticket_no;
 		this.no = no;
@@ -33,7 +32,6 @@ public class Ticket implements java.io.Serializable {
 		this.price = price;
 		this.state = state;
 		this.import_uid = import_uid;
-		this.account_no = account_no;
 	}
 
 	public String getTicket_no() {
@@ -116,21 +114,12 @@ public class Ticket implements java.io.Serializable {
 		this.import_uid = import_uid;
 	}
 
-	public String getAccount_no() {
-		return account_no;
-	}
-
-	public void setAccount_no(String account_no) {
-		this.account_no = account_no;
-	}
-
 	@Override
 	public String toString() {
 		return "Ticket [ticket_no=" + ticket_no + ", no=" + no + ", user_id=" + user_id + ", ticket_date=" + ticket_date
 				+ ", ticket_count=" + ticket_count + ", pay_type=" + pay_type + ", pay_date=" + pay_date + ", price="
-				+ price + ", state=" + state + ", import_uid=" + import_uid + ", account_no=" + account_no + "]";
+				+ price + ", state=" + state + ", import_uid=" + import_uid + "]";
 	}
-
 	
-		
+	
 }

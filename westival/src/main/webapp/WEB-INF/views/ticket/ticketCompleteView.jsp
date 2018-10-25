@@ -42,12 +42,7 @@
 		$("input:text").prop("readonly", true);
 		$("input").css("border", "none");
 		$("input:text").css("width", "100%");
-		$//("#ticket_count").prop("min", "1");
-		//$("#ticket_count").css("height", "30px").css("width", "60px");
-		//$("#ticket_date").css("height", "30px").css("width", "180px");
-		//$("#ticket_date").css("font-size", "13");
-	    //font-size: 13px;
-		
+	
 	});
 
 </script>
@@ -70,7 +65,7 @@
 			<div class="row">
 				<div class="col-lg-7">
 					<div class="intro_item_content d-flex flex-column align-items-center justify-content-center">
-					  <img class="img-thumbnail" style="width:550px;height:550px;" src="/westival/resources/images/2561914_image2_1.jpg" alt="">
+					  <img class="img-thumbnail" style="width:550px;height:550px;" src="/westival/resources/uploadFiles/festivalImg/${festival.original_img_name }" alt="">
 					</div>  
 				</div>
 				<div class="col-lg-5">
@@ -133,7 +128,7 @@
 					<!-- <div style="float:right;width:800px;"> -->
 					<div style="float: right;">
 						<button id="okBtn" type="button" class="btn btn-danger" onclick="location.href='main.do'">메인으로</button>
-						<button id="myInfoBtn" type="button" class="btn btn-outline-danger">예매내역 보기</button>
+						<button id="myInfoBtn" type="button" class="btn btn-outline-danger" onclick="location.href='recommendList.do'">예매내역 보기</button>
 					</div>
 					<!-- </div> -->
 				</form>
