@@ -189,6 +189,9 @@ $.ajax({
 		endPage = json.endPage;
 		
 		var values = "";
+		if(data.listCount == 0){
+			values += '<td colspan="9" align="center">검색 결과가 존재하지 않습니다.</td>';
+		}else{
 		for(var i in json.list){
 			
 			for(var j = 0; j < json.list[i].tname.length; j++){
@@ -212,6 +215,7 @@ $.ajax({
 			+ "<td>" + decodeURIComponent(json.list[i].tstate) + "</td></tr>";
 			
 		}//for
+		}
 		$("#tb1").html(values);  
 		
 		$("#domain").html("");
