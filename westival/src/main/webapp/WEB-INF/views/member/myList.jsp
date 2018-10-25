@@ -87,13 +87,18 @@
 	}
 	
  	.media-object {
-		width: 18vw;
+		width: 100%;
+		height: 100%;
+	}
+	
+	.media-left {
+		width: 30%;
 		height: 22vh;
 		margin: 2.5vh 0 2.5vh 2vw;
 	}
 	
 	.media-body {
-		width: 40vw;
+		width: 70%;
 		height: 22vh;
 		margin: 2.5vh 0 2.5vh 1vw;
 		color: #350a4e;
@@ -143,21 +148,19 @@
 	}
 	
 	@media only screen and (max-width: 1024px) {
- 		.media-object {
-			width: 22vw;
-		}		
+ 		.media-left {
+ 			width: 40%;
+ 		}
+ 		
+ 		.media-body {
+ 			width: 60%;
+ 		}
 	}
 	
 	@media only screen and (max-width: 994px) {
 		#search_month {
 			width: 65%;
 		}
-	}
-	
-	@media only screen and (max-width: 890px) {
- 		.media-object {
-			width: 26vw;
-		}		
 	}
 	
 	@media only screen and (max-width: 768px) {
@@ -188,16 +191,16 @@
 	}
 	
 	@media only screen and (max-width: 726px) {
- 		.media-object {
-			width: 30vw;
-		}		
+ 		.media-left {
+ 			width: 50%;
+ 		}
+ 		
+ 		.media-body {
+ 			width: 50%;
+ 		}
 	}
 	
-	@media only screen and (max-width: 600px) {
- 		.media-object {
-			width: 34vw;
-		}
-		
+	@media only screen and (max-width: 600px) {		
 		.festival_no, .festival_date, .festival_name,
 		.company_name, .festival_placement, .festival_content
 		{
@@ -210,16 +213,16 @@
 			height: 50vh;
 		}
 		
-		.media-object {
-			width: 70vw;
+		.media-left {
+			width: 90%;
 			margin: 5% 0 0 5%;
 		}
 		
 		.media-body {
-			margin: 27vh 0 0 5%;
+			margin: 27vh 5% 0 5%;
 			position: absolute;
 			height: 22vh;
-			width: 70vw;
+			width: 90%;
 		}
 	}
 	
@@ -272,7 +275,7 @@
 					for(var i in jsonObj.list){
 						idx += 1;
 						myList += "<div class='festa_summary' onclick='javascript:checkFn(" + idx + ");'><ul class='media-list'><li class='media'>"
-							+ "<div class='media-left'><img class='media-object' src='/westival/resources/festivalUpImages/" + jsonObj.list[i].new_img_name + "' alt='festival_img'></div>"
+							+ "<div class='media-left'><img class='media-object' src='/westival/resources/festivalUpImages/festivalImg/" + jsonObj.list[i].new_img_name + "' alt='festival_img'></div>"
 					 		+ "<div class='media-body'><input type='checkbox' name='select-item' value='" + jsonObj.list[i].no + "'><h6 class='festival_no'>" + jsonObj.list[i].no
 					 		+ "</h6><h6 class='festival_date'>" +  jsonObj.list[i].start_date + " ~ " +  jsonObj.list[i].end_date + "</h6><h6 class='festival_name'>" + jsonObj.list[i].name
 					 		+ "</h6><h6 class='company_name'>" +  jsonObj.list[i].manage + "</h6><h6 class='festival_placement'>" +  jsonObj.list[i].address + "</h6><h6 class='festival_content'>"
@@ -345,7 +348,7 @@
 						for(var i in jsonObj.list){
 							idx += 1;
 							myList += "<div class='festa_summary' onclick='javascript:checkFn(" + idx + ");'><ul class='media-list'><li class='media'>"
-								+ "<div class='media-left'><img class='media-object' src='/westival/resources/festivalUpImages/" + jsonObj.list[i].new_img_name + "' alt='festival_img'></div>"
+								+ "<div class='media-left'><img class='media-object' src='/westival/resources/festivalUpImages/festivalImg/" + jsonObj.list[i].new_img_name + "' alt='festival_img'></div>"
 						 		+ "<div class='media-body'><input type='checkbox' name='select-item' value='" + jsonObj.list[i].no + "'><h6 class='festival_no'>" + jsonObj.list[i].no
 						 		+ "</h6><h6 class='festival_date'>" +  jsonObj.list[i].start_date + " ~ " +  jsonObj.list[i].end_date + "</h6><h6 class='festival_name'>" + jsonObj.list[i].name
 						 		+ "</h6><h6 class='company_name'>" +  jsonObj.list[i].manage + "</h6><h6 class='festival_placement'>" +  jsonObj.list[i].address + "</h6><h6 class='festival_content'>"
@@ -383,7 +386,7 @@
 					for(var i in jsonObj.list){
 						idx += 1;
 						myList += "<div class='festa_summary' onclick='javascript:checkFn(" + idx + ");'><ul class='media-list'><li class='media'>"
-							+ "<div class='media-left'><img class='media-object' src='/westival/resources/festivalUpImages/" + jsonObj.list[i].new_img_name + "' alt='festival_img'></div>"
+							+ "<div class='media-left'><img class='media-object' src='/westival/resources/festivalUpImages/festivalImg/" + jsonObj.list[i].new_img_name + "' alt='festival_img'></div>"
 					 		+ "<div class='media-body'><input type='checkbox' name='select-item' value='" + jsonObj.list[i].no + "'><h6 class='festival_no'>" + jsonObj.list[i].no
 					 		+ "</h6><h6 class='festival_date'>" +  jsonObj.list[i].start_date + " ~ " +  jsonObj.list[i].end_date + "</h6><h6 class='festival_name'>" + jsonObj.list[i].name
 					 		+ "</h6><h6 class='company_name'>" +  jsonObj.list[i].manage + "</h6><h6 class='festival_placement'>" +  jsonObj.list[i].address + "</h6><h6 class='festival_content'>"
