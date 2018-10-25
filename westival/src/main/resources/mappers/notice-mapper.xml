@@ -17,7 +17,7 @@
 	</resultMap>
 	
 	<select id="noticeList"  resultMap="resultList">
-	select * from tb_notice order by notice_no asc
+	select * from tb_notice order by notice_no desc
 	</select>
 	
 	<select id="noticeDetail" parameterType="_int" resultMap="resultList">
@@ -77,7 +77,7 @@
 				select ROWNUM RNUM, notice_no, user_id, 
 				notice_title, notice_date, notice_content, original_filepath, rename_filepath 
 				from (select * from tb_notice 
-				order by notice_no asc))
+				order by notice_no desc))
 				where RNUM between #{startRow} and #{endRow} 
 	
 	</select>
@@ -96,7 +96,7 @@
 				select ROWNUM RNUM, notice_no, user_id, notice_title, notice_date, 
 				notice_content, original_filepath, rename_filepath
 				from (select * from tb_notice
-				order by notice_no))
+				order by notice_no desc))
 				where RNUM between #{startRow} and #{endRow}
 	
 	</select>
