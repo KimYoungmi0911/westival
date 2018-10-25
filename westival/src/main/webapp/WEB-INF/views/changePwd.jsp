@@ -67,6 +67,20 @@
 </style>
 
 <script type="text/javascript">
+function changePWDbg10(){   
+    $("#changePwd1").css("background-color", "#fffff0");
+ }
+
+
+function changePWDbg20(){
+    if($("#changePwd1").val() != $("#changePwd2").val()){
+       $("#changePwd2").css("background-color", "#FFCECE");
+    }else {
+    $("#changePwd2").css("background-color", "#fffff0");
+    }
+ }
+
+
 
    function changePwd(){
       if($("#changePwd1").val()!=$("#changePwd2").val()){
@@ -127,15 +141,17 @@
                        <form action="" method="post" id="changePwd" style="border:0px;">
                           <!-- <br style="clear:both"> -->
                           <img src="/westival/resources/images/titlelogo.png" style="width:20%">
-                          <h3 style="margin-bottom: 25px; text-align: center;">비밀번호 변경 페이지</h3>
+                          <br><br>
+                          <h6 style="margin-bottom: 25px; text-align: center;">새로 사용 할 비밀번호를 입력해주세요!</h6>
+                         <br>
                            <div class="form-group" align="center">      
                               <div class="form-inline form group">                  
                                <label style="width:120px; font-weight:bold">비밀번호</label>&nbsp;
-                               <input type="password" class="form-1" id="changePwd1" name="changePwd1" required>
+                               <input type="password" class="form-1" id="changePwd1" name="changePwd1" required oninput = "changePWDbg10()" style="width:300px">
                             </div><br>
                               <div class="form-inline form group">                  
                                 <label style="width:120px; font-weight:bold">확인</label>&nbsp;
-                                <input type="password" class="form-1" id="changePwd2" name="changePwd2" required>
+                                <input type="password" class="form-1" id="changePwd2" name="changePwd2" required oninput = "changePWDbg20()" style="width:300px">
                              </div>
                             </div>
                             <br>                                                               

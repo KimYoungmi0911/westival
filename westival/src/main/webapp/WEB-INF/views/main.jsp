@@ -27,6 +27,8 @@
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/main_styles.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/responsive.css">
 
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script> <!-- pagination -->
 
 <style type="text/css">
    .intro_center h2{
@@ -35,6 +37,15 @@
        color: #FFFFFF;
        letter-spacing: -0.05em;
    }
+   
+   .pagination {
+	  display: -webkit-flex;
+	  display:         flex;
+	  -webkit-align-items: center;
+	          align-items: center;
+	  -webkit-justify-content: center;
+	          justify-content: center;
+	}
 </style>
 
 <script type="text/javascript">
@@ -53,7 +64,8 @@
                console.log("검색 결과가 없습니다.");
             
             var todayFestival = '';
-            var paging = '';
+            //var paging = '';
+            var todayPaging="";
             
             var maxPage = jsonObj.maxPage;
             var startPage = jsonObj.startPage;
@@ -80,44 +92,54 @@
                   + "'>자세히 보기</a></div></div></div></div></div></div>";
             }
             
-            if(currentPage <= 1){
-               paging += "[맨처음]&nbsp";
-            } else {
-               paging += "<a href='javascript:todayPaging(1);'>[맨처음]</a>";
-            }
-            
-            if( (currentPage-10 < startPage) && ((currentPage-10) > 1) ){
-               var page = startPage-10;
-               console.log("Page : " + page);
-               paging += "<a href='javascript:todayPaging(" + page + ");'>[이전]</a>";
-            } else{
-               paging += "[이전]&nbsp";
-            }
-            
-            for(var i=startPage ; i<=endPage ; i++){
-               if(i==currentPage){
-                  paging += "<font color='red'>[" + i + "]</font>";
-               } else{
-                  paging += "<a href='javascript:todayPaging(" + i + ");'>[" + i +"]</a>";
-               }
-            }
-            
-            if( ((currentPage+10) > endPage) && (currentPage+10) < maxPage ){
-               var page = endPage+10;
-               paging += "<a href='javascript:todayPaging(" + page + ");'>[다음]</a>";
-            } else{
-               paging += "[다음]&nbsp";
-            }
-            
-            if( currentPage >= maxPage){
-               paging += "[맨끝]&nbsp";
-            } else{
-               var page = maxPage;
-               paging += "<a href='javascript:todayPaging(" + page + ");'>[맨끝]</a>";
-            }
+           	if(currentPage <= 1){
+                //paging += "[맨처음]&nbsp";
+                todayPaging += "<li class='disabled'><span>맨처음</span></li>";
+             } else {
+                //paging += "<a href='javascript:todayPaging(1);'>[맨처음]</a>";
+            	 todayPaging += "<li><a href='javascript:todayPaging(1);'>맨처음</a></li>";
+             }
+         
+	         if( ((currentPage-10) >= 1)){
+	            var page = startPage-10;
+	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[이전]</a>";
+	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>이전</a></li>";
+	         } else{
+	            //paging += "[이전]&nbsp";
+	            todayPaging += "<li class='disabled'><span>이전</span></li>";
+	         }
+	         
+	         for(var i=startPage ; i<=endPage ; i++){
+	            if(i==currentPage){
+	               //paging += "<font color='red'>[" + i + "]</font>";
+	               todayPaging += "<li class='active'><span>" + i + "</span></li>";
+	            } else{
+	               //paging += "<a href='javascript:todayPaging(" + i + ");'>[" + i +"]</a>";
+	               todayPaging += "<li><a href='javascript:todayPaging(" + i + ");'>" + i +"</a></li>";
+	            }
+	         }
+	         
+	         if( ( (startPage+10) <= maxPage ) ){
+	            var page = startPage+10;
+	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[다음]</a>";
+	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>다음</a></li>";
+	         } else{
+	            //paging += "[다음]&nbsp";
+	            todayPaging += "<li class='disabled'><span>다음</span></li>";
+	         }
+	         
+	         if( currentPage >= maxPage){
+	            //paging += "[맨끝]&nbsp";
+	            todayPaging += "<li class='disabled'><span>맨끝</span></li>";
+	         } else{
+	            var page = maxPage;
+	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[맨끝]</a>";
+	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>맨끝</a></li>";
+	         }
             
             $("#todayFestival").html(todayFestival);   
-            $("#todayFestivalPaging").html(paging);   
+            //$("#todayFestivalPaging").html(paging); 
+            $("#todayPagination").html(todayPaging);
             
          },
          error : function(request, status, errorData){
@@ -180,7 +202,8 @@
                console.log("검색 결과가 없습니다.");
             
             var todayFestival = '';
-            var paging = '';
+            //var paging = '';
+            var todayPaging ='';
             
             var maxPage = jsonObj.maxPage;
             var startPage = jsonObj.startPage;
@@ -206,44 +229,55 @@
                   + "'>자세히 보기</a></div></div></div></div></div></div>";
             }
             
-            if(currentPage <= 1){
-               paging += "[맨처음]&nbsp";
-            } else {
-               paging += "<a href='javascript:todayPaging(1);'>[맨처음]</a>";
-            }
-            
-            if( (currentPage-10 < startPage) && ((currentPage-10) > 1) ){
-               var page = startPage-10;
-               console.log("Page : " + page);
-               paging += "<a href='javascript:todayPaging(" + page + ");'>[이전]</a>";
-            } else{
-               paging += "[이전]&nbsp";
-            }
-            
-            for(var i=startPage ; i<=endPage ; i++){
-               if(i==currentPage){
-                  paging += "<font color='red'>[" + i + "]</font>";
-               } else{
-                  paging += "<a href='javascript:todayPaging(" + i + ");'>[" + i +"]</a>";
-               }
-            }
-            
-            if( ((currentPage+10) > endPage) && (currentPage+10) < maxPage ){
-               var page = endPage+10;
-               paging += "<a href='javascript:todayPaging(" + page + ");'>[다음]</a>";
-            } else{
-               paging += "[다음]&nbsp";
-            }
-            
-            if( currentPage >= maxPage){
-               paging += "[맨끝]&nbsp";
-            } else{
-               var page = maxPage;
-               paging += "<a href='javascript:todayPaging(" + page + ");'>[맨끝]</a>";
-            }
+           	if(currentPage <= 1){
+                //paging += "[맨처음]&nbsp";
+                todayPaging += "<li class='disabled'><span>맨처음</span></li>";
+             } else {
+                //paging += "<a href='javascript:todayPaging(1);'>[맨처음]</a>";
+            	 todayPaging += "<li><a href='javascript:todayPaging(1);'>맨처음</a></li>";
+             }
+         
+	         if(  ((currentPage-10) >= 1) ){
+	            var page = startPage-10;
+	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[이전]</a>";
+	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>이전</a></li>";
+	         } else{
+	            //paging += "[이전]&nbsp";
+	            todayPaging += "<li class='disabled'><span>이전</span></li>";
+	         }
+	         
+	         for(var i=startPage ; i<=endPage ; i++){
+	            if(i==currentPage){
+	               //paging += "<font color='red'>[" + i + "]</font>";
+	               todayPaging += "<li class='active'><span>" + i + "</span></li>";
+	            } else{
+	               //paging += "<a href='javascript:todayPaging(" + i + ");'>[" + i +"]</a>";
+	               todayPaging += "<li><a href='javascript:todayPaging(" + i + ");'>" + i +"</a></li>";
+	            }
+	         }
+	         
+	         if( ( (startPage+10) <= maxPage ) ){
+	            var page = startPage+10;
+	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[다음]</a>";
+	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>다음</a></li>";
+	         } else{
+	            //paging += "[다음]&nbsp";
+	            todayPaging += "<li class='disabled'><span>다음</span></li>";
+	         }
+	         
+	         if( currentPage >= maxPage){
+	            //paging += "[맨끝]&nbsp";
+	            todayPaging += "<li class='disabled'><span>맨끝</span></li>";
+	         } else{
+	            var page = maxPage;
+	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[맨끝]</a>";
+	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>맨끝</a></li>";
+	         }
+
             
             $("#todayFestival").html(todayFestival);   
-            $("#todayFestivalPaging").html(paging);   
+            //$("#todayFestivalPaging").html(paging);   
+            $("#todayPagination").html(todayPaging);
             
          },
          error : function(request, status, errorData){
@@ -273,14 +307,14 @@
          
             <!-- Slider Item -->
             <div class="owl-item home_slider_item">
-               <div class="home_slider_background" style="background-image:url(/westival/resources/images/home_slider.jpg)"></div>
+               <div class="home_slider_background" style="background-image:url(/westival/resources/images/festmain1.jpg)"></div>
                <div class="home_slider_content text-center">
                   <div class="home_slider_content_inner" data-animation-in="flipInX" data-animation-out="animate-out fadeOut">
-                     <h1>discover</h1>
-                     <h1>the world</h1>
+                     <h1>WESTIVAL</h1>
+                     <h1>search</h1>
                      <div class="button home_slider_button">
                         <div class="button_bcg"></div>
-                        <a href="searchFestivalPage.do">축제 검색 페이지로 이동</a>
+                        <a href="searchFestivalPage.do">축제 검색하기!</a>
                      </div>
                   </div>
                </div>
@@ -288,26 +322,30 @@
 
             <!-- Slider Item -->
             <div class="owl-item home_slider_item">
-               <div class="home_slider_background" style="background-image:url(/westival/resources/images/home_slider.jpg)"></div>
+               <div class="home_slider_background" style="background-image:url(/westival/resources/images/festmain2.jpg)"></div>
 
                <div class="home_slider_content text-center">
                   <div class="home_slider_content_inner" data-animation-in="flipInX" data-animation-out="animate-out fadeOut">
-                     <h1>discover</h1>
-                     <h1>the world</h1>
-                     <div class="button home_slider_button"><div class="button_bcg"></div><a href="#"">축제 페이지로 이동<span></span><span></span><span></span></a></div>
+                     <h1>WESTIVAL</h1>
+                     <h1>registration</h1>
+                     <div class="button home_slider_button">
+                     <div class="button_bcg"></div>
+                     <a href="#"">축제 등록하기!</a></div>
                   </div>
                </div>
             </div>
 
             <!-- Slider Item -->
             <div class="owl-item home_slider_item">
-               <div class="home_slider_background" style="background-image:url(/westival/resources/images/home_slider.jpg)"></div>
+               <div class="home_slider_background" style="background-image:url(/westival/resources/images/festmain3.jpg"></div>
 
                <div class="home_slider_content text-center">
                   <div class="home_slider_content_inner" data-animation-in="flipInX" data-animation-out="animate-out fadeOut">
-                     <h1>discover</h1>
-                     <h1>the world</h1>
-                     <div class="button home_slider_button"><div class="button_bcg"></div><a href="#"">축제 페이지로 이동<span></span><span></span><span></span></a></div>
+                     <h1>WESTIVAL</h1>
+                     <h1>accompany</h1>
+                     <div class="button home_slider_button">
+                     <div class="button_bcg"></div>
+                     <a href="#"">동행 게시판으로 이동!</a></div>
                   </div>
                </div>
             </div>
@@ -367,11 +405,18 @@
       <div class="container">
          <div class="row">
             <div class="col text-center">
-               <h2 style="font-weight:bold; color:black;">Today Festival</h2>
+               <h2 style="font-weight:bold; color:black;">Today's Festivals</h2>
             </div>
          </div>
          <div class="row offers_items" id="todayFestival"></div>
          <div align="center" id="todayFestivalPaging"></div>
+         
+         <div class="page-nation" >
+         	<ul class="pagination pagination-large" id="todayPagination">
+
+         	</ul>
+         </div>
+
       </div>
    </div>
 
