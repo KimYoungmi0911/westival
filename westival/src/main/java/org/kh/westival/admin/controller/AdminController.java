@@ -67,6 +67,7 @@ public class AdminController {
 	
 	
 	}
+	//예매ajax전체보기(페이징포함)
 	@RequestMapping(value="tpage.do", method=RequestMethod.POST)
 	public void ticketList(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		JSONObject json = null;
@@ -103,7 +104,7 @@ public class AdminController {
 			job.put("tcount", a.getTicket_count());
 			job.put("tptype", URLEncoder.encode(a.getPay_type(), "UTF-8"));
 			job.put("tstate", URLEncoder.encode(a.getState(), "UTF-8"));
-			job.put("tano", URLEncoder.encode(a.getAccount_no(), "UTF-8"));
+			
 			
 			jarr.add(job);
 		}
@@ -129,7 +130,7 @@ public class AdminController {
 	
 	
 	
-	
+	//예매ajax검색보기(페이징포함)
 	@RequestMapping(value="tselectbtn.do", method=RequestMethod.POST)
 	public void tSelectBtn(HttpServletResponse response, HttpServletRequest request,
 			@RequestParam("filter") String filter, 
@@ -174,7 +175,7 @@ public class AdminController {
 			job.put("tcount", a.getTicket_count());
 			job.put("tptype", URLEncoder.encode(a.getPay_type(), "UTF-8"));
 			job.put("tstate", URLEncoder.encode(a.getState(), "UTF-8"));
-			job.put("tano", URLEncoder.encode(a.getAccount_no(), "UTF-8"));
+		
 			
 			jarr.add(job);
 	}
@@ -198,13 +199,15 @@ public class AdminController {
 	}
 	//------------------------------------------------------------------------------
 	//축제관리페이지
+	
+	//축제관리페이지로 화면전환
 	@RequestMapping("adminfestival.do")
 	public String adminfestival(){
 		return "admin/festivalView";
 	}
 	
 	
-	
+	//축제ajax전체보기(페이징포함)
 	@RequestMapping("fpage.do")
 	public void festivalList(HttpServletResponse response, HttpServletRequest request) throws IOException{
 		JSONObject json = null;
@@ -262,6 +265,7 @@ public class AdminController {
 		out.close();
 	}
 	
+	//축제 ajax검색보기(페이징포함)
 	@RequestMapping(value="selectbtn.do", method=RequestMethod.POST)
 	public void selectbtn(HttpServletResponse response, HttpServletRequest request) throws IOException{
 		System.out.println("selectBtn 컨트롤러");
@@ -325,157 +329,9 @@ public class AdminController {
 		out.close();
 	}
 	
-	//축제 디테일뷰
-	@RequestMapping("detailFestival.do")
-	public ModelAndView detailFestival(ModelAndView mv, @RequestParam("fno") int fno){
-		System.out.println("detailFestival 컨트롤러");
-		System.out.println("들어온 fno 값 : " + fno);
-		mv.addObject("festivaldetail", adminService.festivalDetail(fno));
-		mv.setViewName("admin/festivalDetail");
-		
-		return mv;
-	}
-	//축제 수정
-	@RequestMapping(value="updatefestival.do", method=RequestMethod.POST)
-	public ModelAndView updateFestival(ModelAndView mv, HttpServletRequest request, Festival festival, 
-			@RequestParam(name = "name") String name,
-			@RequestParam(name = "address") String address, 
-			@RequestParam(name = "content") String content,
-			@RequestParam(name = "img_name") MultipartFile img_name,
-			@RequestParam(name = "start_date") Date start_date,
-			@RequestParam(name = "end_date") Date end_date,
-			@RequestParam(name = "telephone") String telephone,
-			@RequestParam(name = "manage") String manage,
-			@RequestParam(name = "tag") String tag,
-			@RequestParam(name = "attached") MultipartFile attached) {
-		System.out.println("img_name : " + img_name);
-		System.out.println("attached : " + attached);
-		TicketOption ticketOption = new TicketOption();
-		
-		// 파일 저장 폴더 지정하기
-				String imgSavePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles/festivalImg");
-				String attSavePath = request.getSession().getServletContext().getRealPath("resources/uploadFiles/festivalAtt");
-				
-				// 이미지 파일 처리
-				try {
-					String originalFileName = img_name.getOriginalFilename();
-					String renameFileName = null;
-
-					if (originalFileName != null) {
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-						renameFileName = sdf.format(new java.sql.Date(System.currentTimeMillis())) + "."
-								+ originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
-
-						img_name.transferTo(new File(imgSavePath + "\\" + img_name.getOriginalFilename()));
-
-						File originFile = new File(imgSavePath + "\\" + originalFileName);
-						File renameFile = new File(imgSavePath + "\\" + renameFileName);
-
-						if (!originFile.renameTo(renameFile)) {
-							int read = -1;
-							byte[] buf = new byte[1024];
-
-							FileInputStream fin = new FileInputStream(originFile);
-							FileOutputStream fout = new FileOutputStream(renameFile);
-
-							while ((read = fin.read(buf, 0, buf.length)) != -1) {
-								fout.write(buf, 0, read);
-							}
-							fin.close();
-							fout.close();
-						}
-					}
-					festival.setOriginal_img_name(originalFileName);
-					festival.setNew_img_name(renameFileName);
-					festival.setName(name);
-					festival.setAddress(address);
-					festival.setContent(content);
-					festival.setStart_date(start_date);
-					festival.setEnd_date(end_date);
-					festival.setTheme(request.getParameter("theme"));
-					festival.setTelephone(telephone);
-					festival.setManage(manage);
-					festival.setTag(tag);
-				
-
-				} catch (IllegalStateException | IOException e) {
-					e.printStackTrace();
-				}		
-				
-				// 첨부 파일 처리
-				if (attached.getOriginalFilename() != "") { // 첨부파일 있을 때 이름 바꿔서 넣기
-					try {
-						String originalFileName = attached.getOriginalFilename();
-						String renameFileName = null;
-
-						if (originalFileName != null) {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-							renameFileName = sdf.format(new java.sql.Date(System.currentTimeMillis())) + "."
-									+ originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
-
-							attached.transferTo(new File(attSavePath + "\\" + attached.getOriginalFilename()));
-
-							// 파일명 바꾸려면 File 객체의 renameTo() 사용함
-							File originFile = new File(attSavePath + "\\" + originalFileName);
-							File renameFile = new File(attSavePath + "\\" + renameFileName);
-
-							// 파일 이름바꾸기 실행 >> 실패할 경우 직접 바꾸기함
-							// 새 파일만들고 원래 파일 내용 읽어서 복사하고
-							// 복사가 끝나면 원래 파일 삭제함
-							if (!originFile.renameTo(renameFile)) {
-								int read = -1;
-								byte[] buf = new byte[1024];
-
-								FileInputStream fin = new FileInputStream(originFile);
-								FileOutputStream fout = new FileOutputStream(renameFile);
-
-								while ((read = fin.read(buf, 0, buf.length)) != -1) {
-									fout.write(buf, 0, read);
-								}
-								fin.close();
-								fout.close();
-							}
-						}
-						festival.setFile_name(renameFileName);
-					} catch (IllegalStateException | IOException e) {
-						e.printStackTrace();
-					}
-				}
-				if (request.getParameter("ticket_name").length() != 0) {
-					festival.setTicket("Y");
-					ticketOption.setTicket_name(request.getParameter("ticket_name"));
-					ticketOption.setTicket_price(Integer.parseInt(request.getParameter("ticket_price")));
-					ticketOption.setTicket_quantity(Integer.parseInt(request.getParameter("ticket_quantity")));
-					ticketOption.setCompany_name(request.getParameter("company_name"));
-					ticketOption.setCeo_name(request.getParameter("ceo_name"));
-					ticketOption.setCompany_no(Integer.parseInt(request.getParameter("company_no")));
-					ticketOption.setPhone(request.getParameter("phone"));
-					ticketOption.setBank_name(request.getParameter("bank_name"));
-					ticketOption.setAccount_holder_name(request.getParameter("account_holder_name"));
-					ticketOption.setAccount_no(request.getParameter("account_no"));
-				} else {
-					festival.setTicket("N");
-				}
-
-				mv.addObject(adminService.updateFestival(festival));
-					
-
-					// 아이디 넣어줌
-					// ticketOption.setNo(festival.getNo());
-					ticketOption.setUser_id(festival.getReg_user());
-
-					if (festival.getTicket().equals("Y")) {
-						mv.addObject(adminService.updateTicketOption(ticketOption));
-							
-					}
-				
-
-				mv.setViewName("redirect:/adminfestival.do");
-				
-				return mv;
-		
-	}
-
+	
+	
+	//축제삭제
 		@RequestMapping(value="afdelete.do", method=RequestMethod.POST)
 	public String afDelete(HttpServletResponse response, HttpServletRequest request, int fno, ModelAndView mv) throws IOException{
 		
@@ -491,11 +347,13 @@ public class AdminController {
 //---------------------------------------------------------------------	
 //회원관리 페이지
 	
+		//회원관리페이지로 화면전환
 	@RequestMapping("adminmember.do")
 	public String adminMemberView(){
 		return "admin/memberView";
 	}
 	
+	//회원등록
 	@RequestMapping(value = "register1.do", method = RequestMethod.POST)
 	public String registerMethod(Member member) {
 
@@ -507,32 +365,8 @@ public class AdminController {
 
 	}
 	
-	/*@RequestMapping("adminmember.do")
-	public ModelAndView adminMemberView(ModelAndView mv, HttpServletRequest request){
-		int currentPage = 1;
-		int limit=10;
-		if(request.getParameter("page") != null){
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		}
-		int listCount = adminService.getListCount();
-		ArrayList<Member> list = adminService.selectList(currentPage, limit);
-		int maxPage = (int) Math.ceil(((double)listCount / limit));
-		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1;
-		int endPage = startPage + limit -1;
-		if(maxPage < endPage)	
-			endPage = maxPage;
-		mv.addObject("list", list);
-		mv.addObject("currentPage", currentPage);
-		mv.addObject("maxPage", maxPage);
-		mv.addObject("startPage", startPage);
-		mv.addObject("endPage", endPage);
-		mv.addObject("listCount", listCount);
-		mv.setViewName("admin/memberView");
-		System.out.println("adminMemverView 컨트롤러");
-		
-		return mv;
-	}*/
-	
+
+	//회원ajax전체보기(페이징포함)
 	@RequestMapping("mpage.do")
 	public void memberList(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		JSONObject json = null;
@@ -585,6 +419,7 @@ public class AdminController {
 		out.close();
 	}
 	
+	//회원ajax검색보기(페이징포함)
 	@RequestMapping(value="mselectbtn.do", method=RequestMethod.POST)
 	public void mSelectBtn(HttpServletResponse response, HttpServletRequest request,
 			@RequestParam("filter") String filter, 
@@ -595,7 +430,7 @@ public class AdminController {
 		map.put("searchTF", searchTF);
  
 		 
-		/*int listCount = adminService.mGetSelectListCount(filter, searchTF);*/
+	
 		int listCount = adminService.mGetSelectListCount(map);
 		int currentPage = 1;
 		int limit = 10;
@@ -657,39 +492,8 @@ public class AdminController {
 		
 	}
 	
-	/*@RequestMapping(value="amdelete.do", method=RequestMethod.POST)
-	public void amDelete(HttpServletResponse response, HttpServletRequest request, String mid) throws IOException{
-		Member member = (Member) adminService.amdelete(mid);
-		JSONArray jarr = new JSONArray();
-		JSONObject job = new JSONObject();
-		
-		job.put("mid", member.getUser_id());
-		job.put("mname", member.getUser_name());
-		job.put("mbirth", new SimpleDateFormat("yyyy-MM-dd").format(member.getUser_birth()));
-		job.put("maddress", member.getUser_address());
-		job.put("mphone", member.getUser_phone());
-		job.put("memail", member.getUser_email());
-		job.put("mgender", member.getUser_gender());
-		
-		
-		jarr.add(job);
-		JSONObject sendJson = new JSONObject(); // 전송용 객체
-		sendJson.put("list", jarr); // 전송용 객체에 저장
-		response.setContentType("application/json; charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		out.println(sendJson.toJSONString());
-		out.flush();
-		out.close();
-	}*/
-	@RequestMapping(value="amdelete.do", method=RequestMethod.POST)
-	public String amDelete(HttpServletResponse response, HttpServletRequest request, String mid, ModelAndView mv) throws IOException{
-		
-		mv.addObject(adminService.amdelete(mid));
 	
-		System.out.println("amDelete 컨트롤러");
-		return "redirect:/adminmember.do";
 	
-	}
 	
 	
 	

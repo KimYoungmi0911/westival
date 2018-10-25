@@ -13,13 +13,12 @@ public class Admin implements java.io.Serializable{
 	private int price;
 	private String pay_type;
 	private String state;
-	private String account_no;
 	private String user_name;
 	
 	public Admin(){}
 
 	public Admin(String user_id, String name, String ticket_no, Date ticket_date, int ticket_count, int price,
-			String pay_type, String state, String account_no, String user_name) {
+			String pay_type, String state, String user_name) {
 		super();
 		this.user_id = user_id;
 		this.name = name;
@@ -29,7 +28,6 @@ public class Admin implements java.io.Serializable{
 		this.price = price;
 		this.pay_type = pay_type;
 		this.state = state;
-		this.account_no = account_no;
 		this.user_name = user_name;
 	}
 
@@ -97,14 +95,6 @@ public class Admin implements java.io.Serializable{
 		this.state = state;
 	}
 
-	public String getAccount_no() {
-		return account_no;
-	}
-
-	public void setAccount_no(String account_no) {
-		this.account_no = account_no;
-	}
-
 	public String getUser_name() {
 		return user_name;
 	}
@@ -115,10 +105,13 @@ public class Admin implements java.io.Serializable{
 
 	@Override
 	public String toString() {
-		return "Admin [user_id=" + user_id + ", name=" + name + ", ticket_no=" + ticket_no + ", ticket_count="
-				+ ticket_count + ", price=" + price + ", pay_type=" + pay_type + ", state=" + state + ", account_no="
-				+ account_no + ", user_name=" + user_name + "]";
+		return "Admin [user_id=" + user_id + ", name=" + name + ", ticket_no=" + ticket_no + ", ticket_date="
+				+ ticket_date + ", ticket_count=" + ticket_count + ", price=" + price + ", pay_type=" + pay_type
+				+ ", state=" + state + ", user_name=" + user_name + "]";
 	}
+
+	
+
 	
 	
 }

@@ -13,7 +13,6 @@
 		<result property="price" column="price" />
 		<result property="pay_type" column="pay_type" />
 		<result property="state" column="state" />
-		<result property="account_no" column="account_no" />
 		<result property="user_name" column="user_name" />
 	
 	</resultMap>
@@ -70,7 +69,7 @@
 	
 	select * from (
 				select ROWNUM RNUM, user_id, name, ticket_no, ticket_date, 
-				ticket_count, price, pay_type, state, account_no, user_name 
+				ticket_count, price, pay_type, state, user_name 
 				from (select * from v_festival_ticket_user 
 				order by ticket_date asc))
 				where RNUM between #{startRow} and #{endRow}
@@ -88,7 +87,7 @@
 	
 	select * from (
 				select ROWNUM RNUM, user_id, name, ticket_no, ticket_date, 
-				ticket_count, price, pay_type, state, account_no, user_name 
+				ticket_count, price, pay_type, state, user_name 
 				from (select * from v_festival_ticket_user 
 				order by ticket_date asc))
 				where RNUM between #{startRow} and #{endRow}
@@ -109,7 +108,7 @@
 	or price like '%'||#{searchTF}||'%' 
 	or pay_type like '%'||#{searchTF}||'%' 
 	or state like '%'||#{searchTF}||'%' 
-	or account_no like '%'||#{searchTF}||'%'
+	
 	</when>
 	<when test="filter == 'name'">
 	where user_name like '%'||#{searchTF}||'%'
@@ -132,9 +131,7 @@
 	<when test="filter == 'state'">
 	where state like '%'||#{searchTF}||'%'
 	</when>
-	<when test="filter == 'account'">
-	where account_no like '%'||#{searchTF}||'%'
-	</when>
+
 	</choose>
 	</select>
 	
@@ -152,7 +149,7 @@
 	or price like '%'||#{searchTF}||'%' 
 	or pay_type like '%'||#{searchTF}||'%' 
 	or state like '%'||#{searchTF}||'%' 
-	or account_no like '%'||#{searchTF}||'%'
+	
 	</when>
 	<when test="filter == 'name'">
 	where user_name like '%'||#{searchTF}||'%'
@@ -175,9 +172,7 @@
 	<when test="filter == 'state'">
 	where state like '%'||#{searchTF}||'%'
 	</when>
-	<when test="filter == 'account'">
-	where account_no like '%'||#{searchTF}||'%'
-	</when>
+	
 	</choose>
 	</select>
 	
@@ -185,7 +180,7 @@
 	<select id="tSelectList" parameterType="java.util.Map" resultMap="resultList">
 	 select * from (
 	select ROWNUM RNUM, user_id, name, ticket_no, 
-    ticket_date, ticket_count, price, pay_type, state, account_no, user_name 
+    ticket_date, ticket_count, price, pay_type, state, user_name 
     from (select * from v_festival_ticket_user
 	<choose>
 	<when test="filter == 'all'">
@@ -196,8 +191,8 @@
 	or ticket_no like '%'||#{searchTF}||'%' 
 	or price like '%'||#{searchTF}||'%' 
 	or pay_type like '%'||#{searchTF}||'%' 
-	or state like '%'||#{searchTF}||'%' 
-	or account_no like '%'||#{searchTF}||'%'))
+	or state like '%'||#{searchTF}||'%' ))
+	
 	
 	</when>
 	<when test="filter == 'name'">
@@ -221,9 +216,7 @@
 	<when test="filter == 'state'">
 	where state like '%'||#{searchTF}||'%'))
 	</when>
-	<when test="filter == 'account'">
-	where account_no like '%'||#{searchTF}||'%'))
-	</when>
+	
 	</choose>
 	where RNUM between  #{startRow} and #{endRow}
 	</select> 
