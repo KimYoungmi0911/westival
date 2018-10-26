@@ -141,12 +141,6 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.updateRefundWhy(ticket_no, refund_why);
 	}
 
-	// 페스티벌 컬럼 개수 조회
-	@Override
-	public int FestivalgetListCount(String user_id) {
-		return memberDao.FestivalgetListCount(user_id);
-	}
-
 	// 경호
 	// 내 티켓 조회
 	@Override

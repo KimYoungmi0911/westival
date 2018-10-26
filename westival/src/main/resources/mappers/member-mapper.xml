@@ -129,15 +129,15 @@
 	<select id="myListSearch" parameterType="java.util.HashMap" resultMap="resultFestival">
 		<![CDATA[
 		select * from tb_festival
-		where reg_user = #{user_id}
-		and start_date >= #{start_date} and end_date <= #{end_date}
+		where reg_user = #{user_id}  and delete_check = 'N'
+		and (start_date >= #{start_date} or end_date <= #{end_date} or (start_date < #{start_date} and end_date > #{end_date}))
 		]]>
 	</select>
 	
 	<select id="myListSearchNonLogin" parameterType="java.util.HashMap" resultMap="resultFestival">
 		<![CDATA[
 		select * from tb_festival
-		and start_date >= #{start_date} and end_date <= #{end_date}
+		where delete_check = 'N' and (start_date >= #{start_date} or end_date <= #{end_date} or (start_date < #{start_date} and end_date > #{end_date}))
 		]]>
 	</select>
 	
@@ -145,15 +145,15 @@
 	<select id="myListSearchMonth" parameterType="java.util.HashMap" resultMap="resultFestival">
 		<![CDATA[
 		select * from tb_festival
-		where reg_user = #{user_id}
-		and start_date >= add_months(sysdate, #{month}) and end_date <= sysdate
+		where reg_user = #{user_id} and delete_check = 'N'
+		and (start_date >= add_months(sysdate, #{month}) or end_date <= sysdate or (start_date < add_months(sysdate, #{month}) and end_date > sysdate))
 		]]>
 	</select>
 	
 	<select id="myListSearchMonthNonLogin" parameterType="java.util.HashMap" resultMap="resultFestival">
 		<![CDATA[
 		select * from tb_festival
-		where start_date >= add_months(sysdate, #{month}) and end_date <= sysdate
+		where delete_check = 'N' and (start_date >= add_months(sysdate, #{month}) or end_date <= sysdate or (start_date < add_months(sysdate, #{month}) and end_date > sysdate))
 		]]>
 	</select>
 	
@@ -190,7 +190,7 @@
 		from tb_festival
 		join tb_scrap using (no)
 		where user_id = 'user01' and delete_check = 'N'
-		and start_date >= #{start_date} and end_date <= #{end_date}
+		and (start_date >= #{start_date} or end_date <= #{end_date} or (start_date < #{start_date} and end_date > #{end_date}))
 		]]>
 	</select>
 	
@@ -199,7 +199,7 @@
 		select no, name, address, new_img_name, start_date, end_date, manage, content, delete_check
 		from tb_festival
 		join tb_scrap using (no)
-		where delete_check = 'N' and start_date >= #{start_date} and end_date <= #{end_date}
+		where delete_check = 'N' and (start_date >= #{start_date} or end_date <= #{end_date} or (start_date < #{start_date} and end_date > #{end_date}))
 		]]>
 	</select>
 	
@@ -209,7 +209,7 @@
 		select no, name, address, new_img_name, start_date, end_date, manage, content, delete_check
 		from tb_festival join tb_scrap using (no)
 		where user_id = #{user_id} and delete_check = 'N' 
-		and start_date >= add_months(sysdate, #{month}) and end_date <= sysdate
+		and (start_date >= add_months(sysdate, #{month}) or end_date <= sysdate or (start_date < add_months(sysdate, #{month}) and end_date > sysdate))
 		]]>
 	</select>
 	
@@ -217,7 +217,7 @@
 		<![CDATA[
 		select no, name, address, new_img_name, start_date, end_date, manage, content, delete_check
 		from tb_festival join tb_scrap using (no)
-		where delete_check = 'N' and start_date >= add_months(sysdate, #{month}) and end_date <= sysdate
+		where delete_check = 'N' and (start_date >= add_months(sysdate, #{month}) or end_date <= sysdate or (start_date < add_months(sysdate, #{month}) and end_date > sysdate))
 		]]>
 	</select>
 	
@@ -235,14 +235,5 @@
 	<update id="updateRefundWhy" parameterType="java.util.HashMap" flushCache="true" statementType="PREPARED">
 		update tb_refund set refund_content = #{refund_why} where ticket_no = #{ticket_no}
 	</update>
-	
-	<!-- 페스티벌 컬럼 개수 조회 -->
-	<select id="selectFestivalgetListCount" parameterType="string" resultType="_int">
-		select count(*) from tb_festival where reg_user = #{user_id} and delete_check = 'N'
-	</select>
-	
-	<select id="selectFestivalgetListCountNonLogin" parameterType="string" resultType="_int">
-		select count(*) from tb_festival where delete_check = 'N'
-	</select>
 </mapper>
 
