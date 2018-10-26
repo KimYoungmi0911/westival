@@ -23,15 +23,73 @@
 
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/offers_styles.css">
 <link rel="stylesheet" type="text/css" href="/westival/resources/styles/offers_responsive.css">
+
+<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script> --> <!-- pagination -->
+
 <style type="text/css">
+	#dropdown-menu {
+	    color: #350a4e;
+	}
+	
+   .pagination {
+	  display: -webkit-flex;
+	  display:         flex;
+	  -webkit-align-items: center;
+	          align-items: center;
+	  -webkit-justify-content: center;
+	          justify-content: center;
+	  margin: 20px 0px 0px;
+	  padding : 0px;
+	}
+
+	.pagination li a, .pagination li span{
+		    position: relative;
+    	float: left;
+    	padding: 6px 12px;
+    	margin-left: -1px;
+    	line-height: 1.42857143;
+    	color: #428bca;
+    	text-decoration: none;
+    	background-color: #fff;
+    	border: 1px solid #ddd;
+	}
+	
+	.pagination>.active span{
+		z-index: 2;
+    color: #fff;
+    cursor: default;
+    background-color: #428bca;
+    border-color: #428bca;
+	}
+	
+	.pagination>.disabled span{
+		color: #777;
+	    cursor: not-allowed;
+	    background-color: #fff;
+	    border-color: #ddd;
+	}
+	
+	.pagination li a{
+		display : block;
+	}
+	
+	.pagination li a:hover{
+		background-color: rgb(221, 221, 221);
+	}
+	
+	.pagination>li:first-child {
+	    border-top-left-radius: 4px;
+    	border-bottom-left-radius: 4px;
+	}
+	.pagination>li:last-child {
+		border-top-right-radius: 4px;
+    	border-bottom-right-radius: 4px;
+	}
 	
 </style>
 
 <script type="text/javascript">
-
-	$(function(){
-		
-	});
 	
 	function locationSearch(page){
 		
@@ -79,7 +137,7 @@
 				var currentPage = jsonObj.currentPage;
 				
 				if(jsonObj.list.length==0){
-					$("#searchList").html("검색 결과가 없습니다.");
+					alert("검색 결과가 없습니다.");
 				} else {
 					for(var i in jsonObj.list){ 
 						if(jsonObj.list[i].scrap==0)
@@ -90,8 +148,8 @@
 						
 						resultList += "<div class='offers_item'><div class='row'><div class='col-lg-3 col-1680-4'><div class='offers_image_container'>"
 							+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name
-							+ "'></div></div></div><div class='col-lg-8'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name + "<span>" 
-							+ jsonObj.list[i].start_date + " ~ " + jsonObj.list[i].end_date + "</span></div><p class='offers_text'>" + jsonObj.list[i].content + "<br><br><br><br>" 
+							+ "'></div></div></div><div class='col-lg-8'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name + "</div><p class='offers_text'>" 
+							+ "<font color='black' size='4px'>" + jsonObj.list[i].start_date + "일 부터 " + jsonObj.list[i].end_date + "일 까지</font><br>" +jsonObj.list[i].content +"<br><br><br>" 
 							+ "</p><div class='button book_button'><a href='Info.do?no=" + jsonObj.list[i].no + "'>상세보기<span></span><span></span><span></span></a></div>" 
 							+ "<div class='offer_reviews'><div class='offer_reviews_content'><div class='offer_reviews_subtitle'>" + jsonObj.list[i].recommend 
 							+ " 명의 추천을 받았습니다.</div></div>" ;
@@ -109,42 +167,53 @@
 					}
 					
 					if(currentPage <= 1){
-						paging += "[맨처음]&nbsp";
-					} else {
-						paging += "<a href='javascript:locationSearch(1);'>[맨처음]</a>";
-					}
-					
-					if( (currentPage-10 < startPage) && ((currentPage-10) > 1) ){
-						var page = startPage-10;
-						console.log("Page : " + page);
-						paging += "<a href='javascript:locationSearch(" + page + ");'>[이전]</a>";
-					} else{
-						paging += "[이전]&nbsp";
-					}
-					
-					for(var i=startPage ; i<=endPage ; i++){
-						if(i==currentPage){
-							paging += "<font color='red'>[" + i + "]</font>";
-						} else{
-							paging += "<a href='javascript:locationSearch(" + i + ");'>[" + i +"]</a>";
-						}
-					}
-					
-					if( ((currentPage+10) > endPage) && (currentPage+10) < maxPage ){
-						var page = endPage+10;
-						paging += "<a href='javascript:locationSearch(" + page + ");'>[다음]</a>";
-					} else{
-						paging += "[다음]&nbsp";
-					}
-					
-					if( currentPage >= maxPage){
-						paging += "[맨끝]&nbsp";
-					} else{
-						var page = maxPage;
-						paging += "<a href='javascript:locationSearch(" + page + ");'>[맨끝]</a>";
-					}
+		                //paging += "[맨처음]&nbsp";
+		                paging += "<li class='disabled'><span>맨처음</span></li>";
+		             } else {
+		                //paging += "<a href='javascript:paging(1);'>[맨처음]</a>";
+		            	 paging += "<li><a href='javascript:locationSearch(1);'>맨처음</a></li>";
+		             }
+		         
+			         if( ((currentPage-10) >= 1)){
+			            var page = startPage-10;
+			            //paging += "<a href='javascript:paging(" + page + ");'>[이전]</a>";
+			            paging += "<li><a href='javascript:locationSearch(" + page + ");'>이전</a></li>";
+			         } else{
+			            //paging += "[이전]&nbsp";
+			            paging += "<li class='disabled'><span>이전</span></li>";
+			         }
+			         
+			         for(var i=startPage ; i<=endPage ; i++){
+			            if(i==currentPage){
+			               //paging += "<font color='red'>[" + i + "]</font>";
+			               paging += "<li class='active'><span>" + i + "</span></li>";
+			            } else{
+			               //paging += "<a href='javascript:paging(" + i + ");'>[" + i +"]</a>";
+			               paging += "<li><a href='javascript:locationSearch(" + i + ");'>" + i +"</a></li>";
+			            }
+			         }
+			         
+			         if( ( (startPage+10) <= maxPage ) ){
+			            var page = startPage+10;
+			            //paging += "<a href='javascript:paging(" + page + ");'>[다음]</a>";
+			            paging += "<li><a href='javascript:locationSearch(" + page + ");'>다음</a></li>";
+			         } else{
+			            //paging += "[다음]&nbsp";
+			            paging += "<li class='disabled'><span>다음</span></li>";
+			         }
+			         
+			         if( currentPage >= maxPage){
+			            //paging += "[맨끝]&nbsp";
+			            paging += "<li class='disabled'><span>맨끝</span></li>";
+			         } else{
+			            var page = maxPage;
+			            //paging += "<a href='javascript:paging(" + page + ");'>[맨끝]</a>";
+			            paging += "<li><a href='javascript:locationSearch(" + page + ");'>맨끝</a></li>";
+			         }
 
-					$("#searchList").html("<div class='offers_grid'>" + resultList + "<div align='center'>" + paging + "</div></div>");					
+					//$("#searchList").html("<div class='offers_grid'>" + resultList + "<div align='center'>" + paging + "</div></div>");
+			         $("#searchList").html("<div class='offers_grid'>" + resultList + "</div>" + "<div class='page-nation'><ul class='pagination pagination-large' id='pagination'>" + paging + "</ul></div>");
+		         
 				}
 			},
 			error : function(request, status, errorData){
@@ -185,7 +254,7 @@
 					var currentPage = jsonObj.currentPage;
 
 					if(jsonObj.list.length==0){
-						$("#searchList").html("검색 결과가 없습니다.");
+						alert("검색 결과가 없습니다.");
 					} else {
 						for(var i in jsonObj.list){ 
 							if(jsonObj.list[i].scrap==0)
@@ -196,8 +265,8 @@
 							
 							resultList += "<div class='offers_item'><div class='row'><div class='col-lg-3 col-1680-4'><div class='offers_image_container'>"
 								+ "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name
-								+ "'></div></div></div><div class='col-lg-8'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name + "<span>" 
-								+ jsonObj.list[i].start_date + " ~ " + jsonObj.list[i].end_date + "</span></div><p class='offers_text'>" + jsonObj.list[i].content +"<br><br><Br><br>" 
+								+ "'></div></div></div><div class='col-lg-8'><div class='offers_content'><div class='offers_price'>" + jsonObj.list[i].name + "</div><p class='offers_text'>" 
+								+ "<font color='black' size='4px'>" + jsonObj.list[i].start_date + "일 부터 " + jsonObj.list[i].end_date + "일 까지</font><br>" +jsonObj.list[i].content +"<br><br><br>" 
 								+ "</p><div class='button book_button'><a href='Info.do?no=" + jsonObj.list[i].no + "'>상세보기<span></span><span></span><span></span></a></div>" 
 								+ "<div class='offer_reviews'><div class='offer_reviews_content'><div class='offer_reviews_subtitle'>" + jsonObj.list[i].recommend 
 								+ " 명의 추천을 받았습니다.</div></div>" ;
@@ -214,42 +283,52 @@
 									", 테마 : " + jsonObj.list[i].theme + ", 태그 : " + jsonObj.list[i].tag + ", 추천수 : " + jsonObj.list[i].recommend); */
 						}			
 						if(currentPage <= 1){
-							paging += "[맨처음]&nbsp";
-						} else {
-							paging += "<a href='javascript:tagSearch(1);'>[맨처음]</a>";
-						}
-						
-						if( (currentPage-10 < startPage) && ((currentPage-10) > 1) ){
-							var page = startPage-10;
-							console.log("Page : " + page);
-							paging += "<a href='javascript:tagSearch(" + page + ");'>[이전]</a>";
-						} else{
-							paging += "[이전]&nbsp";
-						}
-						
-						for(var i=startPage ; i<=endPage ; i++){
-							if(i==currentPage){
-								paging += "<font color='red'>[" + i + "]</font>";
-							} else{
-								paging += "<a href='javascript:tagSearch(" + i + ");'>[" + i +"]</a>";
-							}
-						}
-						
-						if( ((currentPage+10) > endPage) && (currentPage+10) < maxPage ){
-							var page = endPage+10;
-							paging += "<a href='javascript:tagSearch(" + page + ");'>[다음]</a>";
-						} else{
-							paging += "[다음]&nbsp";
-						}
-						
-						if( currentPage >= maxPage){
-							paging += "[맨끝]&nbsp";
-						} else{
-							var page = maxPage;
-							paging += "<a href='javascript:tagSearch(" + page + ");'>[맨끝]</a>";
-						}
+			                //paging += "[맨처음]&nbsp";
+			                paging += "<li class='disabled'><span>맨처음</span></li>";
+			             } else {
+			                //paging += "<a href='javascript:paging(1);'>[맨처음]</a>";
+			            	 paging += "<li><a href='javascript:tagSearch(1);'>맨처음</a></li>";
+			             }
+			         
+				         if( ((currentPage-10) >= 1)){
+				            var page = startPage-10;
+				            //paging += "<a href='javascript:paging(" + page + ");'>[이전]</a>";
+				            paging += "<li><a href='javascript:tagSearch(" + page + ");'>이전</a></li>";
+				         } else{
+				            //paging += "[이전]&nbsp";
+				            paging += "<li class='disabled'><span>이전</span></li>";
+				         }
+				         
+				         for(var i=startPage ; i<=endPage ; i++){
+				            if(i==currentPage){
+				               //paging += "<font color='red'>[" + i + "]</font>";
+				               paging += "<li class='active'><span>" + i + "</span></li>";
+				            } else{
+				               //paging += "<a href='javascript:paging(" + i + ");'>[" + i +"]</a>";
+				               paging += "<li><a href='javascript:tagSearch(" + i + ");'>" + i +"</a></li>";
+				            }
+				         }
+				         
+				         if( ( (startPage+10) <= maxPage ) ){
+				            var page = startPage+10;
+				            //paging += "<a href='javascript:paging(" + page + ");'>[다음]</a>";
+				            paging += "<li><a href='javascript:tagSearch(" + page + ");'>다음</a></li>";
+				         } else{
+				            //paging += "[다음]&nbsp";
+				            paging += "<li class='disabled'><span>다음</span></li>";
+				         }
+				         
+				         if( currentPage >= maxPage){
+				            //paging += "[맨끝]&nbsp";
+				            paging += "<li class='disabled'><span>맨끝</span></li>";
+				         } else{
+				            var page = maxPage;
+				            //paging += "<a href='javascript:paging(" + page + ");'>[맨끝]</a>";
+				            paging += "<li><a href='javascript:tagSearch(" + page + ");'>맨끝</a></li>";
+				         }
 
-						$("#searchList").html("<div class='offers_grid'>" + resultList + "<div align='center'>" + paging + "</div></div>");						
+				         $("#searchList").html("<div class='offers_grid'>" + resultList + "</div>" + "<div class='page-nation'><ul class='pagination pagination-large' id='pagination'>" + paging + "</ul></div>");
+
 					}
 				},
 				error : function(request, status, errorData){
@@ -284,7 +363,187 @@
 
 <body>
 
-<c:import url="/WEB-INF/views/header.jsp" />
+<!-- header -->
+<div class="super_container">
+
+<header class="header">
+
+
+   <div class="top_bar">
+         <div class="container">
+            <div class="row">
+               <div class="col d-flex flex-row">
+                   <div class="phone">+ 안될거없조</div>
+                   
+                   <div class="user_box ml-auto">            
+                     <div class=" user_box_link"><a href="index.jsp">westival에 오신 것을 환영합니다!</a></button></div>
+                                    
+                  </div>
+                  
+               </div>
+            </div>
+         </div>      
+      </div>
+
+      
+
+      <!-- Main Navigation -->
+
+      <nav class="main_nav">
+         <div class="container">
+            <div class="row">
+            <c:if test="${sessionScope.member.user_id != 'admin' || empty sessionScope.member }">
+               <div class="col main_nav_col d-flex flex-row align-items-center justify-content-start">
+                  <div class="logo_container">
+                     <div class="logo"><a href="index.jsp">westival</a></div>
+                  </div>
+                  
+                  <div class="main_nav_container ml-auto">
+                     <ul class="main_nav_list">
+                     
+                        <li class="main_nav_item"><a href="index.jsp">home &nbsp;</a></li>   
+                                                                                          
+                        
+                        
+                        <li class="main_nav_item">
+                          <div class="dropdown">
+                           <a class="dropdown-toggle"  href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              my page
+                           </a>
+                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                               <a class="dropdown-item" href="memberInfo.do" id="dropdown-menu">내정보 관리</a>
+                               <a class="dropdown-item" href="recommendList.do" id="dropdown-menu">예매 내역</a>
+                               <a class="dropdown-item" href="likeFesta.do" id="dropdown-menu">관심 축제</a>
+                             </div>
+                          </div>
+                        </li>
+                        
+                        <li class="main_nav_item">
+                          <div class="dropdown">
+                           <a class="dropdown-toggle"  href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              support page
+                           </a>
+                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                               <a class="dropdown-item" href="noticeview.do" id="dropdown-menu">공지사항</a>                           
+                               <a class="dropdown-item" href="insertFestivalPage.do" id="dropdown-menu">축제 등록</a>
+                               <a class="dropdown-item" href="commuPage.do" id="dropdown-menu">동행 게시판</a>
+                               <a class="dropdown-item" href="qnaBoard.do" id="dropdown-menu">문의 게시판</a>
+                             </div>
+                          </div>
+                        </li>
+                        
+                        <c:if test="${empty sessionScope.member }">
+                           <li class="main_nav_item" style="color:white;">
+                              <a href="loginPage.do" style="color:white;">로그인</a>
+                           </li>
+                           <li class="main_nav_item" style="color:white;">
+                              <a href="registerPage.do" style="color:white;">회원가입</a>
+                           </li>
+                        </c:if>                           
+                        <c:if test="${!empty sessionScope.member }">
+                           <li class="main_nav_item" style="color:white;">
+                              ${ member.user_name }님 &nbsp;&nbsp; <a href="logout.do" style="color:red;">로그아웃</a>
+                           </li>
+                        </c:if>                        
+                     </ul>
+                  </div>
+                  <div class="hamburger">
+
+                        <div class="dropdown">
+                           <a class="dropdown-toggle" href="#" id="dropdownMenuButton2"
+                              data-toggle="dropdown" aria-haspopup="true"
+                              aria-expanded="false"> <i class="fa fa-bars trans_200"></i>
+                           </a>
+                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="index.jsp" id="dropdown-menu"
+                                 style="font-family: 'Open Sans', sans-serif; text-transform: uppercase;">HOME</a>
+                              <a class="dropdown-item" href="memberInfo.do" id="dropdown-menu"
+                                 style="font-family: 'Open Sans', sans-serif; text-transform: uppercase;">MY PAGE</a> 
+                              <a class="dropdown-item" href="noticeview.do" id="dropdown-menu"
+                                 style="font-family: 'Open Sans', sans-serif; text-transform: uppercase;">SUPPORT PAGE</a> 
+                                  
+                                
+                           </div>
+                        </div>
+
+                     </div>
+
+               </div>
+               </c:if>
+               <c:if
+                  test="${sessionScope.member.user_id == 'admin' && !empty sessionScope.member}">
+                  
+                  <div class="col main_nav_col d-flex flex-row align-items-center justify-content-start">
+                  <div class="logo_container">
+                     <div class="logo"><a href="index.jsp">westival</a></div>
+                  </div>
+                  
+                  <div class="main_nav_container ml-auto">
+                     <ul class="main_nav_list">
+                     <li class="main_nav_item"><a href="index.jsp">home</a></li>
+                     
+                     <li class="main_nav_item">
+                          <div class="dropdown">
+                           <a class="dropdown-toggle"  href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Management page
+                           </a>
+                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                               <a class="dropdown-item" href="adminfestival.do" id="dropdown-menu">축제 관리</a>                           
+                               <a class="dropdown-item" href="adminticket.do" id="dropdown-menu">예약 관리</a>
+                               <a class="dropdown-item" href="adminmember.do" id="dropdown-menu">회원 관리</a>
+                               <a class="dropdown-item" href="noticeview.do" id="dropdown-menu">공지 관리</a>
+                               <a class="dropdown-item" href="qnaBoard.do" id="dropdown-menu">문의 관리</a>
+                               
+                             </div>
+                          </div>
+                        </li>    
+                        
+                              
+                           
+                        <c:if test="${empty sessionScope.member }">
+                           <li class="main_nav_item" style="color:white;">
+                              <a href="loginPage.do" style="color:white;">로그인</a>
+                           </li>
+                           <li class="main_nav_item" style="color:white;">
+                              <a href="registerPage.do" style="color:white;">회원가입</a>
+                           </li>
+                        </c:if>                           
+                        <c:if test="${!empty sessionScope.member }">
+                           <li class="main_nav_item" style="color:white;">
+                              ${ member.user_name }님 &nbsp;&nbsp; <a href="logout.do" style="color:red;">로그아웃</a>
+                           </li>
+                        </c:if>                        
+                     </ul>
+                  </div>
+                    <div class="hamburger">
+
+                        <div class="dropdown">
+                           <a class="dropdown-toggle" href="#" id="dropdownMenuButton2"
+                              data-toggle="dropdown" aria-haspopup="true"
+                              aria-expanded="false"> <i class="fa fa-bars trans_200"></i>
+                           </a>
+                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="index.jsp" id="dropdown-menu"
+                                 style="font-family: 'Open Sans', sans-serif; text-transform: uppercase;">HOME</a>
+                              <a class="dropdown-item" href="adminfestival.do" id="dropdown-menu"
+                                 style="font-family: 'Open Sans', sans-serif; text-transform: uppercase;">MANAGEMENT PAGE</a> 
+                                
+                           </div>
+                        </div>
+
+                     </div> 
+
+               </div>
+               
+                  
+               </c:if>
+            </div>
+         </div>   
+      </nav>
+
+</header>
+</div>
+<!-- header -->
 
 <div class="super_container">
 
@@ -300,7 +559,7 @@
 
 	<!-- Offers -->
 
-	<div class="offers" style="height:1800px;" >
+	<div class="offers" style="height:2000px;" >
 
 		<!-- Search -->
 
@@ -420,7 +679,8 @@
 					<div class="offers_grid" id="searchList" >
 					
 						
-					</div>					
+					</div>
+			        					
 				</div>
 
 			</div>

@@ -431,7 +431,7 @@
          </c:if>
          <c:if test="${sessionScope.member == null }">
             <div align="center" style="margin-top: 5%;"><img src="resources/images/logo1.PNG" alt="logo" width="20%" height="10%"></div>
-            <h3 style="text-align: center; margin-top: 5%;">로그인이 필요한 서비스 입니다.</h3>   
+				<h3 style="text-align: center; margin-top: 5%; margin-bottom: 5%;">로그인이 필요한 서비스 입니다.</h3>   
          </c:if>
       </div>
    </div>

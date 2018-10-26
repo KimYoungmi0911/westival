@@ -59,88 +59,91 @@
          success : function(result){
             var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈            
             var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈   
-            
-            if(jsonObj.list.length==0)
-               console.log("검색 결과가 없습니다.");
-            
+           
             var todayFestival = '';
-            //var paging = '';
-            var todayPaging="";
             
-            var maxPage = jsonObj.maxPage;
-            var startPage = jsonObj.startPage;
-            var endPage = jsonObj.endPage;
-            var currentPage = jsonObj.currentPage;
-            
-            // 페이징 정보
-            console.log("maxPage : " + maxPage + ", startPage : " + startPage + ", endPage : " + endPage + ", currentPage : " + currentPage);
+             
+            if(jsonObj.list.length==0){
+            	
+            } else {
+            	//var paging = '';
+                var todayPaging="";
+                
+                var maxPage = jsonObj.maxPage;
+                var startPage = jsonObj.startPage;
+                var endPage = jsonObj.endPage;
+                var currentPage = jsonObj.currentPage;
+                
+                // 페이징 정보
+                console.log("maxPage : " + maxPage + ", startPage : " + startPage + ", endPage : " + endPage + ", currentPage : " + currentPage);
 
-            for(var i in jsonObj.list){ 
-               
-               var tagArr = jsonObj.list[i].tag.split('#');
-               var tag = "";
+                for(var i in jsonObj.list){ 
+                	
+                	var tag = "";
+                    if(jsonObj.list[i].tag!=null){
+                        var tagArr = jsonObj.list[i].tag.split('#');
 
-               for(var j=1; j<tagArr.length; j++){
-                  tag += "<a href='tagClick.do?tag=" + tagArr[j] + "'>#" + tagArr[j] + "</a>&nbsp;"
-               }
-               
-               todayFestival += "<div class='col-lg-6 offers_col'><div class='offers_item'><div class='row'><div class='col-lg-6'><div class='offers_image_container'>"
-                  + "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name 
-                  + "); width:250px; height:280px;'></div></div></div><div class='col-lg-6'><div class='offers_content'><div class='offers_price' style='font-size:24px;'>" + jsonObj.list[i].name
-                  + "<span><br><br><p style='font-weight:bold'>" + jsonObj.list[i].end_date + "일 까지</p></span></div><p class='offers_text' style='width:200px; height:50px; font-weight:bold;'>" + "테마 : " 
-                  + jsonObj.list[i].theme + "<br>태그 : " + tag + "<br></p><div class='offers_link'><a href='Info.do?no=" + jsonObj.list[i].no 
-                  + "'>자세히 보기</a></div></div></div></div></div></div>";
+                    	for(var j=1; j<tagArr.length; j++){
+                            tag += "<a href='tagClick.do?tag=" + tagArr[j] + "'>#" + tagArr[j] + "</a>&nbsp;"
+                         }
+                    }                
+
+                   todayFestival += "<div class='col-lg-6 offers_col'><div class='offers_item'><div class='row'><div class='col-lg-6'><div class='offers_image_container'>"
+                      + "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name 
+                      + "); width:250px; height:280px;'></div></div></div><div class='col-lg-6'><div class='offers_content'><div class='offers_price' style='font-size:24px;'>" + jsonObj.list[i].name
+                      + "<span><br><br><p style='font-weight:bold'>" + jsonObj.list[i].end_date + "일 까지</p></span></div><p class='offers_text' style='width:200px; height:50px; font-weight:bold;'>" + "테마 : " 
+                      + jsonObj.list[i].theme + "<br>태그 : " + tag + "<br></p><div class='offers_link'><a href='Info.do?no=" + jsonObj.list[i].no 
+                      + "'>자세히 보기</a></div></div></div></div></div></div>";
+                }
+                if(currentPage <= 1){
+                    //paging += "[맨처음]&nbsp";
+                    todayPaging += "<li class='disabled'><span>맨처음</span></li>";
+                 } else {
+                    //paging += "<a href='javascript:todayPaging(1);'>[맨처음]</a>";
+                	 todayPaging += "<li><a href='javascript:todayPaging(1);'>맨처음</a></li>";
+                 }
+             
+    	         if( ((currentPage-10) >= 1)){
+    	            var page = startPage-10;
+    	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[이전]</a>";
+    	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>이전</a></li>";
+    	         } else{
+    	            //paging += "[이전]&nbsp";
+    	            todayPaging += "<li class='disabled'><span>이전</span></li>";
+    	         }
+    	         
+    	         for(var i=startPage ; i<=endPage ; i++){
+    	            if(i==currentPage){
+    	               //paging += "<font color='red'>[" + i + "]</font>";
+    	               todayPaging += "<li class='active'><span>" + i + "</span></li>";
+    	            } else{
+    	               //paging += "<a href='javascript:todayPaging(" + i + ");'>[" + i +"]</a>";
+    	               todayPaging += "<li><a href='javascript:todayPaging(" + i + ");'>" + i +"</a></li>";
+    	            }
+    	         }
+    	         
+    	         if( ( (startPage+10) <= maxPage ) ){
+    	            var page = startPage+10;
+    	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[다음]</a>";
+    	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>다음</a></li>";
+    	         } else{
+    	            //paging += "[다음]&nbsp";
+    	            todayPaging += "<li class='disabled'><span>다음</span></li>";
+    	         }
+    	         
+    	         if( currentPage >= maxPage){
+    	            //paging += "[맨끝]&nbsp";
+    	            todayPaging += "<li class='disabled'><span>맨끝</span></li>";
+    	         } else{
+    	            var page = maxPage;
+    	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[맨끝]</a>";
+    	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>맨끝</a></li>";
+    	         }
+                
+                $("#todayFestival").html(todayFestival);   
+                //$("#todayFestivalPaging").html(paging); 
+                $("#todayPagination").html(todayPaging);
             }
-            
-           	if(currentPage <= 1){
-                //paging += "[맨처음]&nbsp";
-                todayPaging += "<li class='disabled'><span>맨처음</span></li>";
-             } else {
-                //paging += "<a href='javascript:todayPaging(1);'>[맨처음]</a>";
-            	 todayPaging += "<li><a href='javascript:todayPaging(1);'>맨처음</a></li>";
-             }
-         
-	         if( ((currentPage-10) >= 1)){
-	            var page = startPage-10;
-	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[이전]</a>";
-	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>이전</a></li>";
-	         } else{
-	            //paging += "[이전]&nbsp";
-	            todayPaging += "<li class='disabled'><span>이전</span></li>";
-	         }
-	         
-	         for(var i=startPage ; i<=endPage ; i++){
-	            if(i==currentPage){
-	               //paging += "<font color='red'>[" + i + "]</font>";
-	               todayPaging += "<li class='active'><span>" + i + "</span></li>";
-	            } else{
-	               //paging += "<a href='javascript:todayPaging(" + i + ");'>[" + i +"]</a>";
-	               todayPaging += "<li><a href='javascript:todayPaging(" + i + ");'>" + i +"</a></li>";
-	            }
-	         }
-	         
-	         if( ( (startPage+10) <= maxPage ) ){
-	            var page = startPage+10;
-	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[다음]</a>";
-	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>다음</a></li>";
-	         } else{
-	            //paging += "[다음]&nbsp";
-	            todayPaging += "<li class='disabled'><span>다음</span></li>";
-	         }
-	         
-	         if( currentPage >= maxPage){
-	            //paging += "[맨끝]&nbsp";
-	            todayPaging += "<li class='disabled'><span>맨끝</span></li>";
-	         } else{
-	            var page = maxPage;
-	            //paging += "<a href='javascript:todayPaging(" + page + ");'>[맨끝]</a>";
-	            todayPaging += "<li><a href='javascript:todayPaging(" + page + ");'>맨끝</a></li>";
-	         }
-            
-            $("#todayFestival").html(todayFestival);   
-            //$("#todayFestivalPaging").html(paging); 
-            $("#todayPagination").html(todayPaging);
-            
          },
          error : function(request, status, errorData){
             alert("error code : " + request.status + "\n" + "message : " + request.responseText 
@@ -157,26 +160,26 @@
             var objStr = JSON.stringify(result); // 1. 리턴된 객체를 문자열로 바꿈            
             var jsonObj = JSON.parse(objStr); // 2. 문자열을 json 객체로 바꿈      
             
-            //console.log("이달의 축제 top3");
-            
-            if(jsonObj.list.length==0)
-               console.log("검색 결과가 없습니다.");
-            
             var top3='';
             
-            for(var i in jsonObj.list){   
-               
-               var addressArr = jsonObj.list[i].address.split('#');
-               var address = addressArr[0]+ "<br>" + addressArr[1] ;
-               
-               top3 += "<div class='col-lg-4 intro_col'><div class='intro_item'><div class='intro_item_overlay'></div>" 
-                  + "<div class='intro_item_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" 
-                  + jsonObj.list[i].new_img_name + ")'></div><div class='intro_item_content d-flex flex-column align-items-center justify-content-center'>"
-                  + "<div class='intro_date'>" + jsonObj.list[i].start_date + " ~ " + jsonObj.list[i].end_date + "</div><div class='button intro_button'>"
-                  + "<div class='button_bcg'></div><a href='Info.do?no=" + jsonObj.list[i].no + "'>더보기</a></div><div class='intro_center text-center'><h2>" 
-                  + jsonObj.list[i].name + "</h2><div class='intro_price'>" + address + "</div></div></div></div></div>"; 
+            if(jsonObj.list.length==0){
+            	
+            } else{
+                for(var i in jsonObj.list){   
+                    
+                    var addressArr = jsonObj.list[i].address.split('#');
+                    var address = addressArr[0]+ "<br>" + addressArr[1] ;
+                    
+                    top3 += "<div class='col-lg-4 intro_col'><div class='intro_item'><div class='intro_item_overlay'></div>" 
+                       + "<div class='intro_item_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" 
+                       + jsonObj.list[i].new_img_name + ")'></div><div class='intro_item_content d-flex flex-column align-items-center justify-content-center'>"
+                       + "<div class='intro_date'>" + jsonObj.list[i].start_date + " ~ " + jsonObj.list[i].end_date + "</div><div class='button intro_button'>"
+                       + "<div class='button_bcg'></div><a href='Info.do?no=" + jsonObj.list[i].no + "'>더보기</a></div><div class='intro_center text-center'><h2>" 
+                       + jsonObj.list[i].name + "</h2><div class='intro_price'>" + address + "</div></div></div></div></div>"; 
+                 }
+                 $("#top3").html(top3);
             }
-            $("#top3").html(top3);
+
          },
          error : function(request, status, errorData){
             alert("error code : " + request.status + "\n" + "message : " + request.responseText 
@@ -214,12 +217,14 @@
             console.log("maxPage : " + maxPage + ", startPage : " + startPage + ", endPage : " + endPage + ", currentPage : " + currentPage);
 
             for(var i in jsonObj.list){ 
-               var tagArr = jsonObj.list[i].tag.split('#');
-               var tag = "";
+            	var tag = "";
+                if(jsonObj.list[i].tag!=null){
+                    var tagArr = jsonObj.list[i].tag.split('#');
 
-               for(var j=1; j<tagArr.length; j++){
-                  tag += "<a href='tagClick.do?tag=" + tagArr[j] + "'>#" + tagArr[j] + "</a>&nbsp;"
-               }
+                	for(var j=1; j<tagArr.length; j++){
+                        tag += "<a href='tagClick.do?tag=" + tagArr[j] + "'>#" + tagArr[j] + "</a>&nbsp;"
+                     }
+                }
                
                todayFestival += "<div class='col-lg-6 offers_col'><div class='offers_item'><div class='row'><div class='col-lg-6'><div class='offers_image_container'>"
                   + "<div class='offers_image_background' style='background-image:url(/westival/resources/uploadFiles/festivalImg/" + jsonObj.list[i].new_img_name 
@@ -426,13 +431,13 @@
       <div class="container">
          <div class="row">
             <div class="col">
-               <h2 class="intro_title text-center">이달의 축제 Top3</h2>
+               <h2 class="intro_title text-center">이달의 인기 축제 Top3</h2>
             </div>
          </div>
          <div class="row">
             <div class="col-lg-10 offset-lg-1">
                <div class="intro_text text-center">
-                  <p>이달의 축제 설명 </p>
+                  <p>회원들의 추천을 가장 많이 받은 축제를 확인해보세요! </p>
                </div>
             </div>
          </div>

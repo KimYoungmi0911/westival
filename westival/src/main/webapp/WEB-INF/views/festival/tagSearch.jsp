@@ -30,6 +30,7 @@
 
 <style type="text/css">
    
+   
 </style>
 
 <script type="text/javascript">
@@ -111,7 +112,7 @@
                            
                            <div class='col-lg-8'>
                               <div class='offers_content'>
-                                 <div class='offers_price'>${ item.name }<span>${ item.start_date } ~ ${ item.end_date }</span>
+                                 <div class='offers_price'>${ item.name }
                                  </div>
                                  <p class='offers_text'>
                                     <font color="black">${ item.start_date }일 부터 ${ item.end_date }일 까지</font>
@@ -130,13 +131,13 @@
                                     </div>
                               
                                     <c:if test="${ scrap[status.index] eq 0}">
-                                       <div class='offer_reviews_rating text-center' style="background: linear-gradient(to right, #fa9e1b, #8d4fff); border:0px solid;">
-                                          <a href='#' id='scrapCheck' onclick='scrap(${ item.no });' ><font color='red'>♡</font></a>
+                                       <div class='offer_reviews_rating text-center' style="background-color:#f3f6f9;">
+										   <a href='#' id='scrapCheck' onclick='scrap(${ item.no });'><img src="/westival/resources/images/jjim1.png"></a>
                                        </div>
                                     </c:if>   
                                     <c:if test="${scrap[status.index] eq 1}">
-                                       <div class='offer_reviews_rating text-center' style="background: linear-gradient(to right, #fa9e1b, #8d4fff); border:0px solid;">
-                                          <a href='#' id='scrapCheck' onclick='scrap(${ item.no });'><font color='red'>♥</font></a>
+                                       <div class='offer_reviews_rating text-center' style="background-color:#f3f6f9;">
+                                       		<a href='#' id='scrapCheck' onclick='scrap(${ item.no });'><img src="/westival/resources/images/jjim2.png"></a>
                                        </div>
                                     </c:if>                                 
                                  </div>
@@ -210,37 +211,7 @@
                         </c:url>
                         <li><a href='${ tl5 }'>맨끝</a></li>
                      </c:if>
-                     
-                        <%-- <c:if test="${ ( (currnetPage-10) < startPage) && ((currentPage-10) > 1) }">
-                              <c:url var="tl2" value="tagClick.do">
-                                 <c:param name="tag" value="${ tag }" />
-                                 <c:param name="page" value="${ startPage-10 }" />
-                              </c:url>
-                              <li><a href="${ tl2 }">«</a></li>
-                          </c:if>
-
-                        
-                        <c:forEach var="p" begin="${ startPage }" end="${ endPage }">      
-                              <c:if test="${ p == currentPage}">
-                                 <li class="active"><span>${ p }</span></li>
-                              </c:if>
-                              <c:if test="${ p != currentPage }">
-                                 <c:url var="tl3" value="tagClick.do">
-                                    <c:param name="tag" value="${ tag }" />
-                                    <c:param name="page" value="${ p }" />
-                                 </c:url>
-                                 <li><a href="${ tl3 }">${ p }</a></li>
-                              </c:if>
-                           </c:forEach>
-                        
-                        
-                        <c:if test="${ ((currentPage+10) > endPage) && ((currentPage+10) < maxPage) }">
-                              <c:url var="tl4" value="tagClick.do">
-                                 <c:param name="tag" value="${ tag }" />
-                                 <c:param name="page" value="${ endPage+10 }" />
-                              </c:url>
-                              <li><a href="${ tl4 }">»</a></li>
-                          </c:if> --%>
+                
 
                      </ul>
                   </div>                     
