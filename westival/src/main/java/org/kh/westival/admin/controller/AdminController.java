@@ -447,7 +447,7 @@ public class AdminController {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		int maxPage = (int)Math.ceil((double)listCount / limit + 0.9);
+		int maxPage = (int)Math.ceil((double)listCount / limit);
 		System.out.println("maxPage : " + maxPage);
 		int startPage = (((int)((double)currentPage / limit + 0.9)) - 1) * limit + 1;
 		
