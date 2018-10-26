@@ -112,7 +112,7 @@
 						+ "<td>" + decodeURIComponent(json.list[i].fticket) + "</td>"
 						+ "<td>" + json.list[i].freadcount + "</td>"
 						+ "<td>" + json.list[i].frecommend + "</td>"
-						+ "<td><input type='button' value='탈퇴' class='btn btn-secondary btn-sm' onclick='javascript:festivaldelete("+ idx +")'>" + "</td></tr>";
+						+ "<td><input type='button' value='삭제' class='btn btn-secondary btn-sm' onclick='javascript:festivaldelete("+ idx +")'>" + "</td></tr>";
 					}//for
 					$("#tb1").html(values);
 					
@@ -213,7 +213,7 @@
 				+ "<td>" + decodeURIComponent(json.list[i].fticket) + "</td>"
 				+ "<td>" + json.list[i].freadcount + "</td>"
 				+ "<td>" + json.list[i].frecommend + "</td>"
-				+ "<td><input type='button' value='탈퇴' class='btn btn-secondary btn-sm' onclick='javascript:festivaldelete("+ idx +")'>" + "</td></tr>";
+				+ "<td><input type='button' value='삭제' class='btn btn-secondary btn-sm' onclick='javascript:festivaldelete("+ idx +")'>" + "</td></tr>";
 			}//for
 			}
 			$("#tb1").html(values);
@@ -293,7 +293,7 @@
 							+ "\n" + "error : " + errorData);
 				} 
 			}); 
-			 alert("정상적으로 탈퇴되었습니다.");
+			 alert("정상적으로 삭제되었습니다.");
 			 location.href="adminfestival.do";
 		  }else
 			  return;
