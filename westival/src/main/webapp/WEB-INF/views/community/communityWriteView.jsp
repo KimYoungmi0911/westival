@@ -86,6 +86,7 @@
 		if('${community.category}' != ""){
 			$("#searchFilter").val('${community.category}').prop("selected", true);
 			if("${community.category}" == "동행"){
+				$("#category").val("동행").prop("selected", true);
 				$(".festivalSelect").prop("style", "display:inline");
 				$("#festival").val("${community.no}").prop("selected", true);
 				$(".festivalSelect").append("<input type='hidden' name='no' value='${festival.no}'>");
