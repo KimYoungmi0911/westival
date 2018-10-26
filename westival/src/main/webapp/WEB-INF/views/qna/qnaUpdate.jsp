@@ -214,12 +214,8 @@
 <script>
 	/*jquery*/
 	$(function(){
-		$('#summernote').summernote({
-		    height : 250, // set editor height
-		    minHeight : 100, // set minimum height of editor
-		    maxHeight : null, // set maximum height of editor
-		    lang : 'ko-KR' // default: 'en-US'
-		});
+		$("#summernote").css("height", "250px");
+	    $("#summernote").css("width", "100%");
 		
 		var active = "${ qna.active }";
 

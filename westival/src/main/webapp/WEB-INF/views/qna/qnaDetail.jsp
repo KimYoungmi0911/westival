@@ -210,7 +210,7 @@
 								</td>
 							</c:if>
 						</tr>
-						<tr><td colspan="6" id="content"> ${ qna.content } </td></tr>
+						<tr><td colspan="6" id="content"> <pre>${ qna.content }</pre> </td></tr>
 					</table>
 			
                		<!-- 댓글 목록 -->

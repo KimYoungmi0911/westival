@@ -506,8 +506,8 @@
                         <h3>${ festival.name }</h3>
                         <ul>
                            <li class="look">조회 : ${ festival.read_count } </li>
-                           <li class="likeButton"><img id="recommendBtn" src="/westival/resources/images/like.png" style="width:25px;cursor:pointer;"><span id="recommend">${ festival.recommend }</span></li>
-                           <li class="scrap"><img id="scrapBtn" src="/westival/resources/images/bookmark.png" style="width:25px; cursor:pointer;"></li>
+                           <li class="likeButton"><img id="recommendBtn" src="/westival/resources/images/like.png" style="width:25px;cursor:pointer;"title="좋아요"><span id="recommend">${ festival.recommend }</span></li>
+                           <li class="scrap"><img id="scrapBtn" src="/westival/resources/images/bookmark.png" style="width:25px; cursor:pointer;"title="관심축제 등록"></li>
                         </ul>
                      </div>
                      
@@ -964,10 +964,10 @@
                type: "post",
                success: function(result){
                   if(result == "ok"){
-                     alert("스크랩 되었습니다.");
+                     alert("관심축제로 등록 되었습니다.");
                      $("#scrapBtn").attr("src", "/westival/resources/images/bookmark_after.png");
                   }else{
-                     alert("스크랩을 해제합니다.");
+                     alert("관심축제를 해제합니다.");
                      $("#scrapBtn").attr("src", "/westival/resources/images/bookmark.png");
                   }
                },
