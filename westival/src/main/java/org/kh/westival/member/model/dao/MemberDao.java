@@ -161,14 +161,6 @@ public class MemberDao {
 		return (int) sqlSession.update("memberMapper.updateRefundWhy", param);
 	}
 
-	// 페스티벌 컬럼 개수 조회
-	public int FestivalgetListCount(String user_id) {
-		if (user_id != null)
-			return (int) sqlSession.selectOne("memberMapper.selectFestivalgetListCount", user_id);
-		else
-			return (int) sqlSession.selectOne("memberMapper.selectFestivalgetListCountNonLogin", user_id);
-	}
-
 	// 경호
 	// 내 티켓 조회
 	public List<Ticket> recommendList(String user_id) {

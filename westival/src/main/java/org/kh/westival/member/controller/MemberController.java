@@ -21,7 +21,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -128,84 +127,6 @@ public class MemberController {
 		return "ipsearch";
 	}
 
-	// 10/25 아이디,비밀번호찾기
-		@RequestMapping(value = "searchId.do", method = RequestMethod.POST)
-		@ResponseBody
-		public String searchIdMethod(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-			Member member = new Member();
-			member.setUser_name((String)request.getParameter("user_name"));
-			member.setUser_email((String)request.getParameter("user_email"));
-			
-			String user_id = memberService.searchId(member);
-
-			JSONObject job = new JSONObject();
-			
-			if (user_id != null) {
-				job.put("user_id", user_id);
-			} else if (user_id == null) {
-				job.put("user_id", "0");
-			}
-
-			return job.toJSONString();
-		}
-		
-		@RequestMapping(value = "searchPwd.do", method = RequestMethod.POST)
-		@ResponseBody
-		public String searchPwdMethod(HttpServletResponse response, HttpServletRequest request) throws IOException{
-			
-			Member member = new Member();
-			member.setUser_id((String)request.getParameter("user_id"));
-			member.setUser_email((String)request.getParameter("user_email"));
-			member.setUser_phone((String)request.getParameter("user_phone"));
-			
-			int result =  memberService.searchPwd(member);
-
-			JSONObject job = new JSONObject();
-			if(result == 1){
-				job.put("result", "1");
-			} else{
-				job.put("result", "0");
-			}
-			return job.toJSONString();
-		}
-
-		@RequestMapping(value = "changePwdPage.do", method = RequestMethod.POST)
-		public ModelAndView changePwdPageMethod(ModelAndView mv, HttpServletRequest request) {
-			String user_id = (String)request.getParameter("p_user_id");
-
-			System.out.println(user_id);
-
-			mv.addObject("user_id", user_id);
-			mv.setViewName("changePwd");
-			return mv;
-		}	
-		
-		@RequestMapping(value = "changePwd.do")
-		@ResponseBody
-		public String changePwdMethod(HttpServletRequest request) {
-			Member member = new Member();
-			member.setUser_id((String)request.getParameter("user_id"));
-			member.setUser_pwd((String)request.getParameter("user_pwd"));
-			
-			int result = memberService.changePwd(member);
-			
-			JSONObject job = new JSONObject();
-			if(result == 1){
-				job.put("result", "1");
-			} else{
-				job.put("result", "0");
-			}
-			return job.toJSONString();
-		}
-		
-		
-		
-		
-		
-		
-	
-	
 	// 페이지 이동처리만 담당
 	@RequestMapping(value = "memberInfo.do")
 	public String memberInfo() {
@@ -264,81 +185,130 @@ public class MemberController {
 	public void myTotalList(Member member, HttpServletResponse response, HttpServletRequest request,
 			HttpSession session) throws IOException {
 		JSONArray jarr = new JSONArray();
-
-/*		int currentPage = 1;
+		
+		int currentPage = 1;
 		int limit = 10;
 		if (request.getParameter("page") != null) {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
-*/
+
 		List<Festival> list = memberService.myTotalList(member.getUser_id());
-/*		int listCount = memberService.FestivalgetListCount(member.getUser_id());
+		int listCount = list.size();
 		int maxPage = (int) Math.ceil(((double) listCount / limit));
 		int startPage = (((int) ((double) currentPage / limit + 0.9)) - 1) * limit + 1;
 		int endPage = startPage + limit - 1;
-		if (maxPage < endPage) {
-			endPage = maxPage;
-		}*/
-		/*for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {*/
-		for (Festival festival : list) {
-			JSONObject job = new JSONObject();
+		if (maxPage <= endPage) {
+			if(maxPage < endPage)
+				endPage = maxPage;
+			for (int i = limit * (currentPage - 1); i <listCount; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
 
-			job.put("new_img_name", festival.getNew_img_name());
-			job.put("no", new Integer(festival.getNo()).toString());
-			job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getStart_date()));
-			job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getEnd_date()));
-			job.put("name", festival.getName());
-			job.put("manage", festival.getManage());
-			job.put("address", festival.getAddress());
-			job.put("content", festival.getContent());
-
-			jarr.add(job);
+				jarr.add(job);
+			}
+		} else {
+			for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
+	
+				jarr.add(job);
+			}
 		}
-
-		/*System.out.println(limit * (currentPage - 1) + (listCount % limit));*/
-
+		
+		System.out.println(request.getParameter("page"));
+		System.out.println(currentPage + ", " + maxPage + ", " + startPage + ", " + endPage);
+		
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
-/*		sendJson.put("currentPage", currentPage);
+		sendJson.put("currentPage", currentPage);
 		sendJson.put("maxPage", maxPage);
 		sendJson.put("startPage", startPage);
-		sendJson.put("endPage", endPage);*/
+		sendJson.put("endPage", endPage);
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
 		out.flush();
 		out.close();
 	}
-
+	
 	// 내 게시글 페스티벌 날짜 검색
 	@RequestMapping(value = "myListSearch.do", method = RequestMethod.POST)
 	public void myListSearch(Member member, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-
+		JSONArray jarr = new JSONArray();
+		
+		int currentPage = 1;
+		int limit = 10;
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+		
 		String start_date = (String) (request.getParameter("start_date"));
 		String end_date = (String) (request.getParameter("end_date"));
-
 		List<Festival> list = memberService.myListSearch(start_date, end_date, member);
+		int listCount = list.size();
+		int maxPage = (int) Math.ceil(((double) listCount / limit));
+		int startPage = (((int) ((double) currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit - 1;
+		if (maxPage <= endPage) {
+			if(maxPage < endPage)
+				endPage = maxPage;
+			for (int i = limit * (currentPage - 1); i <listCount; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
 
-		JSONArray jarr = new JSONArray();
-
-		for (Festival festival : list) {
-			JSONObject job = new JSONObject();
-
-			job.put("new_img_name", festival.getNew_img_name());
-			job.put("no", new Integer(festival.getNo()).toString());
-			job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getStart_date()));
-			job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getEnd_date()));
-			job.put("name", festival.getName());
-			job.put("manage", festival.getManage());
-			job.put("address", festival.getAddress());
-			job.put("content", festival.getContent());
-
-			jarr.add(job);
+				jarr.add(job);
+			}
+		} else {
+			for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
+	
+				jarr.add(job);
+			}
 		}
-
+		
+		System.out.println(request.getParameter("page"));
+		System.out.println(currentPage + ", " + maxPage + ", " + startPage + ", " + endPage);
+		
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("currentPage", currentPage);
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
@@ -350,29 +320,64 @@ public class MemberController {
 	@RequestMapping(value = "myListSearchMonth.do", method = RequestMethod.POST)
 	public void myListSearchMonth(Member member, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-
-		int month = Integer.parseInt((String) request.getParameter("month"));
-
-		List<Festival> list = memberService.myListSearchMonth(month, member);
-
 		JSONArray jarr = new JSONArray();
-
-		for (Festival festival : list) {
-			JSONObject job = new JSONObject();
-
-			job.put("new_img_name", festival.getNew_img_name());
-			job.put("no", new Integer(festival.getNo()).toString());
-			job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getStart_date()));
-			job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getEnd_date()));
-			job.put("name", festival.getName());
-			job.put("manage", festival.getManage());
-			job.put("address", festival.getAddress());
-			job.put("content", festival.getContent());
-
-			jarr.add(job);
+		
+		int currentPage = 1;
+		int limit = 10;
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
+		
+		int month = Integer.parseInt((String) request.getParameter("month"));
+		List<Festival> list = memberService.myListSearchMonth(month, member);
+		int listCount = list.size();
+		int maxPage = (int) Math.ceil(((double) listCount / limit));
+		int startPage = (((int) ((double) currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit - 1;
+		if (maxPage <= endPage) {
+			if(maxPage < endPage)
+				endPage = maxPage;
+			for (int i = limit * (currentPage - 1); i <listCount; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
+
+				jarr.add(job);
+			}
+		} else {
+			for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
+	
+				jarr.add(job);
+			}
+		}
+		
+		System.out.println(request.getParameter("page"));
+		System.out.println(currentPage + ", " + maxPage + ", " + startPage + ", " + endPage);
+		
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("currentPage", currentPage);
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
+		sendJson.put("month", month);
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
@@ -396,27 +401,63 @@ public class MemberController {
 
 	// 관심축제 페스티벌 전체 조회
 	@RequestMapping(value = "myLikeFestaList.do", method = RequestMethod.POST)
-	public void myLikeFestaList(Member member, HttpServletResponse response) throws IOException {
-		List<Festival> list = memberService.myLikeFestaList(member.getUser_id());
-
+	public void myLikeFestaList(Member member, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		JSONArray jarr = new JSONArray();
-
-		for (Festival festival : list) {
-			JSONObject job = new JSONObject();
-
-			job.put("new_img_name", festival.getNew_img_name());
-			job.put("no", new Integer(festival.getNo()).toString());
-			job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getStart_date()));
-			job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getEnd_date()));
-			job.put("name", festival.getName());
-			job.put("manage", festival.getManage());
-			job.put("address", festival.getAddress());
-			job.put("content", festival.getContent());
-
-			jarr.add(job);
+		
+		int currentPage = 1;
+		int limit = 10;
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
+		
+		List<Festival> list = memberService.myLikeFestaList(member.getUser_id());
+		int listCount = list.size();
+		int maxPage = (int) Math.ceil(((double) listCount / limit));
+		int startPage = (((int) ((double) currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit - 1;
+		if (maxPage <= endPage) {
+			if(maxPage < endPage)
+				endPage = maxPage;
+			for (int i = limit * (currentPage - 1); i <listCount; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
+
+				jarr.add(job);
+			}
+		} else {
+			for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
+	
+				jarr.add(job);
+			}
+		}
+		
+		System.out.println(request.getParameter("page"));
+		System.out.println(currentPage + ", " + maxPage + ", " + startPage + ", " + endPage);
+		
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("currentPage", currentPage);
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
@@ -428,31 +469,64 @@ public class MemberController {
 	@RequestMapping(value = "myLikeFestaSearch.do", method = RequestMethod.POST)
 	public void myLikeFestaSearch(Member member, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-
+		JSONArray jarr = new JSONArray();
+		
+		int currentPage = 1;
+		int limit = 10;
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+		
 		String start_date = (String) (request.getParameter("start_date"));
 		String end_date = (String) (request.getParameter("end_date"));
-
 		List<Festival> list = memberService.myLikeFestaSearch(start_date, end_date, member);
+		int listCount = list.size();
+		int maxPage = (int) Math.ceil(((double) listCount / limit));
+		int startPage = (((int) ((double) currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit - 1;
+		if (maxPage <= endPage) {
+			if(maxPage < endPage)
+				endPage = maxPage;
+			for (int i = limit * (currentPage - 1); i <listCount; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
 
-		JSONArray jarr = new JSONArray();
-
-		for (Festival festival : list) {
-			JSONObject job = new JSONObject();
-
-			job.put("new_img_name", festival.getNew_img_name());
-			job.put("no", new Integer(festival.getNo()).toString());
-			job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getStart_date()));
-			job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getEnd_date()));
-			job.put("name", festival.getName());
-			job.put("manage", festival.getManage());
-			job.put("address", festival.getAddress());
-			job.put("content", festival.getContent());
-
-			jarr.add(job);
+				jarr.add(job);
+			}
+		} else {
+			for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
+	
+				jarr.add(job);
+			}
 		}
-
+		
+		System.out.println(request.getParameter("page"));
+		System.out.println(currentPage + ", " + maxPage + ", " + startPage + ", " + endPage);
+		
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("currentPage", currentPage);
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
@@ -464,29 +538,64 @@ public class MemberController {
 	@RequestMapping(value = "myLikeFestaSearchMonth.do", method = RequestMethod.POST)
 	public void myLikeFestaSearchMonth(Member member, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-
-		int month = Integer.parseInt((String) request.getParameter("month"));
-
-		List<Festival> list = memberService.myLikeFestaSearchMonth(month, member);
-
 		JSONArray jarr = new JSONArray();
-
-		for (Festival festival : list) {
-			JSONObject job = new JSONObject();
-
-			job.put("new_img_name", festival.getNew_img_name());
-			job.put("no", new Integer(festival.getNo()).toString());
-			job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getStart_date()));
-			job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(festival.getEnd_date()));
-			job.put("name", festival.getName());
-			job.put("manage", festival.getManage());
-			job.put("address", festival.getAddress());
-			job.put("content", festival.getContent());
-
-			jarr.add(job);
+		
+		int currentPage = 1;
+		int limit = 10;
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
+		
+		int month = Integer.parseInt((String) request.getParameter("month"));
+		List<Festival> list = memberService.myLikeFestaSearchMonth(month, member);
+		int listCount = list.size();
+		int maxPage = (int) Math.ceil(((double) listCount / limit));
+		int startPage = (((int) ((double) currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit - 1;
+		if (maxPage <= endPage) {
+			if(maxPage < endPage)
+				endPage = maxPage;
+			for (int i = limit * (currentPage - 1); i <listCount; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
+
+				jarr.add(job);
+			}
+		} else {
+			for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("new_img_name", list.get(i).getNew_img_name());
+				job.put("no", new Integer(list.get(i).getNo()).toString());
+				job.put("start_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getStart_date()));
+				job.put("end_date", new SimpleDateFormat("yyyy-MM-dd").format(list.get(i).getEnd_date()));
+				job.put("name", list.get(i).getName());
+				job.put("manage", list.get(i).getManage());
+				job.put("address", list.get(i).getAddress());
+				job.put("content", list.get(i).getContent());
+				
+				jarr.add(job);
+			}
+		}
+		
+		System.out.println(request.getParameter("page"));
+		System.out.println(currentPage + ", " + maxPage + ", " + startPage + ", " + endPage);
+		
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("currentPage", currentPage);
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
+		sendJson.put("month", month);
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
@@ -530,25 +639,59 @@ public class MemberController {
 	// 경호
 	// 내 예매내역
 	@RequestMapping(value = "myTicketList.do", method = RequestMethod.POST)
-	public void myTicketList(Member member, HttpServletResponse response) throws IOException {
-		List<Ticket> list = memberService.recommendList(member.getUser_id());
-
+	public void myTicketList(Member member, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		JSONArray jarr = new JSONArray();
-
-		for (Ticket ticket : list) {
-			JSONObject job = new JSONObject();
-
-			job.put("ticket_no", ticket.getTicket_no());
-			job.put("ticket_date", ticket.getTicket_date().toString());
-			job.put("festival_name", memberService.selectFestivalName(ticket.getNo()));
-			job.put("ticket_count", ticket.getTicket_count());
-			job.put("price", ticket.getPrice());
-			job.put("state", ticket.getState());
-
-			jarr.add(job);
+		
+		int currentPage = 1;
+		int limit = 10;
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
+		
+		List<Ticket> list = memberService.recommendList(member.getUser_id());
+		int listCount = list.size();
+		int maxPage = (int) Math.ceil(((double) listCount / limit));
+		int startPage = (((int) ((double) currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit - 1;
+		if (maxPage <= endPage) {
+			if(maxPage < endPage)
+				endPage = maxPage;
+			for (int i = limit * (currentPage - 1); i <listCount; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("ticket_no", list.get(i).getTicket_no());
+				job.put("ticket_date", list.get(i).getTicket_date().toString());
+				job.put("festival_name", memberService.selectFestivalName(list.get(i).getNo()));
+				job.put("ticket_count", list.get(i).getTicket_count());
+				job.put("price", list.get(i).getPrice());
+				job.put("state", list.get(i).getState());
+
+				jarr.add(job);
+			}
+		} else {
+			for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("ticket_no", list.get(i).getTicket_no());
+				job.put("ticket_date", list.get(i).getTicket_date().toString());
+				job.put("festival_name", memberService.selectFestivalName(list.get(i).getNo()));
+				job.put("ticket_count", list.get(i).getTicket_count());
+				job.put("price", list.get(i).getPrice());
+				job.put("state", list.get(i).getState());
+				
+				jarr.add(job);
+			}
+		}
+		
+		System.out.println(request.getParameter("page"));
+		System.out.println(currentPage + ", " + maxPage + ", " + startPage + ", " + endPage);
+		
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("currentPage", currentPage);
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
@@ -560,28 +703,60 @@ public class MemberController {
 	@RequestMapping(value = "myTicketSearch.do", method = RequestMethod.POST)
 	public void myTicketSearch(Member member, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-
+		JSONArray jarr = new JSONArray();
+		
+		int currentPage = 1;
+		int limit = 10;
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+		
 		String start_date = (String) (request.getParameter("start_date"));
 		String end_date = (String) (request.getParameter("end_date"));
-
 		List<Ticket> list = memberService.myTicketSearch(start_date, end_date, member);
+		int listCount = list.size();
+		int maxPage = (int) Math.ceil(((double) listCount / limit));
+		int startPage = (((int) ((double) currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit - 1;
+		if (maxPage <= endPage) {
+			if(maxPage < endPage)
+				endPage = maxPage;
+			for (int i = limit * (currentPage - 1); i <listCount; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("ticket_no", list.get(i).getTicket_no());
+				job.put("ticket_date", list.get(i).getTicket_date().toString());
+				job.put("festival_name", memberService.selectFestivalName(list.get(i).getNo()));
+				job.put("ticket_count", list.get(i).getTicket_count());
+				job.put("price", list.get(i).getPrice());
+				job.put("state", list.get(i).getState());
 
-		JSONArray jarr = new JSONArray();
-
-		for (Ticket ticket : list) {
-			JSONObject job = new JSONObject();
-
-			job.put("ticket_no", ticket.getTicket_no());
-			job.put("ticket_date", ticket.getTicket_date().toString());
-			job.put("festival_name", memberService.selectFestivalName(ticket.getNo()));
-			job.put("ticket_count", ticket.getTicket_count());
-			job.put("price", ticket.getPrice());
-			job.put("state", ticket.getState());
-
-			jarr.add(job);
+				jarr.add(job);
+			}
+		} else {
+			for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("ticket_no", list.get(i).getTicket_no());
+				job.put("ticket_date", list.get(i).getTicket_date().toString());
+				job.put("festival_name", memberService.selectFestivalName(list.get(i).getNo()));
+				job.put("ticket_count", list.get(i).getTicket_count());
+				job.put("price", list.get(i).getPrice());
+				job.put("state", list.get(i).getState());
+				
+				jarr.add(job);
+			}
 		}
+		
+		System.out.println(request.getParameter("page"));
+		System.out.println(currentPage + ", " + maxPage + ", " + startPage + ", " + endPage);
+		
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("currentPage", currentPage);
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());
@@ -593,27 +768,60 @@ public class MemberController {
 	@RequestMapping(value = "myTicketSearchMonth.do", method = RequestMethod.POST)
 	public void myTicketSearchMonth(Member member, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-
-		int month = Integer.parseInt((String) request.getParameter("month"));
-
-		List<Ticket> list = memberService.myTicketSearchMonth(month, member);
-
 		JSONArray jarr = new JSONArray();
-
-		for (Ticket ticket : list) {
-			JSONObject job = new JSONObject();
-
-			job.put("ticket_no", ticket.getTicket_no());
-			job.put("ticket_date", ticket.getTicket_date().toString());
-			job.put("festival_name", memberService.selectFestivalName(ticket.getNo()));
-			job.put("ticket_count", ticket.getTicket_count());
-			job.put("price", ticket.getPrice());
-			job.put("state", ticket.getState());
-
-			jarr.add(job);
+		
+		int currentPage = 1;
+		int limit = 10;
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
+		
+		int month = Integer.parseInt((String) request.getParameter("month"));
+		List<Ticket> list = memberService.myTicketSearchMonth(month, member);
+		int listCount = list.size();
+		int maxPage = (int) Math.ceil(((double) listCount / limit));
+		int startPage = (((int) ((double) currentPage / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit - 1;
+		if (maxPage <= endPage) {
+			if(maxPage < endPage)
+				endPage = maxPage;
+			for (int i = limit * (currentPage - 1); i <listCount; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("ticket_no", list.get(i).getTicket_no());
+				job.put("ticket_date", list.get(i).getTicket_date().toString());
+				job.put("festival_name", memberService.selectFestivalName(list.get(i).getNo()));
+				job.put("ticket_count", list.get(i).getTicket_count());
+				job.put("price", list.get(i).getPrice());
+				job.put("state", list.get(i).getState());
+
+				jarr.add(job);
+			}
+		} else {
+			for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {
+				JSONObject job = new JSONObject();
+				
+				job.put("ticket_no", list.get(i).getTicket_no());
+				job.put("ticket_date", list.get(i).getTicket_date().toString());
+				job.put("festival_name", memberService.selectFestivalName(list.get(i).getNo()));
+				job.put("ticket_count", list.get(i).getTicket_count());
+				job.put("price", list.get(i).getPrice());
+				job.put("state", list.get(i).getState());
+				
+				jarr.add(job);
+			}
+		}
+		
+		System.out.println(request.getParameter("page"));
+		System.out.println(currentPage + ", " + maxPage + ", " + startPage + ", " + endPage);
+		
 		JSONObject sendJson = new JSONObject(); // 전송용 객체
 		sendJson.put("list", jarr); // 전송용 객체에 저장
+		sendJson.put("currentPage", currentPage);
+		sendJson.put("maxPage", maxPage);
+		sendJson.put("startPage", startPage);
+		sendJson.put("endPage", endPage);
+		sendJson.put("month", month);
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(sendJson.toJSONString());

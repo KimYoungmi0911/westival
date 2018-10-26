@@ -69,9 +69,6 @@ public interface MemberService {
 	// 내 예매내역 환불 사유 전송
 	int updateRefundWhy(String ticket_no, String refund_why);
 
-	// 페스티벌 컬럼 개수 조회
-	int FestivalgetListCount(String user_id);
-
 	// 경호
 	// 마이페이지 내 예매내역
 	List<Ticket> recommendList(String user_id);
